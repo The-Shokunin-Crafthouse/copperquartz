@@ -1,0 +1,497 @@
+/*
+ * Save the Date — Desktop (1512×1080 design canvas).
+ * Page-scoped layout coordinates live on .page as custom properties.
+ * Tokens (--color-*, --text-*, --space-*, --border-hairline) come from tokens.css.
+ */
+
+.page {
+  /* Canvas */
+  --pg-w: 1512px;
+  --pg-h: 1080px;
+
+  /* Vertical-divider position (from page right) */
+  --pg-divider-v-right: 282px;
+
+  /* Bottom regions */
+  --pg-info-bar-h: 105px;
+  --pg-footer-h: 156px;
+
+  /* Print button — anchored relative to courthouse-left */
+  --pg-print-y: 40px;
+  --pg-print-pad-y: 12px;
+  --pg-print-from-court-left: -84px; /* figma: 895 − 979 */
+
+  /* H1 SVG lockup ("Save the Date") — proportional to left column */
+  --pg-h1-y: 318px;
+  --pg-h1-y-narrow: 200px;          /* shifts up when viewport < 1340 */
+  --pg-h1-aspect: 538 / 324;
+  --pg-h1-h-narrow-cqw: 26.34cqw;   /* 43.74cqw × 324/538 — H1 rendered height */
+
+  /* Watercolor / palm composite — scales with viewport */
+  --pg-palm-w-figma: 1192px;
+  --pg-palm-w-min: 800px;
+  --pg-palm-w-fluid: 78.83vw;
+  --pg-palm-aspect: 1192 / 727;
+
+  /* Coastal scene — anchored to top of horizontal rule */
+  --pg-coastal-x: 0px;
+  --pg-coastal-w-figma: 254px;
+  --pg-coastal-w-min: 180px;
+  --pg-coastal-w-fluid: 16.8vw;
+
+  /* Courthouse illustration — scales with viewport, anchored to vertical divider */
+  --pg-court-w-figma: 250px;
+  --pg-court-w-min: 180px;
+  --pg-court-w-fluid: 16.53vw;
+  --pg-court-aspect: 250 / 924;
+
+  /* Levi & Meghan SVG lockup — scales with viewport, centered in right panel */
+  --pg-couple-y: 87px;
+  --pg-couple-w-figma: 200px;
+  --pg-couple-w-min: 140px;
+  --pg-couple-w-fluid: 13.23vw;
+  --pg-couple-aspect: 200 / 107;
+
+  /* Right panel content column — centered horizontally */
+  --pg-rp-w: 208px;
+  --pg-rp-body-y: 220px;
+  --pg-rp-events-label-y: 328px;
+  --pg-rp-events-y: 360px;
+  --pg-rp-coords-label-y: 528px;
+  --pg-rp-coords-y: 560px;
+
+  /* Info bar (Date / Location / Venue) — page-anchored, left column */
+  --pg-info-x: 264px;
+  --pg-info-y: 819px;
+  --pg-info-gap: 42px;
+  --pg-info-col-gap: var(--space-2);
+  --pg-info-stack-gap: var(--space-2);
+  --pg-info-pillar-h: 75px;
+  --pg-info-col-w: 196px;
+
+  /* Wax seal — anchored to right within footer */
+  --pg-badge-right: 86px;
+  --pg-badge-y: 13px;
+  --pg-badge-size: 126px;
+
+  /* Palm corner icons */
+  --pg-palm-icon-w: 15px;
+  --pg-palm-icon-h: 16px;
+  --pg-palm-icon-corner-inset: 24px;
+  --pg-palm-icon-tr-y: 24px;
+  --pg-palm-icon-bl-x: 24px;
+  --pg-palm-icon-bl-y: 116px;
+  --pg-palm-icon-br-right: 24px;
+  --pg-palm-icon-br-y: 116px;
+
+  /* Footer text — three equal sub-columns spanning the left-column footer */
+  --pg-footer-text-y: 67px;
+  --pg-footer-text-min: var(--text-sm);
+  --pg-footer-text-fluid: 1.587vw;
+  --pg-footer-text-max: var(--text-xl);
+
+  position: relative;
+  width: 100%;
+  max-width: var(--pg-w);
+  height: var(--pg-h);
+  margin-inline: auto;
+  background-color: var(--color-bg);
+  overflow: hidden;
+}
+
+/*
+ * Right panel + footer are right-/bottom-anchored containers.
+ * Their children stay glued to those edges as the viewport narrows;
+ * the left illustration column absorbs the width change and clips.
+ */
+.rightPanel {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: var(--pg-divider-v-right);
+  height: 100%;
+}
+
+.footer {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: var(--pg-footer-h);
+}
+
+/*
+ * Left-column container — constrains the H1 SVG so it fills the column
+ * proportionally as the viewport narrows. Uses container query units (cqw)
+ * = 1% of this container's inline size.
+ */
+.leftColumn {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: var(--pg-divider-v-right);
+  height: 100%;
+  container-type: inline-size;
+  pointer-events: none;
+}
+
+/* ---------- Page Background group ---------- */
+
+.palmIllustration {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: clamp(var(--pg-palm-w-min), var(--pg-palm-w-fluid), var(--pg-palm-w-figma));
+  height: auto;
+  aspect-ratio: var(--pg-palm-aspect);
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+}
+
+.coastal {
+  position: absolute;
+  left: var(--pg-coastal-x);
+  bottom: var(--pg-footer-h); /* sits flush on top edge of horizontal rule */
+  width: clamp(var(--pg-coastal-w-min), var(--pg-coastal-w-fluid), var(--pg-coastal-w-figma));
+  height: auto;
+  pointer-events: none;
+  user-select: none;
+}
+
+/*
+ * Courthouse + Print button share an anchor container so they move together
+ * as the viewport narrows.
+ */
+.courthouseAnchor {
+  position: absolute;
+  top: 0;
+  right: var(--pg-divider-v-right);
+  width: clamp(var(--pg-court-w-min), var(--pg-court-w-fluid), var(--pg-court-w-figma));
+}
+
+.courthouse {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: var(--pg-court-aspect);
+  pointer-events: none;
+  user-select: none;
+}
+
+/* ---------- Dividers ---------- */
+
+.dividerV {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: var(--pg-divider-v-right);
+  width: var(--border-hairline);
+  background-color: var(--color-palm-leaf);
+}
+
+.dividerH {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: var(--pg-footer-h);
+  height: var(--border-hairline);
+  background-color: var(--color-palm-leaf);
+}
+
+/* ---------- Print button (positioned inside .courthouseAnchor) ---------- */
+
+.printBtn {
+  position: absolute;
+  left: var(--pg-print-from-court-left);
+  top: var(--pg-print-y);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--pg-print-pad-y) var(--space-5);
+  background-color: var(--color-palm-leaf);
+  color: var(--color-bg);
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  font-weight: 500;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.printBtn:focus-visible {
+  outline: var(--border-focus) solid var(--color-terracotta);
+  outline-offset: var(--border-focus);
+}
+
+/* ---------- H1 SVG lockup (positioned inside .leftColumn) ---------- */
+
+.h1 {
+  position: absolute;
+  left: 23.74cqw;  /* 292 / 1230 — proportional within left column */
+  top: var(--pg-h1-y);
+  width: 43.74cqw; /* 538 / 1230 — same proportion as Figma */
+  height: auto;
+  aspect-ratio: var(--pg-h1-aspect);
+  display: block;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* ---------- Info bar (Date / Location / Venue) ---------- */
+
+.infoBar {
+  position: absolute;
+  left: var(--pg-info-x);
+  top: var(--pg-info-y);
+  display: flex;
+  align-items: center;
+  gap: var(--pg-info-gap);
+  pointer-events: auto; /* re-enable inside .leftColumn (which sets none) */
+}
+
+.infoCol {
+  display: flex;
+  align-items: center;
+  gap: var(--pg-info-col-gap);
+  flex-shrink: 0;
+}
+
+.pillar {
+  width: var(--border-hairline);
+  height: var(--pg-info-pillar-h);
+  background-color: var(--color-gold);
+  opacity: 0.5;
+  flex-shrink: 0;
+}
+
+.infoStack {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--pg-info-stack-gap);
+}
+
+.infoStackFixed {
+  width: var(--pg-info-col-w);
+}
+
+.infoLabel {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: 400;
+  font-size: var(--text-base);
+  line-height: 1;
+  color: var(--color-terracotta);
+  white-space: nowrap;
+}
+
+.infoValue {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-weight: 600;
+  font-size: var(--text-2xl);
+  line-height: 1;
+  color: var(--color-teal);
+  white-space: nowrap;
+}
+
+/* ---------- Right panel (positioned inside .rightPanel; centered) ---------- */
+
+.couple {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: var(--pg-couple-y);
+  width: clamp(var(--pg-couple-w-min), var(--pg-couple-w-fluid), var(--pg-couple-w-figma));
+  height: auto;
+  aspect-ratio: var(--pg-couple-aspect);
+  display: block;
+  pointer-events: none;
+  user-select: none;
+}
+
+.bodyCopy {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: var(--pg-rp-body-y);
+  width: var(--pg-rp-w);
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: 400;
+  font-size: var(--text-sm);
+  line-height: 1.235;
+  color: var(--color-gold-dark);
+}
+
+.rpSectionLabel {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: var(--pg-rp-w);
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: 400;
+  font-size: var(--text-xs);
+  line-height: 2.667;
+  color: var(--color-gold-dark);
+}
+
+.eventsLabel {
+  top: var(--pg-rp-events-label-y);
+}
+
+.coordsLabel {
+  top: var(--pg-rp-coords-label-y);
+}
+
+.events {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: var(--pg-rp-events-y);
+  width: var(--pg-rp-w);
+  display: flex;
+  flex-direction: column;
+  font-family: var(--font-sans);
+  font-weight: 400;
+  font-size: var(--text-xs);
+  line-height: 2.667;
+}
+
+.eventRow {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.eventNum {
+  width: var(--space-3);
+  margin: 0;
+  color: var(--color-terracotta);
+}
+
+.eventTime {
+  width: var(--space-5);
+  margin: 0;
+  color: var(--color-teal);
+}
+
+.eventLabel {
+  width: 100px;
+  margin: 0;
+  color: var(--color-teal);
+}
+
+.coords {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: var(--pg-rp-coords-y);
+  width: var(--pg-rp-w);
+  display: flex;
+  flex-direction: column;
+  font-family: var(--font-sans);
+  font-weight: 400;
+  font-size: var(--text-xs);
+  line-height: 2;
+}
+
+.coordRow {
+  margin: 0;
+}
+
+.coordVal {
+  color: var(--color-teal);
+}
+
+.coordDir {
+  color: var(--color-terracotta);
+}
+
+/* ---------- Footer ---------- */
+
+.footerText {
+  position: absolute;
+  left: 0;
+  right: var(--pg-divider-v-right); /* spans only the left-column footer area */
+  top: var(--pg-footer-text-y);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-inline: var(--space-8);
+  font-family: var(--font-serif);
+  line-height: 1;
+  color: var(--color-gold-dark);
+}
+
+.footerQuote {
+  margin: 0;
+  text-align: center;
+  font-size: clamp(var(--pg-footer-text-min), var(--pg-footer-text-fluid), var(--pg-footer-text-max));
+  font-style: italic;
+  font-weight: 700;
+}
+
+.footerUrl,
+.footerNote {
+  margin: 0;
+  text-align: center;
+  font-size: clamp(var(--pg-footer-text-min), var(--pg-footer-text-fluid), var(--pg-footer-text-max));
+  font-style: normal;
+  font-weight: 600;
+}
+
+.badge {
+  position: absolute;
+  right: var(--pg-badge-right);
+  top: var(--pg-badge-y);
+  width: var(--pg-badge-size);
+  height: var(--pg-badge-size);
+  pointer-events: none;
+  user-select: none;
+}
+
+/* ---------- Palm corner icons ---------- */
+
+.palmIcon {
+  position: absolute;
+  width: var(--pg-palm-icon-w);
+  height: var(--pg-palm-icon-h);
+  pointer-events: none;
+  user-select: none;
+}
+
+.palmIconTR {
+  right: var(--pg-palm-icon-corner-inset);
+  top: var(--pg-palm-icon-tr-y);
+}
+
+.palmIconBL {
+  left: var(--pg-palm-icon-bl-x);
+  top: var(--pg-palm-icon-bl-y);
+}
+
+.palmIconBR {
+  right: var(--pg-palm-icon-br-right);
+  top: var(--pg-palm-icon-br-y);
+}
+
+/*
+ * Below 1340px: H1 shifts up; info bar reflows to a vertical stack
+ * anchored just below the H1 (its position tracks the H1 via cqw, so they
+ * move together as the viewport narrows). Both share the same left edge.
+ */
+@media (max-width: 1339px) {
+  .h1 {
+    top: var(--pg-h1-y-narrow);
+  }
+  .infoBar {
+    left: 23.74cqw;
+    top: calc(var(--pg-h1-y-narrow) + var(--pg-h1-h-narrow-cqw) + var(--space-10));
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-6);
+  }
+}
+
