@@ -539,7 +539,8 @@
     --mob-courthouse-h: 371px;
     --mob-courthouse-top: 1036px;
     --mob-courthouse-fade-h: 60px;
-    --mob-coastal-w: 254px;
+    --mob-coastal-w: 200px;
+    --mob-badge-print-gap: 56px;               /* breathing room between badge and Print bar */
     --mob-palm-bg-w: 647px;
     --mob-palm-bg-top: -40px;
     --mob-palm-bg-left: 0px;
@@ -567,7 +568,8 @@
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    padding: 0 var(--mob-side-pad) var(--mob-print-h);
+    /* padding-bottom = print bar height + 56px gap above the bar */
+    padding: 0 var(--mob-side-pad) calc(var(--mob-print-h) + var(--mob-badge-print-gap));
     /* New stacking context so coastal can sit behind in-flow content */
     isolation: isolate;
   }
