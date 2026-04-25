@@ -64,6 +64,7 @@ Thumbs.db
 .parcel-cache/
 .eslintcache
 .stylelintcache
+*.tsbuildinfo
 
 # Figma bulk exports (keep structure, not assets)
 stages/02-design/figma/exports/

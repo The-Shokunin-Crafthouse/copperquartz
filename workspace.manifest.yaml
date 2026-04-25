@@ -13,12 +13,12 @@ studio: "The Shokunin Crafthouse"
 template_version: "1.0.0"
 
 project:
-  name: ""
+  name: "Copper & Quartz"
   client: ""
-  kind: ""            # brand | product | site | app | campaign
-  stage: "01-brief"   # current stage id
+  kind: "site"        # brand | product | site | app | campaign
+  stage: "02-design"  # current stage id
   lead: ""
-  started: ""         # YYYY-MM-DD
+  started: "2026-04-24"
   target_launch: ""   # YYYY-MM-DD
   status: "active"    # active | paused | closed
 
