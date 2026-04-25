@@ -1,0 +1,65 @@
+:root {
+  /* Color */
+  --color-bg: #FBF3E9;
+  --color-sand-linen: #F3E6D3;
+  --color-teal: #2F7F7B;
+  --color-terracotta: #C86A4A;
+  --color-coral-rose: #F27D72;
+  --color-palm-leaf: #4F7A4A;
+  --color-gold: #C2A98B;
+  --color-gold-dark: #877660;
+  --color-brown: #5D4931;
+
+  /* Typography — families */
+  --font-display: 'Ngetic Modern', serif;
+  --font-accent: 'Hesland Regular', cursive;
+  --font-serif: 'Cormorant Garamond', serif;
+  --font-sans: 'Commissioner', sans-serif;
+
+  /* Typography — scale */
+  --text-xs: 12px;
+  --text-sm: 14px;
+  --text-base: 16px;
+  --text-lg: 18px;
+  --text-xl: 24px;
+  --text-2xl: 32px;
+  --text-3xl: 40px;
+  --text-4xl: 56px;
+  --text-5xl: 112px;
+  --text-display: 200px;
+
+  /* Spacing — 8px grid */
+  --space-1: 8px;
+  --space-2: 16px;
+  --space-3: 24px;
+  --space-4: 32px;
+  --space-5: 40px;
+  --space-6: 48px;
+  --space-8: 64px;
+  --space-10: 80px;
+  --space-12: 96px;
+  --space-16: 128px;
+
+  /* Radius */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+  --radius-full: 9999px;
+
+  /* Layout */
+  --content-max-width: 650px;
+  --page-max-width: 1512px;
+
+  /* Breakpoints */
+  --bp-sm: 640px;
+  --bp-md: 768px;
+  --bp-lg: 1024px;
+  --bp-xl: 1280px;
+  --bp-2xl: 1512px;
+
+  /* Structural primitives — added beyond the spec to keep components px-free.
+     Logged in decisions/decisions.md. */
+  --border-hairline: 1px;
+  --border-focus: 2px;
+  --height-tap: 44px;
+}

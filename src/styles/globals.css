@@ -1,0 +1,116 @@
+@import url('https://fonts.googleapis.com/css2?family=Commissioner:wght@400;500;600&family=Cormorant+Garamond:wght@400;500;600;700&display=swap');
+@import './tokens.css';
+
+/* TODO: drop ngetic-modern-regular.woff2 / .woff into public/fonts/ — see public/fonts/README.md */
+@font-face {
+  font-family: 'Ngetic Modern';
+  src: url('/fonts/ngetic-modern-regular.woff2') format('woff2'),
+       url('/fonts/ngetic-modern-regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* TODO: drop hesland-regular.woff2 / .woff into public/fonts/ — see public/fonts/README.md */
+@font-face {
+  font-family: 'Hesland Regular';
+  src: url('/fonts/hesland-regular.woff2') format('woff2'),
+       url('/fonts/hesland-regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-brown);
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: inherit;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+}
+
+/* Page grid — column count, gutter, and side margin scale by breakpoint. */
+.grid-page {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  column-gap: var(--space-2);
+  padding-inline: var(--space-2);
+  max-width: var(--page-max-width);
+  margin-inline: auto;
+}
+
+@media (min-width: 768px) {
+  .grid-page {
+    grid-template-columns: repeat(8, 1fr);
+    column-gap: var(--space-3);
+    padding-inline: var(--space-3);
+  }
+}
+
+@media (min-width: 1024px) {
+  .grid-page {
+    grid-template-columns: repeat(12, 1fr);
+    column-gap: var(--space-3);
+    padding-inline: var(--space-4);
+  }
+}
+
+@media (min-width: 1512px) {
+  .grid-page {
+    padding-inline: 0;
+  }
+}
+
+/* Column span helpers — match Figma content proportions. */
+.col-full {
+  grid-column: 1 / -1;
+}
+
+.col-content {
+  grid-column: 1 / -1;
+}
+
+.col-half {
+  grid-column: 1 / -1;
+}
+
+@media (min-width: 768px) {
+  .col-content {
+    grid-column: 2 / span 6;
+  }
+  .col-half {
+    grid-column: span 4;
+  }
+}
+
+@media (min-width: 1024px) {
+  .col-content {
+    grid-column: 3 / span 8;
+  }
+  .col-half {
+    grid-column: span 6;
+  }
+}
