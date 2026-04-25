@@ -495,3 +495,327 @@
   }
 }
 
+/*
+ * Mobile (≤ 768px) — single-column reflow per Figma frame 22:1450 (360×1921).
+ * Pure @media additions; no DOM changes. Two horizontal divider+palm graphics
+ * are rendered via .page::before / .page::after; courthouse fade-top via
+ * .courthouseAnchor::after.
+ *
+ * Strategy: .page becomes flex-column; .leftColumn and .rightPanel use
+ * display: contents so their children promote to .page's flex context and
+ * are sequenced via `order`. Decoratives (palm bg, coastal, courthouse,
+ * print bar) stay absolute / fixed.
+ */
+@media (max-width: 768px) {
+  .page {
+    /* Mobile-scoped vars — Figma 360×1921 frame */
+    --mob-side-pad: var(--space-4);            /* 32px */
+    --mob-h1-w: 242px;
+    --mob-h1-mt: 138px;
+    --mob-info-mt: 84px;
+    --mob-info-stack-gap: var(--space-1);      /* 8px (label↔value, mobile) */
+    --mob-info-pillar-h: 68px;
+    --mob-divider-rule-w: 296px;
+    --mob-divider-h: 36px;
+    --mob-divider1-mt: 48px;
+    --mob-divider2-mt: 16px;
+    --mob-couple-w: 201px;
+    --mob-couple-mt: 48px;
+    --mob-body-mt: var(--space-4);             /* 32px */
+    --mob-events-label-mt: var(--space-3);     /* 24px */
+    --mob-events-mt: 0px;
+    --mob-coords-label-mt: var(--space-4);     /* 32px */
+    --mob-coords-mt: 0px;
+    --mob-event-num-w: 41px;
+    --mob-event-time-w: 67px;
+    --mob-event-label-w: 170px;
+    --mob-footer-mt: var(--space-10);          /* 80px */
+    --mob-footer-text-gap: var(--space-3);     /* 24px (snap 25→24) */
+    --mob-footer-text-size: var(--text-xl);    /* 24px (snap 23→24, ref D1) */
+    --mob-badge-mt: var(--space-5);            /* 40px */
+    --mob-badge-size: 122px;
+    --mob-print-h: 54px;
+    --mob-courthouse-w: 100px;
+    --mob-courthouse-h: 371px;
+    --mob-courthouse-top: 1036px;
+    --mob-courthouse-fade-h: 60px;
+    --mob-coastal-w: 254px;
+    --mob-palm-bg-w: 600px;
+    --mob-palm-bg-top: 0px;
+    --mob-palm-bg-left: -120px;
+
+    /* Switch from canvas to flow */
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding: 0 var(--mob-side-pad) var(--mob-print-h);
+    /* New stacking context so coastal can sit behind in-flow content */
+    isolation: isolate;
+  }
+
+  /* Background palm + watercolor — top-left bleed
+     (combined desktop asset; positioned to surface the palm portion
+     in the upper-left, behind the H1) */
+  .palmIllustration {
+    width: var(--mob-palm-bg-w);
+    height: auto;
+    top: var(--mob-palm-bg-top);
+    left: var(--mob-palm-bg-left);
+    z-index: -1;
+  }
+
+  /* Coastal — bottom-left, sits flush above the print bar
+     and behind the footer flow content */
+  .coastal {
+    bottom: var(--mob-print-h);
+    left: 0;
+    width: var(--mob-coastal-w);
+    z-index: -1;
+  }
+
+  /* Courthouse — right-anchored mid-page; fade-top via ::after */
+  .courthouseAnchor {
+    width: var(--mob-courthouse-w);
+    top: var(--mob-courthouse-top);
+    right: 0;
+  }
+  .courthouse {
+    height: var(--mob-courthouse-h);
+    aspect-ratio: auto;
+    object-fit: cover;
+    object-position: top center;
+  }
+  /* Fade overlay covers the events label band so the building doesn't
+     occlude the label text. Upper portion stays solid bg, fading to
+     transparent past the label height. */
+  .courthouseAnchor::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: var(--mob-courthouse-fade-h);
+    background: linear-gradient(
+      to bottom,
+      var(--color-bg) 0%,
+      var(--color-bg) 50%,
+      transparent 100%
+    );
+    pointer-events: none;
+  }
+
+  /* Print button — full-width bar pinned to viewport bottom */
+  .printBtn {
+    position: fixed;
+    inset: auto 0 0 0;
+    width: 100%;
+    height: var(--mob-print-h);
+    padding: 0;
+    justify-content: center;
+    z-index: 10;
+  }
+
+  /* Hide desktop chrome that mobile replaces */
+  .dividerV,
+  .dividerH,
+  .palmIconTR,
+  .palmIconBL,
+  .palmIconBR {
+    display: none;
+  }
+
+  /* leftColumn → contents; h1 + infoBar promote into .page's flex context */
+  .leftColumn {
+    position: static;
+    display: contents;
+    container-type: normal;
+    pointer-events: auto;
+  }
+
+  .h1 {
+    position: static;
+    width: var(--mob-h1-w);
+    margin: var(--mob-h1-mt) auto 0;
+    align-self: center;
+    order: 10;
+  }
+
+  .infoBar {
+    position: static;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--pg-info-gap);                   /* reuse desktop 42px */
+    margin-top: var(--mob-info-mt);
+    align-self: flex-start;
+    order: 20;
+  }
+  .pillar {
+    height: var(--mob-info-pillar-h);
+  }
+  .infoStack {
+    gap: var(--mob-info-stack-gap);
+  }
+
+  /* Mobile divider 1 — between info bar and "Levi & Meghan" */
+  .page::before {
+    content: '';
+    display: block;
+    width: 100%;
+    height: var(--mob-divider-h);
+    background:
+      url('/images/svg/palm-icon.svg') no-repeat center / var(--pg-palm-icon-w) var(--pg-palm-icon-h),
+      linear-gradient(var(--color-palm-leaf), var(--color-palm-leaf)) no-repeat center / var(--mob-divider-rule-w) var(--border-hairline);
+    margin-top: var(--mob-divider1-mt);
+    order: 30;
+  }
+
+  /* rightPanel → contents; couple, body, events, coords promote */
+  .rightPanel {
+    position: static;
+    display: contents;
+    width: auto;
+    height: auto;
+  }
+
+  .couple {
+    position: static;
+    transform: none;
+    left: auto;
+    width: var(--mob-couple-w);
+    margin-top: var(--mob-couple-mt);
+    align-self: flex-start;
+    order: 40;
+  }
+
+  .bodyCopy {
+    position: static;
+    transform: none;
+    left: auto;
+    width: 100%;
+    margin-top: var(--mob-body-mt);
+    font-size: var(--text-lg);
+    align-self: stretch;
+    order: 50;
+  }
+
+  /* Section labels — text-lg with 32px visual line.
+     z-index lifts above the absolute courthouse image even though
+     position is static (flex items honor z-index per spec). */
+  .rpSectionLabel {
+    position: static;
+    transform: none;
+    left: auto;
+    width: 100%;
+    font-size: var(--text-lg);
+    line-height: calc(32 / 18);
+    align-self: stretch;
+    z-index: 1;
+  }
+  .eventsLabel {
+    margin-top: var(--mob-events-label-mt);
+    order: 60;
+  }
+  .coordsLabel {
+    margin-top: var(--mob-coords-label-mt);
+    order: 80;
+  }
+
+  /* Events list — wider columns, text-base, 32px line.
+     z-index lifts above courthouse image (flex item w/ static position). */
+  .events {
+    position: static;
+    transform: none;
+    left: auto;
+    width: 100%;
+    margin-top: var(--mob-events-mt);
+    font-size: var(--text-base);
+    line-height: 2;
+    align-self: stretch;
+    z-index: 1;
+    order: 70;
+  }
+  .eventNum { width: var(--mob-event-num-w); }
+  .eventTime { width: var(--mob-event-time-w); }
+  .eventLabel { width: var(--mob-event-label-w); }
+
+  /* Coordinates — text-base, 32px line.
+     z-index lifts above courthouse image (flex item w/ static position). */
+  .coords {
+    position: static;
+    transform: none;
+    left: auto;
+    width: 100%;
+    margin-top: var(--mob-coords-mt);
+    font-size: var(--text-base);
+    line-height: 2;
+    align-self: stretch;
+    z-index: 1;
+    order: 90;
+  }
+
+  /* Mobile divider 2 — between coords and footer */
+  .page::after {
+    content: '';
+    display: block;
+    width: 100%;
+    height: var(--mob-divider-h);
+    background:
+      url('/images/svg/palm-icon.svg') no-repeat center / var(--pg-palm-icon-w) var(--pg-palm-icon-h),
+      linear-gradient(var(--color-palm-leaf), var(--color-palm-leaf)) no-repeat center / var(--mob-divider-rule-w) var(--border-hairline);
+    margin-top: var(--mob-divider2-mt);
+    order: 100;
+  }
+
+  /* Footer — flex column section */
+  .footer {
+    position: static;
+    height: auto;
+    margin-top: var(--mob-footer-mt);
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    align-self: stretch;
+    order: 110;
+  }
+
+  /* Footer text — vertical stack; reorder note → url → quote */
+  .footerText {
+    position: static;
+    top: auto;
+    right: auto;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: var(--mob-footer-text-gap);
+    padding: 0;
+    width: 100%;
+  }
+  .footerQuote {
+    order: 3;
+    font-size: var(--mob-footer-text-size);
+  }
+  .footerUrl {
+    order: 2;
+    font-size: var(--mob-footer-text-size);
+  }
+  .footerNote {
+    order: 1;
+    font-size: var(--mob-footer-text-size);
+  }
+
+  /* Wax seal — centered in footer flow */
+  .badge {
+    position: static;
+    right: auto;
+    top: auto;
+    margin-top: var(--mob-badge-mt);
+    width: var(--mob-badge-size);
+    height: var(--mob-badge-size);
+    align-self: center;
+  }
+}
+
