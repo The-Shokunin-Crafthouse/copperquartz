@@ -1,0 +1,87 @@
+# ============================================================
+# workspace.manifest.yaml
+# ============================================================
+# Parseable index of canonical paths and roles for this
+# project workspace. Machine-readable source of truth for
+# tooling, bootstraps, and model adapters. Update whenever
+# structure changes. Do not delete keys — mark deprecated
+# entries with `deprecated: true`.
+# ============================================================
+
+schema_version: 1
+studio: "The Shokunin Crafthouse"
+template_version: "1.0.0"
+
+project:
+  name: ""
+  client: ""
+  kind: ""            # brand | product | site | app | campaign
+  stage: "01-brief"   # current stage id
+  lead: ""
+  started: ""         # YYYY-MM-DD
+  target_launch: ""   # YYYY-MM-DD
+  status: "active"    # active | paused | closed
+
+identity:
+  workspace: WORKSPACE.md
+  workflow: WORKFLOW.md
+  decisions: decisions/decisions.md
+
+adapters:
+  claude: adapters/claude/CLAUDE.md
+  generic: adapters/generic/BOOTSTRAP.md
+
+config:
+  brand: _config/brand/
+  voice: _config/voice/
+  design_system:
+    root: _config/design-system/
+    figma_links: _config/design-system/figma-links.md
+    token_map: _config/design-system/token-map.md
+    ui_rules: _config/design-system/ui-rules.md
+
+stages:
+  - id: "01-brief"
+    path: stages/01-brief/
+    brief: stages/01-brief/STAGE.md
+    references: stages/01-brief/references/
+    output: stages/01-brief/output/
+    gate: "concept"
+  - id: "02-design"
+    path: stages/02-design/
+    brief: stages/02-design/STAGE.md
+    figma: stages/02-design/figma/
+    claude_design: stages/02-design/claude-design/
+    output: stages/02-design/output/
+    gate: "design"
+  - id: "03-build"
+    path: stages/03-build/
+    brief: stages/03-build/STAGE.md
+    references: stages/03-build/references/
+    output: stages/03-build/output/
+    gate: "build"
+  - id: "04-review"
+    path: stages/04-review/
+    brief: stages/04-review/STAGE.md
+    references: stages/04-review/references/
+    output: stages/04-review/output/
+    gate: "review"
+  - id: "05-launch"
+    path: stages/05-launch/
+    brief: stages/05-launch/STAGE.md
+    references: stages/05-launch/references/
+    output: stages/05-launch/output/
+    gate: "close"
+
+# Canonical read order for any model or agent entering this
+# workspace. Follow in sequence. Do not skip.
+read_order:
+  - WORKSPACE.md
+  - WORKFLOW.md
+  - workspace.manifest.yaml
+  - stages/<current>/STAGE.md
+  - _config/design-system/ui-rules.md
+  - _config/design-system/token-map.md
+  - _config/voice/
+  - _config/brand/
+  - decisions/decisions.md
