@@ -16,18 +16,16 @@
   --pg-info-bar-h: 105px;
   --pg-footer-h: 156px;
 
-  /* Print button */
-  --pg-print-x: 895px;
+  /* Print button — anchored relative to courthouse-left */
   --pg-print-y: 40px;
   --pg-print-pad-y: 12px;
+  --pg-print-from-court-left: -84px; /* figma: 895 − 979 */
 
-  /* H1 SVG lockup ("Save the Date") — scales with viewport */
-  --pg-h1-x: 292px;
+  /* H1 SVG lockup ("Save the Date") — proportional to left column */
   --pg-h1-y: 318px;
-  --pg-h1-w-figma: 538px;
-  --pg-h1-w-min: 360px;
-  --pg-h1-w-fluid: 35.55vw;
+  --pg-h1-y-narrow: 200px;          /* shifts up when viewport < 1340 */
   --pg-h1-aspect: 538 / 324;
+  --pg-h1-h-narrow-cqw: 26.34cqw;   /* 43.74cqw × 324/538 — H1 rendered height */
 
   /* Watercolor / palm composite — scales with viewport */
   --pg-palm-w-figma: 1192px;
@@ -35,29 +33,26 @@
   --pg-palm-w-fluid: 78.83vw;
   --pg-palm-aspect: 1192 / 727;
 
-  /* Coastal scene — scales with viewport, anchored bottom-left */
+  /* Coastal scene — anchored to top of horizontal rule */
   --pg-coastal-x: 0px;
-  --pg-coastal-y: 716px;
   --pg-coastal-w-figma: 254px;
   --pg-coastal-w-min: 180px;
   --pg-coastal-w-fluid: 16.8vw;
-  --pg-coastal-aspect: 254 / 208;
 
   /* Courthouse illustration — scales with viewport, anchored to vertical divider */
-  --pg-court-right-from-divider: 0px;
   --pg-court-w-figma: 250px;
   --pg-court-w-min: 180px;
   --pg-court-w-fluid: 16.53vw;
   --pg-court-aspect: 250 / 924;
 
-  /* Levi & Meghan SVG lockup — fixed size */
-  --pg-couple-x: 1262px;
+  /* Levi & Meghan SVG lockup — scales with viewport, centered in right panel */
   --pg-couple-y: 87px;
-  --pg-couple-w: 200px;
-  --pg-couple-h: 107px;
+  --pg-couple-w-figma: 200px;
+  --pg-couple-w-min: 140px;
+  --pg-couple-w-fluid: 13.23vw;
+  --pg-couple-aspect: 200 / 107;
 
-  /* Right panel content column */
-  --pg-rp-x: 1265px;
+  /* Right panel content column — centered horizontally */
   --pg-rp-w: 208px;
   --pg-rp-body-y: 220px;
   --pg-rp-events-label-y: 328px;
@@ -65,7 +60,7 @@
   --pg-rp-coords-label-y: 528px;
   --pg-rp-coords-y: 560px;
 
-  /* Info bar (Date / Location / Venue) */
+  /* Info bar (Date / Location / Venue) — page-anchored, left column */
   --pg-info-x: 264px;
   --pg-info-y: 819px;
   --pg-info-gap: 42px;
@@ -74,32 +69,70 @@
   --pg-info-pillar-h: 75px;
   --pg-info-col-w: 196px;
 
-  /* Wax seal */
-  --pg-badge-x: 1300px;
-  --pg-badge-y: 937px;
+  /* Wax seal — anchored to right within footer */
+  --pg-badge-right: 86px;
+  --pg-badge-y: 13px;
   --pg-badge-size: 126px;
 
   /* Palm corner icons */
   --pg-palm-icon-w: 15px;
   --pg-palm-icon-h: 16px;
-  --pg-palm-icon-tr-x: 1473px;
+  --pg-palm-icon-corner-inset: 24px;
   --pg-palm-icon-tr-y: 24px;
   --pg-palm-icon-bl-x: 24px;
-  --pg-palm-icon-bl-y: 1040px;
-  --pg-palm-icon-br-x: 1473px;
-  --pg-palm-icon-br-y: 1040px;
+  --pg-palm-icon-bl-y: 116px;
+  --pg-palm-icon-br-right: 24px;
+  --pg-palm-icon-br-y: 116px;
 
-  /* Footer text */
-  --pg-footer-text-x: 155px;
-  --pg-footer-text-y: 991px;
-  --pg-footer-gap: 89px;
+  /* Footer text — three equal sub-columns spanning the left-column footer */
+  --pg-footer-text-y: 67px;
+  --pg-footer-text-min: var(--text-sm);
+  --pg-footer-text-fluid: 1.587vw;
+  --pg-footer-text-max: var(--text-xl);
 
   position: relative;
-  width: var(--pg-w);
+  width: 100%;
+  max-width: var(--pg-w);
   height: var(--pg-h);
   margin-inline: auto;
   background-color: var(--color-bg);
   overflow: hidden;
+}
+
+/*
+ * Right panel + footer are right-/bottom-anchored containers.
+ * Their children stay glued to those edges as the viewport narrows;
+ * the left illustration column absorbs the width change and clips.
+ */
+.rightPanel {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: var(--pg-divider-v-right);
+  height: 100%;
+}
+
+.footer {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: var(--pg-footer-h);
+}
+
+/*
+ * Left-column container — constrains the H1 SVG so it fills the column
+ * proportionally as the viewport narrows. Uses container query units (cqw)
+ * = 1% of this container's inline size.
+ */
+.leftColumn {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: var(--pg-divider-v-right);
+  height: 100%;
+  container-type: inline-size;
+  pointer-events: none;
 }
 
 /* ---------- Page Background group ---------- */
@@ -119,23 +152,29 @@
 .coastal {
   position: absolute;
   left: var(--pg-coastal-x);
-  top: var(--pg-coastal-y);
+  bottom: var(--pg-footer-h); /* sits flush on top edge of horizontal rule */
   width: clamp(var(--pg-coastal-w-min), var(--pg-coastal-w-fluid), var(--pg-coastal-w-figma));
   height: auto;
-  aspect-ratio: var(--pg-coastal-aspect);
-  object-fit: contain;
   pointer-events: none;
   user-select: none;
 }
 
-.courthouse {
+/*
+ * Courthouse + Print button share an anchor container so they move together
+ * as the viewport narrows.
+ */
+.courthouseAnchor {
   position: absolute;
   top: 0;
   right: var(--pg-divider-v-right);
   width: clamp(var(--pg-court-w-min), var(--pg-court-w-fluid), var(--pg-court-w-figma));
+}
+
+.courthouse {
+  display: block;
+  width: 100%;
   height: auto;
   aspect-ratio: var(--pg-court-aspect);
-  object-fit: contain;
   pointer-events: none;
   user-select: none;
 }
@@ -160,11 +199,11 @@
   background-color: var(--color-palm-leaf);
 }
 
-/* ---------- Print button ---------- */
+/* ---------- Print button (positioned inside .courthouseAnchor) ---------- */
 
 .printBtn {
   position: absolute;
-  left: var(--pg-print-x);
+  left: var(--pg-print-from-court-left);
   top: var(--pg-print-y);
   display: inline-flex;
   align-items: center;
@@ -184,13 +223,13 @@
   outline-offset: var(--border-focus);
 }
 
-/* ---------- H1 SVG lockup ---------- */
+/* ---------- H1 SVG lockup (positioned inside .leftColumn) ---------- */
 
 .h1 {
   position: absolute;
-  left: var(--pg-h1-x);
+  left: 23.74cqw;  /* 292 / 1230 — proportional within left column */
   top: var(--pg-h1-y);
-  width: clamp(var(--pg-h1-w-min), var(--pg-h1-w-fluid), var(--pg-h1-w-figma));
+  width: 43.74cqw; /* 538 / 1230 — same proportion as Figma */
   height: auto;
   aspect-ratio: var(--pg-h1-aspect);
   display: block;
@@ -207,6 +246,7 @@
   display: flex;
   align-items: center;
   gap: var(--pg-info-gap);
+  pointer-events: auto; /* re-enable inside .leftColumn (which sets none) */
 }
 
 .infoCol {
@@ -255,14 +295,16 @@
   white-space: nowrap;
 }
 
-/* ---------- Right panel ---------- */
+/* ---------- Right panel (positioned inside .rightPanel; centered) ---------- */
 
 .couple {
   position: absolute;
-  left: var(--pg-couple-x);
+  left: 50%;
+  transform: translateX(-50%);
   top: var(--pg-couple-y);
-  width: var(--pg-couple-w);
-  height: var(--pg-couple-h);
+  width: clamp(var(--pg-couple-w-min), var(--pg-couple-w-fluid), var(--pg-couple-w-figma));
+  height: auto;
+  aspect-ratio: var(--pg-couple-aspect);
   display: block;
   pointer-events: none;
   user-select: none;
@@ -270,7 +312,8 @@
 
 .bodyCopy {
   position: absolute;
-  left: var(--pg-rp-x);
+  left: 50%;
+  transform: translateX(-50%);
   top: var(--pg-rp-body-y);
   width: var(--pg-rp-w);
   margin: 0;
@@ -283,7 +326,8 @@
 
 .rpSectionLabel {
   position: absolute;
-  left: var(--pg-rp-x);
+  left: 50%;
+  transform: translateX(-50%);
   width: var(--pg-rp-w);
   margin: 0;
   font-family: var(--font-sans);
@@ -303,7 +347,8 @@
 
 .events {
   position: absolute;
-  left: var(--pg-rp-x);
+  left: 50%;
+  transform: translateX(-50%);
   top: var(--pg-rp-events-y);
   width: var(--pg-rp-w);
   display: flex;
@@ -340,7 +385,8 @@
 
 .coords {
   position: absolute;
-  left: var(--pg-rp-x);
+  left: 50%;
+  transform: translateX(-50%);
   top: var(--pg-rp-coords-y);
   width: var(--pg-rp-w);
   display: flex;
@@ -367,20 +413,22 @@
 
 .footerText {
   position: absolute;
-  left: var(--pg-footer-text-x);
+  left: 0;
+  right: var(--pg-divider-v-right); /* spans only the left-column footer area */
   top: var(--pg-footer-text-y);
   display: flex;
   align-items: center;
-  gap: var(--pg-footer-gap);
+  justify-content: space-between;
+  padding-inline: var(--space-8);
   font-family: var(--font-serif);
-  font-size: var(--text-xl);
   line-height: 1;
   color: var(--color-gold-dark);
-  white-space: nowrap;
 }
 
 .footerQuote {
   margin: 0;
+  text-align: center;
+  font-size: clamp(var(--pg-footer-text-min), var(--pg-footer-text-fluid), var(--pg-footer-text-max));
   font-style: italic;
   font-weight: 700;
 }
@@ -388,13 +436,15 @@
 .footerUrl,
 .footerNote {
   margin: 0;
+  text-align: center;
+  font-size: clamp(var(--pg-footer-text-min), var(--pg-footer-text-fluid), var(--pg-footer-text-max));
   font-style: normal;
   font-weight: 600;
 }
 
 .badge {
   position: absolute;
-  left: var(--pg-badge-x);
+  right: var(--pg-badge-right);
   top: var(--pg-badge-y);
   width: var(--pg-badge-size);
   height: var(--pg-badge-size);
@@ -413,7 +463,7 @@
 }
 
 .palmIconTR {
-  left: var(--pg-palm-icon-tr-x);
+  right: var(--pg-palm-icon-corner-inset);
   top: var(--pg-palm-icon-tr-y);
 }
 
@@ -423,6 +473,25 @@
 }
 
 .palmIconBR {
-  left: var(--pg-palm-icon-br-x);
+  right: var(--pg-palm-icon-br-right);
   top: var(--pg-palm-icon-br-y);
 }
+
+/*
+ * Below 1340px: H1 shifts up; info bar reflows to a vertical stack
+ * anchored just below the H1 (its position tracks the H1 via cqw, so they
+ * move together as the viewport narrows). Both share the same left edge.
+ */
+@media (max-width: 1339px) {
+  .h1 {
+    top: var(--pg-h1-y-narrow);
+  }
+  .infoBar {
+    left: 23.74cqw;
+    top: calc(var(--pg-h1-y-narrow) + var(--pg-h1-h-narrow-cqw) + var(--space-10));
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-6);
+  }
+}
+
