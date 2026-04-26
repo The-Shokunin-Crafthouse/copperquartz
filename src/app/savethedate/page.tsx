@@ -1,8 +1,9 @@
+import PrintButton from './PrintButton';
 import styles from './page.module.css';
 
 export default function SaveTheDatePage() {
   return (
-    <main className={styles.page}>
+    <main className={styles.page} data-scroll-root>
       {/* Page Background ------------------------------------------------- */}
       {/* TODO: drop /public/images/palm-illustration@2x.jpg (combined palm + watercolor wash) */}
       <img
@@ -28,14 +29,7 @@ export default function SaveTheDatePage() {
           alt=""
         />
         {/* TODO: drop final /public/downloads/save-the-date.pdf before launch */}
-        <a
-          className={styles.printBtn}
-          href="/downloads/save-the-date.pdf"
-          download
-          aria-label="Download Save the Date PDF"
-        >
-          Print
-        </a>
+        <PrintButton className={styles.printBtn} />
       </div>
 
       {/* Dividers -------------------------------------------------------- */}

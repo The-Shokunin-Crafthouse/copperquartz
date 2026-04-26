@@ -840,3 +840,184 @@
   }
 }
 
+/*
+ * Motion. All entrance, hover, and press behaviors live here. Wrapped
+ * in prefers-reduced-motion: no-preference — the static page above is
+ * the reduced-motion baseline (functional, immediately visible).
+ *
+ * Easing: cubic-bezier(0.16, 1, 0.3, 1) — strong ease-out for entries
+ * and interactive feedback. cubic-bezier(0.4, 0, 0.2, 1) — ease-in-out
+ * for the mobile print bar slide-in (one-shot, scroll-triggered).
+ *
+ * GPU-only: every animation touches transform and/or opacity.
+ *
+ * --anim-tx composes horizontal centering (translateX(-50%)) into the
+ * entrance keyframes for elements that center themselves. Defaults to 0
+ * (uncentered). Mobile resets to 0 since centering is dropped there.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes std-fade-in {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  @keyframes std-fade-rise {
+    from { opacity: 0; transform: translate(var(--anim-tx, 0), 12px); }
+    to   { opacity: 1; transform: translate(var(--anim-tx, 0), 0); }
+  }
+  @keyframes std-fade-rise-sm {
+    from { opacity: 0; transform: translate(var(--anim-tx, 0), 8px); }
+    to   { opacity: 1; transform: translate(var(--anim-tx, 0), 0); }
+  }
+  @keyframes std-fade-zoom {
+    from { opacity: 0; transform: translate(var(--anim-tx, 0), 12px) scale(0.97); }
+    to   { opacity: 1; transform: translate(var(--anim-tx, 0), 0) scale(1); }
+  }
+  @keyframes std-slide-up {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Compose translateX(-50%) into entrance for self-centering elements. */
+  .couple,
+  .bodyCopy,
+  .rpSectionLabel,
+  .events,
+  .coords {
+    --anim-tx: -50%;
+  }
+  /* Inheritance reset: .eventRow runs its own entrance and must not pick up
+     the -50% from its centered parent (.events). */
+  .eventRow {
+    --anim-tx: 0;
+  }
+
+  .palmIllustration,
+  .coastal,
+  .courthouse,
+  .h1,
+  .couple,
+  .bodyCopy,
+  .eventsLabel,
+  .eventRow,
+  .coordsLabel,
+  .coords,
+  .infoBar,
+  .footer {
+    will-change: transform, opacity;
+  }
+
+  /* Stage 1 — background wash + decorative illustrations. */
+  .palmIllustration,
+  .coastal,
+  .courthouse {
+    animation: std-fade-in 800ms cubic-bezier(0.16, 1, 0.3, 1) 0ms both;
+  }
+
+  /* Stage 2 — H1 lockup. */
+  .h1 {
+    animation: std-fade-zoom 600ms cubic-bezier(0.16, 1, 0.3, 1) 200ms both;
+  }
+
+  /* Stage 3 — right panel, top to bottom. */
+  .couple {
+    animation: std-fade-rise 600ms cubic-bezier(0.16, 1, 0.3, 1) 500ms both;
+  }
+  .bodyCopy {
+    animation: std-fade-in 400ms cubic-bezier(0.16, 1, 0.3, 1) 1220ms both;
+  }
+  .eventsLabel {
+    animation: std-fade-in 300ms cubic-bezier(0.16, 1, 0.3, 1) 1620ms both;
+  }
+  .eventRow:nth-child(1) {
+    animation: std-fade-rise-sm 400ms cubic-bezier(0.16, 1, 0.3, 1) 1920ms both;
+  }
+  .eventRow:nth-child(2) {
+    animation: std-fade-rise-sm 400ms cubic-bezier(0.16, 1, 0.3, 1) 2000ms both;
+  }
+  .eventRow:nth-child(3) {
+    animation: std-fade-rise-sm 400ms cubic-bezier(0.16, 1, 0.3, 1) 2080ms both;
+  }
+  .eventRow:nth-child(4) {
+    animation: std-fade-rise-sm 400ms cubic-bezier(0.16, 1, 0.3, 1) 2160ms both;
+  }
+  .coordsLabel,
+  .coords {
+    animation: std-fade-in 400ms cubic-bezier(0.16, 1, 0.3, 1) 2320ms both;
+  }
+
+  /* Stage 4 — info bar slides up after right panel completes. */
+  .infoBar {
+    animation: std-slide-up 500ms cubic-bezier(0.16, 1, 0.3, 1) 2520ms both;
+  }
+
+  /* Stage 5 — footer. */
+  .footer {
+    animation: std-fade-in 400ms cubic-bezier(0.16, 1, 0.3, 1) 3020ms both;
+  }
+
+  /* ---------- Print button ---------- */
+  .printBtn {
+    transition: transform 150ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .printBtn:active {
+    transform: scale(0.97);
+    transition-duration: 100ms;
+  }
+
+  /* ---------- Schedule rows ---------- */
+  .eventLabel,
+  .eventTime {
+    transition: transform 150ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* ---------- Coordinates — baseline reduced opacity, hover restores. ---------- */
+  .coordRow {
+    opacity: 0.78;
+    transition: opacity 120ms ease-out;
+  }
+
+  /* Hover-only affordances — gated to non-touch devices to avoid
+     sticky :hover states after tap on touchscreens. */
+  @media (hover: hover) and (pointer: fine) {
+    .printBtn:hover {
+      transform: scale(1.02);
+    }
+    .eventRow:hover .eventLabel,
+    .eventRow:hover .eventTime {
+      transform: translateX(4px);
+    }
+    .coordRow:hover {
+      opacity: 1;
+    }
+  }
+
+  /* ---------- Mobile (≤768px) — print bar reveals on first scroll. ---------- */
+  @media (max-width: 768px) {
+    /* Mobile drops translateX(-50%) on these elements (transform: none),
+       so neutralize --anim-tx for entrance. */
+    .couple,
+    .bodyCopy,
+    .rpSectionLabel,
+    .events,
+    .coords {
+      --anim-tx: 0;
+    }
+
+    .printBtn {
+      transform: translateY(100%);
+      opacity: 0;
+      transition:
+        transform 600ms cubic-bezier(0.4, 0, 0.2, 1),
+        opacity 600ms cubic-bezier(0.4, 0, 0.2, 1);
+      will-change: transform, opacity;
+    }
+    [data-scroll-root][data-scrolled='true'] .printBtn {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    [data-scroll-root][data-scrolled='true'] .printBtn:active {
+      transform: translateY(0) scale(0.97);
+      transition-duration: 100ms;
+    }
+  }
+}
