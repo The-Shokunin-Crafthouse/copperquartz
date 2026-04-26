@@ -869,12 +869,33 @@
     to   { opacity: 1; transform: translate(var(--anim-tx, 0), 0); }
   }
   @keyframes std-fade-zoom {
-    from { opacity: 0; transform: translate(var(--anim-tx, 0), 12px) scale(0.97); }
+    from { opacity: 0; transform: translate(var(--anim-tx, 0), 12px) scale(0.90); }
     to   { opacity: 1; transform: translate(var(--anim-tx, 0), 0) scale(1); }
+  }
+  /* Right-panel "drop" — start above final position, settle down. */
+  @keyframes std-fade-drop {
+    from { opacity: 0; transform: translate(var(--anim-tx, 0), -12px); }
+    to   { opacity: 1; transform: translate(var(--anim-tx, 0), 0); }
+  }
+  @keyframes std-fade-drop-sm {
+    from { opacity: 0; transform: translate(var(--anim-tx, 0), -8px); }
+    to   { opacity: 1; transform: translate(var(--anim-tx, 0), 0); }
   }
   @keyframes std-slide-up {
     from { opacity: 0; transform: translateY(16px); }
     to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes std-slide-up-sm {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes std-slide-in-l {
+    from { opacity: 0; transform: translateX(-32px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes std-slide-in-r {
+    from { opacity: 0; transform: translateX(32px); }
+    to   { opacity: 1; transform: translateX(0); }
   }
 
   /* Compose translateX(-50%) into entrance for self-centering elements. */
@@ -902,62 +923,96 @@
   .coordsLabel,
   .coords,
   .infoBar,
-  .footer {
+  .footer,
+  .printBtn {
     will-change: transform, opacity;
   }
 
-  /* Stage 1 — background wash + decorative illustrations. */
+  /* All entrances start together (no delay) and play long, gentle ease-out
+     curves. Different durations create natural pacing without choreography. */
+
+  /* Illustrations — slide in slightly from their respective edges.
+     Left two slide left→right; courthouse slides right→left and is
+     clipped at the vertical divider via .courthouseAnchor's clip-path
+     (defined below). */
   .palmIllustration,
-  .coastal,
+  .coastal {
+    animation: std-slide-in-l 1400ms cubic-bezier(0.16, 1, 0.3, 1) 0ms both;
+  }
   .courthouse {
-    animation: std-fade-in 800ms cubic-bezier(0.16, 1, 0.3, 1) 0ms both;
+    animation: std-slide-in-r 1400ms cubic-bezier(0.16, 1, 0.3, 1) 0ms both;
   }
 
-  /* Stage 2 — H1 lockup. */
+  /* Polygon clip on the anchor: right edge clamped at the vertical divider
+     (anchor's right edge), left edge extended to include the print button
+     (which sits at left: var(--pg-print-from-court-left), a negative offset).
+     Static — applied for the lifetime of the page so the courthouse stays
+     contained at all viewport sizes. */
+  .courthouseAnchor {
+    clip-path: polygon(
+      var(--pg-print-from-court-left) 0,
+      100% 0,
+      100% 100%,
+      var(--pg-print-from-court-left) 100%
+    );
+  }
+
+  /* H1 lockup — slow zoom-in from 0.90, longest entrance on the page so
+     the lockup is the last thing to settle. */
   .h1 {
-    animation: std-fade-zoom 600ms cubic-bezier(0.16, 1, 0.3, 1) 200ms both;
+    animation: std-fade-zoom 1800ms cubic-bezier(0.16, 1, 0.3, 1) 0ms both;
   }
 
-  /* Stage 3 — right panel, top to bottom. */
+  /* Right panel — every element drops down from above into place. Slight
+     100ms stagger so they cascade without waiting for each other. */
   .couple {
-    animation: std-fade-rise 600ms cubic-bezier(0.16, 1, 0.3, 1) 500ms both;
+    animation: std-fade-drop 800ms cubic-bezier(0.16, 1, 0.3, 1) 0ms both;
   }
   .bodyCopy {
-    animation: std-fade-in 400ms cubic-bezier(0.16, 1, 0.3, 1) 1220ms both;
+    animation: std-fade-drop 800ms cubic-bezier(0.16, 1, 0.3, 1) 100ms both;
   }
   .eventsLabel {
-    animation: std-fade-in 300ms cubic-bezier(0.16, 1, 0.3, 1) 1620ms both;
+    animation: std-fade-drop-sm 800ms cubic-bezier(0.16, 1, 0.3, 1) 200ms both;
   }
   .eventRow:nth-child(1) {
-    animation: std-fade-rise-sm 400ms cubic-bezier(0.16, 1, 0.3, 1) 1920ms both;
+    animation: std-fade-drop-sm 800ms cubic-bezier(0.16, 1, 0.3, 1) 300ms both;
   }
   .eventRow:nth-child(2) {
-    animation: std-fade-rise-sm 400ms cubic-bezier(0.16, 1, 0.3, 1) 2000ms both;
+    animation: std-fade-drop-sm 800ms cubic-bezier(0.16, 1, 0.3, 1) 400ms both;
   }
   .eventRow:nth-child(3) {
-    animation: std-fade-rise-sm 400ms cubic-bezier(0.16, 1, 0.3, 1) 2080ms both;
+    animation: std-fade-drop-sm 800ms cubic-bezier(0.16, 1, 0.3, 1) 500ms both;
   }
   .eventRow:nth-child(4) {
-    animation: std-fade-rise-sm 400ms cubic-bezier(0.16, 1, 0.3, 1) 2160ms both;
+    animation: std-fade-drop-sm 800ms cubic-bezier(0.16, 1, 0.3, 1) 600ms both;
   }
-  .coordsLabel,
+  .coordsLabel {
+    animation: std-fade-drop-sm 800ms cubic-bezier(0.16, 1, 0.3, 1) 700ms both;
+  }
   .coords {
-    animation: std-fade-in 400ms cubic-bezier(0.16, 1, 0.3, 1) 2320ms both;
+    animation: std-fade-drop-sm 800ms cubic-bezier(0.16, 1, 0.3, 1) 800ms both;
   }
 
-  /* Stage 4 — info bar slides up after right panel completes. */
+  /* Info bar — slide up 16px. */
   .infoBar {
-    animation: std-slide-up 500ms cubic-bezier(0.16, 1, 0.3, 1) 2520ms both;
+    animation: std-slide-up 1000ms cubic-bezier(0.16, 1, 0.3, 1) 0ms both;
   }
 
-  /* Stage 5 — footer. */
+  /* Footer — slide up 10px (matches info copy gesture). */
   .footer {
-    animation: std-fade-in 400ms cubic-bezier(0.16, 1, 0.3, 1) 3020ms both;
+    animation: std-slide-up-sm 1000ms cubic-bezier(0.16, 1, 0.3, 1) 0ms both;
   }
 
   /* ---------- Print button ---------- */
   .printBtn {
+    /* Explicit center origin so hover/press scaling grows/shrinks from
+       the middle, never pivoting from a corner. */
+    transform-origin: center;
     transition: transform 150ms cubic-bezier(0.16, 1, 0.3, 1);
+    /* Backwards fill: holds the start keyframe before play, then cleanly
+       releases transform back to the cascade so :hover and :active scaling
+       can take over without competing with animation-applied values. */
+    animation: std-fade-drop 900ms cubic-bezier(0.16, 1, 0.3, 1) 0ms backwards;
   }
   .printBtn:active {
     transform: scale(0.97);
@@ -1003,7 +1058,25 @@
       --anim-tx: 0;
     }
 
+    /* Mobile illustrations live in different layout positions; horizontal
+       slides would read wrong against bleed/anchored backgrounds. Fade only. */
+    .palmIllustration,
+    .coastal,
+    .courthouse {
+      animation-name: std-fade-in;
+    }
+
+    /* Drop the desktop clip — the fixed print bar is a descendant of
+       .courthouseAnchor on mobile; clip-path on an ancestor would clip
+       fixed children too. */
+    .courthouseAnchor {
+      clip-path: none;
+    }
+
     .printBtn {
+      /* Mobile baseline owns the print bar — desktop slide-down entrance
+         is suppressed so it doesn't fight the scroll-triggered slide-up. */
+      animation: none;
       transform: translateY(100%);
       opacity: 0;
       transition:
