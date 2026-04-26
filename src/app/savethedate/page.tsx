@@ -12,11 +12,11 @@ export default function SaveTheDatePage() {
         alt=""
       />
 
-      {/* Asset: /public/images/coastal-scene@2x.jpg
+      {/* Asset: /public/images/coastal-scene@2x.png (transparent PNG)
           (figma layer is "coastal-illustration@2x"; using filename per drop on disk + original spec). */}
       <img
         className={styles.coastal}
-        src="/images/coastal-scene@2x.jpg"
+        src="/images/coastal-scene@2x.png"
         alt=""
       />
 
