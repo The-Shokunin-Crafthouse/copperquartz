@@ -1,6 +1,7 @@
 import '../styles/globals.css';
 
 export const metadata = {
+  metadataBase: new URL('https://copperquartz.family'),
   title: 'Copper & Quartz',
   description: 'Coming soon.',
   openGraph: {
