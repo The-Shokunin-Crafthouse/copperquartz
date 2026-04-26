@@ -418,8 +418,12 @@
   top: var(--pg-footer-text-y);
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding-inline: var(--space-8);
+  justify-content: center;
+  /* Tightened from space-between → centered with explicit gap.
+     Figma auto-layout sets 80px max at the 1512px canvas; clamp scales it
+     down to a 16px floor as the viewport narrows (5.29vw = 80/1512). */
+  gap: clamp(var(--space-2), 5.29vw, var(--space-10));
+  padding-inline: var(--space-2);
   font-family: var(--font-serif);
   line-height: 1;
   color: var(--color-gold-dark);
@@ -534,7 +538,7 @@
     --mob-footer-text-size: var(--text-xl);    /* 24px (snap 23→24, ref D1) */
     --mob-badge-mt: var(--space-5);            /* 40px */
     --mob-badge-size: 122px;
-    --mob-print-h: 54px;
+    --mob-print-h: 74px;
     --mob-courthouse-w: 100px;
     --mob-courthouse-h: 371px;
     --mob-courthouse-top: 1036px;
