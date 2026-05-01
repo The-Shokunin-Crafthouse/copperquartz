@@ -23,6 +23,27 @@
   background-color: transparent;
 }
 
+/* ---------- Tablet (769–1023): center MENU.
+     The palm bleed expands to its Save the Date scale at >768px and
+     overlaps the left edge of the bar. Centering the MENU button keeps
+     it readable against bg until the inline nav takes over at ≥1024. */
+
+@media (min-width: 769px) and (max-width: 1023px) {
+  .navBar {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+  }
+  .menuToggle {
+    grid-column: 2;
+    justify-self: center;
+  }
+  .rsvp {
+    grid-column: 3;
+    justify-self: end;
+  }
+}
+
 /* ---------- MENU toggle (mobile/tablet only) ---------- */
 
 .menuToggle {
@@ -181,9 +202,12 @@
     from { opacity: 0; transform: translateY(-8px); }
     to   { opacity: 1; transform: translateY(0); }
   }
+  @keyframes nav-fade-drop {
+    from { opacity: 0; transform: translateY(-12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
 
-  /* Only animate links at desktop (in flow). The mobile overlay is
-     hidden until tapped — no entrance gesture. */
+  /* Desktop: links live in flow at top of page — animate on page load. */
   @media (min-width: 1024px) {
     .link {
       will-change: transform, opacity;
@@ -194,6 +218,23 @@
     .link:nth-child(3) { animation-delay: 160ms; }
     .link:nth-child(4) { animation-delay: 240ms; }
     .link:nth-child(5) { animation-delay: 320ms; }
+  }
+
+  /* Mobile/tablet overlay: links cascade in when MENU is tapped.
+     Mirrors the Save the Date right-panel std-fade-drop stagger
+     (100ms steps, 800ms duration, cubic-bezier 0.16 1 0.3 1). The
+     selectors are scoped to [data-open] so the animation only fires
+     when the drawer is shown — pure CSS, no JS triggers needed. */
+  @media (max-width: 1023px) {
+    .navBar[data-open] .link {
+      will-change: transform, opacity;
+      animation: nav-fade-drop 800ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+    .navBar[data-open] .link:nth-child(1) { animation-delay: 0ms; }
+    .navBar[data-open] .link:nth-child(2) { animation-delay: 100ms; }
+    .navBar[data-open] .link:nth-child(3) { animation-delay: 200ms; }
+    .navBar[data-open] .link:nth-child(4) { animation-delay: 300ms; }
+    .navBar[data-open] .link:nth-child(5) { animation-delay: 400ms; }
   }
 
   .menuToggle,
