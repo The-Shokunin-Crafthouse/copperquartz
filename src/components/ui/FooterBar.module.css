@@ -13,7 +13,6 @@
   --footer-h-mobile: 96px;
   --footer-h-desktop: 163px;
   --footer-h: var(--footer-h-mobile);
-  --footer-divider-y: 33px;
   --footer-side-pad: var(--space-3);
   --footer-badge-size: 122px;
   --footer-badge-right: 119px;
@@ -67,9 +66,12 @@
     --footer-h: var(--footer-h-desktop);
   }
 
-  .divider {
-    top: var(--footer-divider-y);
-  }
+  /* Hairline stays at top: 0 across all breakpoints so the backdrop's
+     coastal + courthouse bleeds (anchored bottom: var(--bd-footer-h))
+     sit flush with the visible footer line at every viewport. The
+     33px Figma offset between the footer frame top and the hairline
+     was a designer-canvas artifact — irrelevant once the footer is a
+     fixed rectangle painted in --color-bg. */
 
   .columns {
     top: 70px;
