@@ -81,10 +81,15 @@
     overflow: visible;
   }
 
+  /* Wax seal — Figma anchors it 3px above the footer frame top
+     (asset y=914, footer y=917), placing ~36px of the medallion
+     above the visible hairline. Snap to --space-4 (32px) above so
+     the seal floats over body content scrolling beneath it. The
+     fixed footer's z-index 20 keeps the seal above .main content. */
   .badge {
     display: block;
     position: absolute;
-    top: 0;
+    top: calc(-1 * var(--space-4));
     right: var(--footer-badge-right);
     width: var(--footer-badge-size);
     height: var(--footer-badge-size);
