@@ -25,7 +25,18 @@ export default function FooterBar({ weddingDate }: FooterBarProps) {
         />
         <InfoItem label="IX.XXIX.MMXXVI" value="Sept. 29th, 2026" />
         <InfoItem label="LOCATION" value="Santa Barbara, CA" fixedWidth={false} />
-        <InfoItem label="VENUE" value="Sunken Garden" />
+        <InfoItem
+          label="VENUE"
+          value={
+            <a
+              href="https://www.google.com/maps/search/?api=1&query=1100+Anacapa+St+Santa+Barbara+CA+93101"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Sunken Garden
+            </a>
+          }
+        />
       </div>
 
       <img

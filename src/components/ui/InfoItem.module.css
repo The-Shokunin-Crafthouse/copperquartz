@@ -49,6 +49,21 @@
   white-space: nowrap;
 }
 
+/* Inline links inside the value (e.g. Sunken Garden → Google Maps).
+   No visual styling — only the cursor signals affordance. Focus ring
+   stays for keyboard users. */
+.value a {
+  color: inherit;
+  font: inherit;
+  text-decoration: none;
+}
+
+.value a:focus-visible {
+  outline: var(--border-focus) solid var(--color-gold);
+  outline-offset: var(--border-focus);
+  border-radius: var(--radius-sm);
+}
+
 /* ---------- Desktop (≥1280px) — Figma cadence ---------- */
 @media (min-width: 1280px) {
   .pillar {

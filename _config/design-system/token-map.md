@@ -16,6 +16,7 @@ Nominal palette. No raw hex anywhere except here and `src/styles/tokens.css`.
 | `--color-terracotta` | `#C86A4A` | Accent — secondary highlight |
 | `--color-coral-rose` | `#F27D72` | Accent — emphasis, callouts |
 | `--color-palm-leaf` | `#4F7A4A` | Accent — botanical motif |
+| `--color-palm-leaf-deep` | `#468C3E` | Hover/active state for palm-leaf-filled controls (RSVP pill) |
 | `--color-gold` | `#C2A98B` | Hairline borders, focus ring |
 | `--color-gold-dark` | `#877660` | Footer dividers, pressed state |
 | `--color-brown` | `#5D4931` | Body copy, primary border, footer fill |

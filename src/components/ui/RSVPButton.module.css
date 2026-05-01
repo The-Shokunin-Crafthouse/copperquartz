@@ -24,7 +24,7 @@
 }
 
 .button:active {
-  background-color: var(--color-gold-dark);
+  background-color: var(--color-palm-leaf-deep);
   transform: scale(0.97);
   transition-duration: 100ms;
 }
@@ -42,7 +42,7 @@
 
 @media (hover: hover) and (pointer: fine) {
   .button:hover {
-    background-color: var(--color-gold-dark);
+    background-color: var(--color-palm-leaf-deep);
     transform: scale(1.02);
   }
 }
