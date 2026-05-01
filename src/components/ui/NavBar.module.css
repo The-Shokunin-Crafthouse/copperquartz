@@ -1,22 +1,25 @@
+/*
+ * Site navigation. Desktop (≥768px): center-aligned link row at top:51,
+ * RSVP pill at top:40 right (Figma frames 22:1047 + 22:1054). Mobile
+ * (<768px): hamburger + RSVP pill on a single bar; links collapse into a
+ * full-width drawer below the bar.
+ */
 .navBar {
+  --nav-side-pad-mobile: var(--space-3);
+  --nav-side-pad-desktop: var(--space-5);
+  --nav-top-pad-desktop: var(--space-5);
+
+  position: relative;
+  z-index: 5;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding-block: var(--space-3);
-  padding-inline: var(--space-4);
-  background-color: var(--color-bg);
-  position: relative;
+  padding-inline: var(--nav-side-pad-mobile);
+  background-color: transparent;
 }
 
-.left {
-  display: flex;
-  align-items: center;
-}
-
-.right {
-  display: flex;
-  align-items: center;
-}
+/* ---------- Hamburger (mobile only) ---------- */
 
 .hamburger {
   display: flex;
@@ -34,6 +37,7 @@
 .hamburger:focus-visible {
   outline: var(--border-focus) solid var(--color-gold);
   outline-offset: var(--border-focus);
+  border-radius: var(--radius-sm);
 }
 
 .hamburgerLine {
@@ -41,36 +45,60 @@
   width: 100%;
   height: var(--border-hairline);
   background-color: currentColor;
+  transition: transform 220ms ease-out, opacity 220ms ease-out;
 }
+
+.navBar[data-open] .hamburgerLine:nth-child(1) {
+  transform: translateY(11px) rotate(45deg);
+}
+.navBar[data-open] .hamburgerLine:nth-child(2) {
+  opacity: 0;
+}
+.navBar[data-open] .hamburgerLine:nth-child(3) {
+  transform: translateY(-11px) rotate(-45deg);
+}
+
+/* ---------- Links (mobile drawer / desktop inline) ---------- */
 
 .links {
   display: none;
-}
-
-.linksOpen {
-  display: flex;
   position: absolute;
   top: 100%;
   left: 0;
   right: 0;
   flex-direction: column;
-  gap: var(--space-2);
-  padding: var(--space-3) var(--space-4);
+  gap: var(--space-3);
+  padding: var(--space-4) var(--nav-side-pad-mobile) var(--space-5);
   background-color: var(--color-bg);
   border-block-end: var(--border-hairline) solid var(--color-gold);
-  z-index: 1;
+  z-index: 10;
+}
+
+.navBar[data-open] .links {
+  display: flex;
 }
 
 .link {
   font-family: var(--font-sans);
-  font-size: var(--text-base);
-  color: var(--color-brown);
+  font-weight: 600;
+  font-size: var(--text-lg);
+  color: var(--color-palm-leaf);
   text-decoration: none;
+  white-space: nowrap;
+  min-height: var(--height-tap);
+  display: inline-flex;
+  align-items: center;
   transition: color 220ms ease-out;
 }
 
-.link:hover {
-  color: var(--color-teal);
+@media (hover: hover) and (pointer: fine) {
+  .link:hover {
+    color: var(--color-teal);
+  }
+}
+
+.link:active {
+  color: var(--color-terracotta);
 }
 
 .link:focus-visible {
@@ -79,35 +107,87 @@
   border-radius: var(--radius-sm);
 }
 
+.rsvp {
+  display: flex;
+  align-items: center;
+}
+
+/* ---------- Tablet (≥768px) — inline nav, tighter cadence ---------- */
+
 @media (min-width: 768px) {
   .navBar {
     display: grid;
     grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    padding-block: var(--space-4);
+    padding-inline: var(--space-3);
   }
 
   .hamburger {
     display: none;
   }
 
-  .links,
-  .linksOpen {
+  .links {
     display: flex;
     position: static;
     flex-direction: row;
-    gap: var(--space-4);
+    gap: var(--space-3);
     justify-content: center;
     padding: 0;
     background: transparent;
     border: 0;
   }
 
-  .right {
+  .link {
+    min-height: 0;
+    font-size: var(--text-base);
+  }
+
+  .rsvp {
     justify-self: end;
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
+/* ---------- Desktop (≥1024px) — Figma cadence: 41px gap, 18px links ---------- */
+
+@media (min-width: 1024px) {
+  .navBar {
+    padding-block: var(--nav-top-pad-desktop);
+    padding-inline: var(--nav-side-pad-desktop);
+  }
+
+  .links {
+    gap: var(--space-5);
+  }
+
   .link {
+    font-size: var(--text-lg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .link,
+  .hamburgerLine {
     transition: none;
+  }
+}
+
+/* ---------- Entrance: nav bar drops in; links cascade ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes nav-fade-drop-sm {
+    from { opacity: 0; transform: translateY(-8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .link {
+    will-change: transform, opacity;
+    animation: nav-fade-drop-sm 800ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  .link:nth-child(1) { animation-delay: 0ms; }
+  .link:nth-child(2) { animation-delay: 80ms; }
+  .link:nth-child(3) { animation-delay: 160ms; }
+  .link:nth-child(4) { animation-delay: 240ms; }
+  .link:nth-child(5) { animation-delay: 320ms; }
+  .rsvp {
+    animation: nav-fade-drop-sm 900ms cubic-bezier(0.16, 1, 0.3, 1) 0ms backwards;
   }
 }

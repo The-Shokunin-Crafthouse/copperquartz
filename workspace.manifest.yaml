@@ -16,7 +16,7 @@ project:
   name: "Copper & Quartz"
   client: ""
   kind: "site"        # brand | product | site | app | campaign
-  stage: "02-design"  # current stage id
+  stage: "03-build"   # current stage id
   lead: ""
   started: "2026-04-24"
   target_launch: ""   # YYYY-MM-DD

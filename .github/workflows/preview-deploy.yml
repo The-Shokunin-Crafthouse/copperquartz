@@ -1,0 +1,112 @@
+name: Preview Deploy
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, closed]
+
+concurrency:
+  group: preview-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  # Build the PR's branch with NEXT_PUBLIC_BASE_PATH=/_previews/<pr#> and
+  # rsync the static export into ~/.../public_html/_previews/<pr#>/. The
+  # production-only .htaccess (root → /savethedate redirect) is stripped
+  # so it does not fire on the preview subpath.
+  deploy:
+    if: github.event.action != 'closed'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      PR_NUMBER: ${{ github.event.pull_request.number }}
+      BASE_PATH: /_previews/${{ github.event.pull_request.number }}
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build (Next.js static export, prefixed)
+        env:
+          NEXT_PUBLIC_BASE_PATH: ${{ env.BASE_PATH }}
+        run: npm run build
+
+      - name: Strip production-only .htaccess from preview output
+        run: rm -f out/.htaccess
+
+      - name: Configure SSH
+        env:
+          SSH_KEY: ${{ secrets.HOSTINGER_SSH_KEY }}
+          SSH_HOST: ${{ secrets.HOSTINGER_HOST }}
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/id_deploy
+          chmod 600 ~/.ssh/id_deploy
+          ssh-keyscan -p 65002 -H "$SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null
+
+      - name: Deploy preview via rsync
+        env:
+          SSH_USER: ${{ secrets.HOSTINGER_USER }}
+          SSH_HOST: ${{ secrets.HOSTINGER_HOST }}
+        run: |
+          ssh -p 65002 -i ~/.ssh/id_deploy -o StrictHostKeyChecking=yes \
+            "$SSH_USER@$SSH_HOST" \
+            "mkdir -p ~/domains/copperquartz.family/public_html/_previews/${PR_NUMBER}/"
+          rsync -avz --delete \
+            -e "ssh -p 65002 -i ~/.ssh/id_deploy -o StrictHostKeyChecking=yes" \
+            ./out/ \
+            "$SSH_USER@$SSH_HOST:~/domains/copperquartz.family/public_html/_previews/${PR_NUMBER}/"
+
+      - name: Comment preview URL on PR
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: preview-url
+          message: |
+            **Preview deployed →** https://copperquartz.family/_previews/${{ github.event.pull_request.number }}/
+
+            Built from `${{ github.event.pull_request.head.sha }}` with `NEXT_PUBLIC_BASE_PATH=/_previews/${{ github.event.pull_request.number }}`.
+
+  # On PR close, remove the preview directory so old previews don't accumulate.
+  teardown:
+    if: github.event.action == 'closed'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      PR_NUMBER: ${{ github.event.pull_request.number }}
+
+    steps:
+      - name: Configure SSH
+        env:
+          SSH_KEY: ${{ secrets.HOSTINGER_SSH_KEY }}
+          SSH_HOST: ${{ secrets.HOSTINGER_HOST }}
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/id_deploy
+          chmod 600 ~/.ssh/id_deploy
+          ssh-keyscan -p 65002 -H "$SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null
+
+      - name: Remove preview directory
+        env:
+          SSH_USER: ${{ secrets.HOSTINGER_USER }}
+          SSH_HOST: ${{ secrets.HOSTINGER_HOST }}
+        run: |
+          ssh -p 65002 -i ~/.ssh/id_deploy -o StrictHostKeyChecking=yes \
+            "$SSH_USER@$SSH_HOST" \
+            "rm -rf ~/domains/copperquartz.family/public_html/_previews/${PR_NUMBER}/"
+
+      - name: Update sticky comment
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: preview-url
+          message: |
+            **Preview removed** (PR closed). The `_previews/${{ github.event.pull_request.number }}/` directory has been deleted from the host.
