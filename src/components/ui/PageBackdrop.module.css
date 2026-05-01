@@ -1,25 +1,26 @@
 /*
- * Backdrop layer geometry. Numbers reflect the Figma 1512×1080 canvas;
- * widths use clamp() with vw fluids so the bleed scales below 1512.
+ * Fixed backdrop. Three layered illustrations from Save the Date,
+ * sized to the Figma 1512 canvas with vw fluids for sub-1512 widths.
+ * Anchors:
+ *   palm      → top-left, full bleed
+ *   courthouse → bottom-right, base sits on the footer's top hairline
+ *   coastal   → bottom-left, base sits on the footer's top hairline
  */
 .backdrop {
-  --bd-page-w: 1512px;
-  --bd-palm-w-figma: 538px;
-  --bd-palm-w-min: 320px;
-  --bd-palm-w-fluid: 35.58vw;       /* 538 / 1512 */
-  --bd-palm-aspect: 538 / 693;
+  --bd-palm-w-figma: 1192px;          /* matches Save the Date --pg-palm-w-figma */
+  --bd-palm-w-min: 720px;
+  --bd-palm-w-fluid: 78.83vw;
+  --bd-palm-aspect: 1192 / 727;
   --bd-court-w-figma: 250px;
   --bd-court-w-min: 160px;
-  --bd-court-w-fluid: 16.53vw;      /* 250 / 1512 */
+  --bd-court-w-fluid: 16.53vw;
   --bd-court-aspect: 250 / 924;
   --bd-coastal-w-figma: 254px;
   --bd-coastal-w-min: 160px;
   --bd-coastal-w-fluid: 16.8vw;
-  --bd-wash-w-fluid: 78.83vw;
-  --bd-wash-w-figma: 1192px;
-  --bd-wash-w-min: 720px;
-  --bd-wash-aspect: 1192 / 1036;
-  --bd-footer-h: 163px;             /* matches FooterBar.module.css */
+  --bd-footer-h-mobile: 96px;
+  --bd-footer-h-desktop: 163px;
+  --bd-footer-h: var(--bd-footer-h-mobile);
 
   position: fixed;
   inset: 0;
@@ -29,20 +30,13 @@
   background-color: var(--color-bg);
 }
 
-/* ---------- Layer 1: full-page watercolor wash ---------- */
-.wash {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: clamp(var(--bd-wash-w-min), var(--bd-wash-w-fluid), var(--bd-wash-w-figma));
-  height: auto;
-  aspect-ratio: var(--bd-wash-aspect);
-  opacity: 0.6;
-  object-fit: cover;
-  user-select: none;
+@media (min-width: 1280px) {
+  .backdrop {
+    --bd-footer-h: var(--bd-footer-h-desktop);
+  }
 }
 
-/* ---------- Layer 2: palm bleed top-left ---------- */
+/* Palm + watercolor wash combined (Save the Date asset) — top-left bleed. */
 .palm {
   position: absolute;
   top: 0;
@@ -55,10 +49,10 @@
   user-select: none;
 }
 
-/* ---------- Layer 3: courthouse bleed right ---------- */
+/* Courthouse — bottom-right, building base anchored to footer-top hairline. */
 .courthouse {
   position: absolute;
-  top: 0;
+  bottom: var(--bd-footer-h);
   right: 0;
   width: clamp(var(--bd-court-w-min), var(--bd-court-w-fluid), var(--bd-court-w-figma));
   height: auto;
@@ -67,7 +61,7 @@
   user-select: none;
 }
 
-/* ---------- Layer 4: coastal water bleed bottom-left ---------- */
+/* Coastal — bottom-left, water sits on footer-top hairline. */
 .coastal {
   position: absolute;
   left: 0;
@@ -77,69 +71,22 @@
   user-select: none;
 }
 
-/* ---------- Layer 5: feathering gradients (fade wash into bg) ---------- */
-.fade {
-  position: absolute;
-  display: block;
-  pointer-events: none;
-}
-.fadeTop {
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 118px;
-  background: linear-gradient(to bottom, var(--color-bg), rgb(from var(--color-bg) r g b / 0));
-}
-.fadeBottom {
-  bottom: var(--bd-footer-h);
-  left: 0;
-  right: 0;
-  height: 118px;
-  background: linear-gradient(to top, var(--color-bg), rgb(from var(--color-bg) r g b / 0));
-}
-.fadeLeft {
-  top: 0;
-  bottom: 0;
-  left: 0;
-  width: 118px;
-  background: linear-gradient(to right, var(--color-bg), rgb(from var(--color-bg) r g b / 0));
-}
-.fadeRight {
-  top: 0;
-  bottom: 0;
-  right: 0;
-  width: 118px;
-  background: linear-gradient(to left, var(--color-bg), rgb(from var(--color-bg) r g b / 0));
-}
-
-/* ---------- Mobile reflow (≤768px): pull bleeds back, drop courthouse ---------- */
+/* ---------- Mobile (≤768px) — pull palm bleed back, narrow coastal/courthouse ---------- */
 @media (max-width: 768px) {
   .palm {
     width: 360px;
     top: -40px;
     left: -32px;
   }
-  .courthouse {
-    /* Hidden on mobile — at 360px wide the right bleed reads as clutter
-       under the hero. Save the Date precedent (2026-04-26) anchors it
-       lower in the page when needed. */
-    display: none;
-  }
   .coastal {
     width: 200px;
-    bottom: var(--bd-footer-h);
   }
-  .wash {
-    width: 130vw;
-    opacity: 0.45;
-  }
-  .fadeLeft,
-  .fadeRight {
-    width: 56px;
+  .courthouse {
+    width: 100px;
   }
 }
 
-/* ---------- Entrance motion — mirrors Save the Date specs ---------- */
+/* ---------- Entrance: mirrors Save the Date specs ---------- */
 @media (prefers-reduced-motion: no-preference) {
   @keyframes bd-slide-l {
     from { opacity: 0; transform: translateX(-32px); }
@@ -149,10 +96,6 @@
     from { opacity: 0; transform: translateX(32px); }
     to   { opacity: 1; transform: translateX(0); }
   }
-  @keyframes bd-fade-in {
-    from { opacity: 0; }
-    to   { opacity: 0.6; }
-  }
   .palm,
   .coastal {
     animation: bd-slide-l 1400ms cubic-bezier(0.16, 1, 0.3, 1) 0ms both;
@@ -161,9 +104,5 @@
   .courthouse {
     animation: bd-slide-r 1400ms cubic-bezier(0.16, 1, 0.3, 1) 0ms both;
     will-change: transform, opacity;
-  }
-  .wash {
-    animation: bd-fade-in 1800ms cubic-bezier(0.16, 1, 0.3, 1) 0ms both;
-    will-change: opacity;
   }
 }

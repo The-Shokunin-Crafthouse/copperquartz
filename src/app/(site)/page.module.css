@@ -5,7 +5,7 @@
  *   - body line: top 542, gold-dark, Commissioner 34→32, 636 wide
  */
 .home {
-  --home-body-top: var(--space-6);
+  --home-body-top: var(--space-2);    /* 16px gap below hero lockup */
   --home-body-w: 636px;
   --home-hero-w-figma: 769px;       /* Figma text bound for the lockup */
   --home-hero-w-fluid: 50.86vw;     /* 769 / 1512 */

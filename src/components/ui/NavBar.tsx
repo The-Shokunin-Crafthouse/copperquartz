@@ -14,29 +14,31 @@ type NavBarProps = {
 export default function NavBar({ links, rsvpHref }: NavBarProps) {
   const [open, setOpen] = useState(false);
 
-  /* Close drawer on Escape — keyboard parity with the menu button. */
+  /* Close drawer on Escape; lock body scroll while open. */
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') setOpen(false);
     };
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
     window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      document.body.style.overflow = prevOverflow;
+    };
   }, [open]);
 
   return (
     <header className={styles.navBar} data-open={open || undefined}>
       <button
         type="button"
-        className={styles.hamburger}
+        className={styles.menuToggle}
         aria-expanded={open}
         aria-controls="site-nav-links"
-        aria-label={open ? 'Close menu' : 'Open menu'}
         onClick={() => setOpen((v) => !v)}
       >
-        <span className={styles.hamburgerLine} aria-hidden />
-        <span className={styles.hamburgerLine} aria-hidden />
-        <span className={styles.hamburgerLine} aria-hidden />
+        {open ? 'CLOSE' : 'MENU'}
       </button>
 
       <nav

@@ -1,134 +1,107 @@
 /*
- * Site footer. Desktop: 163px tall, hairline divider at top, four columns
- * centered, wax seal anchored right, palm icons in bottom corners.
- * Mobile: stacks into a single column with hairline rows between items.
- * Figma frame 22:1011.
+ * Site footer — fixed to the viewport bottom so it never scrolls with
+ * page content. Top hairline doubles as the anchor line for the
+ * backdrop's coastal water and courthouse bleeds (PageBackdrop).
+ *
+ *   Mobile / tablet (<1280): 96px tall. Hairline + four compact info
+ *     columns centered horizontally. Badge and palm corner icons are
+ *     omitted — the canvas is too narrow to fit them without crowding.
+ *   Desktop (≥1280): 163px tall, matches Figma frame 22:1011 — wax
+ *     seal anchored right, palm corner icons in the bottom corners.
  */
 .footer {
+  --footer-h-mobile: 96px;
   --footer-h-desktop: 163px;
-  --footer-divider-y: 33px;             /* divider sits 33px down from footer top */
-  --footer-side-pad: var(--space-5);
+  --footer-h: var(--footer-h-mobile);
+  --footer-divider-y: 33px;
+  --footer-side-pad: var(--space-3);
   --footer-badge-size: 122px;
   --footer-badge-right: 119px;
   --footer-palm-icon-w: 15px;
   --footer-palm-icon-h: 16px;
-  --footer-palm-icon-inset-x: var(--space-3);
-  --footer-palm-icon-inset-y: 40px;
 
-  position: relative;
-  width: 100%;
+  position: fixed;
+  inset: auto 0 0 0;
+  z-index: 20;                 /* above main + nav (which scroll), below open menu drawer (z 100) */
+  height: var(--footer-h);
   background-color: var(--color-bg);
-  padding-block: var(--space-6);
-  padding-inline: var(--footer-side-pad);
-  padding-block-end: 100px;            /* room for absolutely-positioned palm icons on mobile */
   isolation: isolate;
 }
 
+/* Top hairline — always present so the backdrop bleeds anchor to it. */
 .divider {
-  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--border-hairline);
+  background-color: var(--color-palm-leaf);
 }
 
 .columns {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  gap: 0;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-/* Mobile column stack: hairline between items in lieu of pillars. */
-.columns > :global(.infoItem),
-.columns > * {
-  padding-block: var(--space-3);
-  border-block-end: var(--border-hairline) solid var(--color-gold);
-  border-inline-start: 0 !important;
-}
-
-.columns > :last-child {
-  border-block-end: 0;
-}
-
-/* Mobile: badge below the stack, centered. Palm icons sit at bottom corners. */
-.badge {
-  display: block;
-  width: var(--footer-badge-size);
-  height: var(--footer-badge-size);
-  margin: var(--space-5) auto 0;
-  pointer-events: none;
-  user-select: none;
-}
-
-.palmIcon {
   position: absolute;
-  width: var(--footer-palm-icon-w);
-  height: var(--footer-palm-icon-h);
-  pointer-events: none;
-  user-select: none;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--space-3);
+  white-space: nowrap;
+  max-width: calc(100vw - var(--space-3) * 2);
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;       /* hide scrollbar; gesture/swipe still works */
+}
+.columns::-webkit-scrollbar { display: none; }
+
+.badge,
+.palmIcon {
+  display: none;               /* mobile/tablet: omit decorative chrome */
 }
 
-.palmIconBL {
-  left: var(--footer-palm-icon-inset-x);
-  bottom: var(--footer-palm-icon-inset-y);
-}
-
-.palmIconBR {
-  right: var(--footer-palm-icon-inset-x);
-  bottom: var(--footer-palm-icon-inset-y);
-}
-
-/* ---------- Desktop (≥1280px): horizontal columns + anchored badge.
-     Below 1280 the four 213-wide columns plus the right-anchored badge
-     cannot fit without overlap — keep the mobile column stack instead. */
+/* ---------- Desktop (≥1280px): Figma cadence ---------- */
 
 @media (min-width: 1280px) {
   .footer {
-    height: var(--footer-h-desktop);
-    padding-block: 0;
-    padding-inline: 0;
+    --footer-h: var(--footer-h-desktop);
   }
 
   .divider {
-    display: block;
-    position: absolute;
-    left: 0;
-    right: 0;
     top: var(--footer-divider-y);
-    height: var(--border-hairline);
-    background-color: var(--color-palm-leaf);
   }
 
   .columns {
-    position: absolute;
     top: 70px;
-    left: 50%;
     transform: translateX(-50%);
-    flex-direction: row;
-    align-items: center;
     gap: var(--space-6);
-  }
-
-  .columns > * {
-    padding-block: 0;
-    border-block-end: 0;
+    max-width: none;
+    overflow: visible;
   }
 
   .badge {
+    display: block;
     position: absolute;
     top: 0;
     right: var(--footer-badge-right);
-    margin: 0;
+    width: var(--footer-badge-size);
+    height: var(--footer-badge-size);
+    pointer-events: none;
+    user-select: none;
   }
 
-  .palmIconBL {
-    left: var(--space-3);
+  .palmIcon {
+    display: block;
+    position: absolute;
+    width: var(--footer-palm-icon-w);
+    height: var(--footer-palm-icon-h);
+    pointer-events: none;
+    user-select: none;
     bottom: 40px;
   }
-  .palmIconBR {
-    right: var(--space-3);
-    bottom: 40px;
-  }
+
+  .palmIconBL { left: var(--space-3); }
+  .palmIconBR { right: var(--space-3); }
 }
 
 /* ---------- Entrance: footer slides up; columns cascade ---------- */

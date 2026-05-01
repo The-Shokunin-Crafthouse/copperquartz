@@ -1,20 +1,23 @@
 /*
- * Outer shell for the marketing route group. Establishes a min-height
- * column flex so the footer sits at the bottom of short pages, and an
- * isolation context so PageBackdrop's z-index: -1 is bounded to this
- * subtree.
+ * Marketing-route shell. PageBackdrop and FooterBar are both fixed to
+ * the viewport, so .main needs bottom padding equal to the footer
+ * height to keep its last content visible above the fixed strip.
  */
 .shell {
-  display: flex;
-  flex-direction: column;
   min-height: 100vh;
   isolation: isolate;
   position: relative;
 }
 
 .main {
-  flex: 1 0 auto;
   width: 100%;
   max-width: var(--page-max-width);
   margin-inline: auto;
+  padding-bottom: 96px;          /* matches FooterBar --footer-h-mobile */
+}
+
+@media (min-width: 1280px) {
+  .main {
+    padding-bottom: 163px;       /* matches FooterBar --footer-h-desktop */
+  }
 }
