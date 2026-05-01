@@ -5,14 +5,11 @@
  *   - body line: top 542, gold-dark, Commissioner 34→32, 636 wide
  */
 .home {
-  --home-hero-top: 240px;          /* desktop hero top offset (snap from 344 - nav) */
   --home-body-top: var(--space-6);
   --home-body-w: 636px;
-  --home-hero-size-figma: var(--text-5xl);   /* 112 (snap 114) */
-  --home-hero-size-fluid: 7.41vw;            /* 112 / 1512 */
-  --home-hero-size-min: 56px;
-  --home-body-size: var(--text-2xl);          /* 32 (snap 34) */
-  --home-body-size-mobile: var(--text-lg);    /* 18 — readable measure on 360 */
+  --home-hero-w-figma: 769px;       /* Figma text bound for the lockup */
+  --home-hero-w-fluid: 50.86vw;     /* 769 / 1512 */
+  --home-hero-w-min: 280px;
 
   position: relative;
   display: flex;
@@ -25,15 +22,19 @@
   text-align: center;
 }
 
-.hero {
+.heroLockup {
   margin: 0 0 var(--home-body-top);
-  font-family: var(--font-display), var(--font-serif), serif;
-  font-weight: 400;
-  font-size: clamp(var(--home-hero-size-min), var(--home-hero-size-fluid), var(--home-hero-size-figma));
-  line-height: 1;
-  color: var(--color-terracotta);
-  letter-spacing: -0.005em;
-  white-space: nowrap;
+  display: block;
+  width: 100%;
+  max-width: var(--home-hero-w-figma);
+  text-align: center;
+}
+
+.heroImg {
+  display: inline-block;
+  width: clamp(var(--home-hero-w-min), var(--home-hero-w-fluid), var(--home-hero-w-figma));
+  height: auto;
+  user-select: none;
 }
 
 .body {
@@ -41,8 +42,8 @@
   max-width: var(--home-body-w);
   font-family: var(--font-sans);
   font-weight: 400;
-  font-size: var(--home-body-size);
-  line-height: 1.235;
+  font-size: var(--text-xl);                 /* 24px per Sprint 1 fix */
+  line-height: 1.4;
   color: var(--color-gold-dark);
 }
 
@@ -53,13 +54,8 @@
     padding-block: var(--space-12) var(--space-10);
     min-height: calc(100vh - 80px - 360px);
   }
-  .hero {
-    font-size: clamp(40px, 13.3vw, 80px);
-    line-height: 1.05;
-    white-space: normal;
-  }
-  .body {
-    font-size: var(--home-body-size-mobile);
+  .heroImg {
+    width: clamp(var(--home-hero-w-min), 80vw, 480px);
   }
 }
 
@@ -74,7 +70,7 @@
     to   { opacity: 1; transform: translateY(0); }
   }
 
-  .hero {
+  .heroImg {
     animation: home-fade-zoom 1800ms cubic-bezier(0.16, 1, 0.3, 1) 0ms both;
     will-change: transform, opacity;
     transform-origin: center;

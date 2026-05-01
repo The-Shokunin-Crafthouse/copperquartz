@@ -145,23 +145,61 @@
 
   .rsvp {
     justify-self: end;
+    margin-inline-start: var(--space-3);    /* min breathing room from Q&A */
   }
 }
 
-/* ---------- Desktop (≥1024px) — Figma cadence: 41px gap, 18px links ---------- */
+/* ---------- Desktop (≥1024px) — viewport-centered nav, RSVP anchored
+     to the courthouse bleed.
+
+     The grid centering at ≥768 visually centers the nav between the
+     left edge and the RSVP pill, which biases the nav toward the
+     hamburger column. At desktop we want the nav exactly on the
+     viewport centerline regardless of what sits beside it, and the
+     RSVP pill anchored to the courthouse bleed (PageBackdrop) with
+     a minimum gap from the nav equal to the inter-link gap.
+
+     --nav-half-width: rough half-width of the inline nav (5 links at
+       18px Commissioner SemiBold + 4 × 40px gaps ≈ 504px → 252 + safety).
+     --rsvp-width: inline-flex pill (RSVP label + 40+40 padding) ≈ 110px.
+     --court-w: must mirror PageBackdrop's --bd-court-w-fluid clamp. */
 
 @media (min-width: 1024px) {
   .navBar {
+    --nav-half-width: 270px;
+    --rsvp-width: 110px;
+    --court-w: clamp(160px, 16.53vw, 250px);
+    --rsvp-court-gap: var(--space-3);
+
+    display: block;
+    position: relative;
     padding-block: var(--nav-top-pad-desktop);
-    padding-inline: var(--nav-side-pad-desktop);
+    padding-inline: 0;
   }
 
   .links {
+    position: absolute;
+    top: var(--nav-top-pad-desktop);
+    left: 50%;
+    transform: translateX(-50%);
     gap: var(--space-5);
   }
 
   .link {
     font-size: var(--text-lg);
+  }
+
+  .rsvp {
+    position: absolute;
+    top: var(--nav-top-pad-desktop);
+    /* Take the further-right of two anchors:
+         - clear-the-nav: viewport center + nav half-width + nav-item gap
+         - clear-the-courthouse: viewport right − courthouse width − breathing
+       max() picks the larger left value = the right-most position. */
+    left: max(
+      calc(50% + var(--nav-half-width) + var(--space-5)),
+      calc(100% - var(--court-w) - var(--rsvp-court-gap) - var(--rsvp-width))
+    );
   }
 }
 

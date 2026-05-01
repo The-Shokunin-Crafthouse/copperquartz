@@ -1,3 +1,4 @@
+import { withBase } from '@/src/lib/paths';
 import styles from './page.module.css';
 
 /*
@@ -7,7 +8,13 @@ import styles from './page.module.css';
 export default function HomePage() {
   return (
     <section className={styles.home}>
-      <h1 className={styles.hero}>Levi & Meghan</h1>
+      <h1 className={styles.heroLockup}>
+        <img
+          className={styles.heroImg}
+          src={withBase('/images/svg/Levi & Meghan - homepage.svg')}
+          alt="Levi & Meghan"
+        />
+      </h1>
       <p className={styles.body}>
         Request the honor of your presence — an evening under palms, in good
         company, with the ocean near.
