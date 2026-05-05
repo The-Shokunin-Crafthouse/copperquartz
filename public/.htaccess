@@ -1,5 +1,0 @@
-RewriteEngine On
-
-# Temporary: redirect bare root to /savethedate/ until the main site is ready.
-# Remove this file (or this rule) to restore the root index.
-RewriteRule ^$ /savethedate/ [R=302,L]
