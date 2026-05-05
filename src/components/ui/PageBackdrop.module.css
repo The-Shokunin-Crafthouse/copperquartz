@@ -30,7 +30,7 @@
   background-color: var(--color-bg);
 }
 
-@media (min-width: 1280px) {
+@media (min-width: 1440px) {
   .backdrop {
     --bd-footer-h: var(--bd-footer-h-desktop);
   }

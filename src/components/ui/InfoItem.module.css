@@ -1,6 +1,7 @@
 /*
  * Info column — gold pillar + label/value stack. Sized down at mobile
- * so all four items fit in the fixed 96px footer strip.
+ * so all items fit in the fixed footer strip; reverts to the Figma
+ * cadence at ≥1280.
  */
 .item {
   display: flex;
@@ -17,11 +18,30 @@
   flex-shrink: 0;
 }
 
-.stack {
+/*
+ * Two stack variants — a div for static items and an <a> for items
+ * with an `href` — share the same flex column layout. The link variant
+ * resets default anchor color/decoration so the type renders identical
+ * to the static stack; only the cursor and the focus ring signal the
+ * affordance.
+ */
+.stack,
+.stackLink {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 2px;
+}
+
+.stackLink {
+  color: inherit;
+  text-decoration: none;
+}
+
+.stackLink:focus-visible {
+  outline: var(--border-focus) solid var(--color-gold);
+  outline-offset: var(--border-focus);
+  border-radius: var(--radius-sm);
 }
 
 .stackFixed {
@@ -49,34 +69,23 @@
   white-space: nowrap;
 }
 
-/* Inline links inside the value (e.g. Sunken Garden → Google Maps).
-   No visual styling — only the cursor signals affordance. Focus ring
-   stays for keyboard users. */
-.value a {
-  color: inherit;
-  font: inherit;
-  text-decoration: none;
-}
-
-.value a:focus-visible {
-  outline: var(--border-focus) solid var(--color-gold);
-  outline-offset: var(--border-focus);
-  border-radius: var(--radius-sm);
-}
-
-/* ---------- Desktop (≥1280px) — Figma cadence ---------- */
-@media (min-width: 1280px) {
+/* ---------- Desktop (≥1440px) — Figma cadence at the larger value
+     size. --text-xl (24) is a closer match to Figma's 26px than the
+     v1 --text-2xl (32) and leaves room for 5 items + the badge in
+     the footer row at 1440–1512. ---------- */
+@media (min-width: 1440px) {
   .pillar {
     height: 45px;
   }
-  .stack {
+  .stack,
+  .stackLink {
     gap: var(--space-1);
   }
   .stackFixed {
     width: 196px;
   }
   .value {
-    font-size: var(--text-2xl);
+    font-size: var(--text-xl);
     line-height: 1;
   }
 }

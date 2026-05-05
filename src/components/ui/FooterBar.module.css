@@ -37,47 +37,56 @@
   background-color: var(--color-palm-leaf);
 }
 
-.columns {
+/* Wrapper holds the scrolling columns row plus a static fade overlay
+   pinned to the right edge (Fix 3). The wrapper is centered in the
+   footer; the scroll container fills it; the fade rides on top. */
+.columnsWrap {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  width: calc(100vw - var(--space-3) * 2);
+  max-width: 100%;
+}
+
+.columns {
   display: flex;
   flex-direction: row;
   align-items: center;
   gap: var(--space-3);
   white-space: nowrap;
-  max-width: calc(100vw - var(--space-3) * 2);
   overflow-x: auto;
   overflow-y: hidden;
   scrollbar-width: none;       /* hide scrollbar; gesture/swipe still works */
 }
 .columns::-webkit-scrollbar { display: none; }
 
-/* Wax seal — hidden below 1024 because the centered 4-column row
-   collides with a right-anchored seal at narrower widths. At 1024+
-   the columns leave the right edge clear, the seal scales smaller
-   than its desktop size; at ≥1280 it goes full Figma. */
+/* Right-edge swipe affordance — gradient fades the rightmost ~48px
+   of the columns row into --color-bg, signalling there is more content
+   to swipe to. When items fit and end before the fade region the
+   gradient overlays bg → invisible, so it only "appears" when content
+   genuinely overflows. Hidden at desktop where the row has room. */
+.fadeRight {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: var(--space-6);
+  background: linear-gradient(
+    to right,
+    rgb(from var(--color-bg) r g b / 0) 0%,
+    var(--color-bg) 100%
+  );
+  pointer-events: none;
+}
+
 .badge {
   display: none;
 }
 
-@media (min-width: 1024px) {
-  .badge {
-    --footer-badge-size: 96px;
-    --footer-badge-right: var(--space-5);
-    --footer-badge-pop: var(--space-3);
-
-    display: block;
-    position: absolute;
-    top: calc(-1 * var(--footer-badge-pop));
-    right: var(--footer-badge-right);
-    width: var(--footer-badge-size);
-    height: var(--footer-badge-size);
-    pointer-events: none;
-    user-select: none;
-  }
-}
+/* Badge appears at ≥1440 — same threshold as the Figma desktop
+   layout. Below that, the seal would collide with the wider 5-item
+   row centered in the footer. */
 
 .palmIcon {
   display: none;               /* mobile/tablet: omit decorative chrome */
@@ -106,9 +115,13 @@
   }
 }
 
-/* ---------- Desktop (≥1280px): Figma cadence ---------- */
+/* ---------- Desktop (≥1440px): Figma cadence.
+     Below 1440 the new 5-column row + a right-anchored 122px seal
+     don't both fit without the seal overlapping the last column.
+     The 1024–1439 band uses the mobile-row layout with overflow-x
+     scroll + the right-edge swipe fade. */
 
-@media (min-width: 1280px) {
+@media (min-width: 1440px) {
   .footer {
     --footer-h: var(--footer-h-desktop);
   }
@@ -120,12 +133,21 @@
      was a designer-canvas artifact — irrelevant once the footer is a
      fixed rectangle painted in --color-bg. */
 
-  .columns {
+  .columnsWrap {
     top: 70px;
     transform: translateX(-50%);
-    gap: var(--space-6);
+    width: auto;
     max-width: none;
+  }
+
+  .columns {
+    gap: var(--space-5);
     overflow: visible;
+  }
+
+  /* No swipe affordance needed at the Figma desktop layout — items fit. */
+  .fadeRight {
+    display: none;
   }
 
   /* Wax seal at desktop — Figma anchors 3px above frame top, ~36px
@@ -134,6 +156,15 @@
     --footer-badge-size: 122px;
     --footer-badge-right: 119px;
     --footer-badge-pop: var(--space-4);
+
+    display: block;
+    position: absolute;
+    top: calc(-1 * var(--footer-badge-pop));
+    right: var(--footer-badge-right);
+    width: var(--footer-badge-size);
+    height: var(--footer-badge-size);
+    pointer-events: none;
+    user-select: none;
   }
 
   .palmIcon {

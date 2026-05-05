@@ -11,42 +11,59 @@ type FooterBarProps = {
   rsvpHref: string;
 };
 
+const CEREMONY_HREF = 'https://maps.app.goo.gl/W1HYa3VJHi5fbgWm7';
+const RECEPTION_HREF = 'https://maps.app.goo.gl/tS9ES4q8SHVE5q2E8';
+
 /*
- * Site footer — single hairline divider top, four info columns
- * (Countdown / Date / Location / Venue), wax seal anchored right,
- * palm icons in the bottom corners. Mirrors Figma frame 22:1011.
+ * Site footer — single hairline divider top, five info columns
+ * (Countdown / Date / Location / Ceremony / Reception), wax seal
+ * anchored right at desktop, palm icons in the bottom corners.
+ * Mobile (<768) appends a sixth slot with the RSVP pill.
  */
 export default function FooterBar({ weddingDate, rsvpHref }: FooterBarProps) {
   return (
     <footer className={styles.footer}>
       <div className={styles.divider} aria-hidden />
 
-      <div className={styles.columns}>
-        <InfoItem
-          label="COUNTDOWN"
-          value={<CountdownValue target={weddingDate} />}
-        />
-        <InfoItem label="IX.XXIX.MMXXVI" value="Sept. 29th, 2026" />
-        <InfoItem label="LOCATION" value="Santa Barbara, CA" fixedWidth={false} />
-        <InfoItem
-          label="VENUE"
-          value={
-            <a
-              href="https://www.google.com/maps/search/?api=1&query=1100+Anacapa+St+Santa+Barbara+CA+93101"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Sunken Garden
-            </a>
-          }
-        />
+      <div className={styles.columnsWrap}>
+        <div className={styles.columns}>
+          <InfoItem
+            label="COUNTDOWN"
+            value={<CountdownValue target={weddingDate} />}
+            fixedWidth={false}
+          />
+          <InfoItem
+            label="IX.XXIX.MMXXVI"
+            value="Sept. 29th, 2026"
+            fixedWidth={false}
+          />
+          <InfoItem
+            label="LOCATION"
+            value="Santa Barbara, CA"
+            fixedWidth={false}
+          />
+          <InfoItem
+            label="CEREMONY"
+            value="Sunken Garden"
+            href={CEREMONY_HREF}
+            fixedWidth={false}
+          />
+          <InfoItem
+            label="RECEPTION"
+            value="Cabrillo Pavillon"
+            href={RECEPTION_HREF}
+            fixedWidth={false}
+          />
 
-        {/* Mobile-only 5th slot — RSVP button positioned where a value
-            would normally sit, with the same gold pillar to the left. */}
-        <div className={styles.mobileRsvpItem}>
-          <div className={styles.mobileRsvpPillar} aria-hidden />
-          <RSVPButton href={rsvpHref} label="RSVP" />
+          {/* Mobile-only — RSVP pill sits where a value would, gold
+              pillar on the left like every other column. Hidden ≥768
+              via styles.mobileRsvpItem. */}
+          <div className={styles.mobileRsvpItem}>
+            <div className={styles.mobileRsvpPillar} aria-hidden />
+            <RSVPButton href={rsvpHref} label="RSVP" />
+          </div>
         </div>
+        <div className={styles.fadeRight} aria-hidden />
       </div>
 
       <img

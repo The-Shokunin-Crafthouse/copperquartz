@@ -17,7 +17,7 @@
   view-transition-name: site-main;
 }
 
-@media (min-width: 1280px) {
+@media (min-width: 1440px) {
   .main {
     padding-bottom: 163px;       /* matches FooterBar --footer-h-desktop */
   }
