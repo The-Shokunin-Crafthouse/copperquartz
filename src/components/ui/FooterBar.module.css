@@ -141,7 +141,7 @@
   }
 
   .columns {
-    gap: var(--space-5);
+    gap: var(--space-4);
     overflow: visible;
   }
 
@@ -150,11 +150,12 @@
     display: none;
   }
 
-  /* Wax seal at desktop — Figma anchors 3px above frame top, ~36px
-     above the visible hairline. Snap to --space-4 (32px). */
+  /* Wax seal at desktop. Right offset eases in from --space-8 at 1440
+     (so the 5-column row + 122px seal both fit) up to the Figma 119px
+     position once the canvas hits 1512+. */
   .badge {
     --footer-badge-size: 122px;
-    --footer-badge-right: 119px;
+    --footer-badge-right: var(--space-8);
     --footer-badge-pop: var(--space-4);
 
     display: block;
@@ -179,6 +180,13 @@
 
   .palmIconBL { left: var(--space-3); }
   .palmIconBR { right: var(--space-3); }
+}
+
+/* ---------- Figma canvas (≥1512px): restore the original badge inset ---------- */
+@media (min-width: 1512px) {
+  .badge {
+    --footer-badge-right: 119px;
+  }
 }
 
 /* ---------- Entrance: footer slides up; columns cascade ---------- */
