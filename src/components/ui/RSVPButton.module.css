@@ -3,14 +3,15 @@
  * palm-leaf fill, page-bg label. Five interaction states.
  */
 .button {
-  /* Mobile defaults — visually smaller pill; tap target stays at 44px
-     via min-height for WCAG compliance, padding alone shrinks the
-     visible chrome. */
+  /* Tap target shaves --space-1 (8px) off the WCAG 44px floor — total
+     button height ≈ 36px. Padding-block uses --space-half (4) on
+     mobile and --space-half + --space-1 (12) on desktop, dropping
+     8px from the previous heights (4 off top, 4 off bottom). */
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: var(--height-tap);
-  padding-block: var(--space-1);
+  min-height: calc(var(--height-tap) - var(--space-1));
+  padding-block: var(--space-half);
   padding-inline: var(--space-3);
   font-family: var(--font-sans);
   font-weight: 500;
@@ -28,7 +29,7 @@
 
 @media (min-width: 768px) {
   .button {
-    padding-block: var(--space-2);
+    padding-block: calc(var(--space-1) + var(--space-half));
     padding-inline: var(--space-5);
     font-size: var(--text-base);
   }

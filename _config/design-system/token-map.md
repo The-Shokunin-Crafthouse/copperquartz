@@ -62,6 +62,7 @@ The v1 scale ships with **mixed ratios** by deliberate decision (see `decisions/
 
 | Token | px |
 | --- | --- |
+| `--space-half` | 4 |
 | `--space-1` | 8 |
 | `--space-2` | 16 |
 | `--space-3` | 24 |

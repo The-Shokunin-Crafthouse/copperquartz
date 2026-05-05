@@ -68,9 +68,9 @@
   z-index: 100;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: var(--space-5);
-  padding: var(--space-12) var(--space-5);
+  justify-content: flex-start;     /* top-aligned per Fix 2 */
+  gap: var(--space-3);              /* tighter than --space-5 */
+  padding: calc(var(--space-12) + var(--space-3)) var(--space-5) var(--space-12);
   background-color: var(--color-bg);
 }
 
@@ -81,7 +81,7 @@
 .link {
   font-family: var(--font-sans);
   font-weight: 600;
-  font-size: var(--text-3xl);                  /* 40px overlay typography */
+  font-size: var(--text-2xl);                  /* 32px overlay (was 40, Fix 2) */
   color: var(--color-palm-leaf);
   text-decoration: none;
   white-space: nowrap;
@@ -207,20 +207,22 @@
   }
 
   /* Mobile/tablet overlay: links cascade in when MENU is tapped.
-     Mirrors the Save the Date right-panel std-fade-drop stagger
-     (100ms steps, 800ms duration, cubic-bezier 0.16 1 0.3 1). The
-     selectors are scoped to [data-open] so the animation only fires
-     when the drawer is shown — pure CSS, no JS triggers needed. */
+     Smaller translateY (-8) and tighter 60ms stagger keep the entrance
+     subtle — fades in with just a hair of vertical settle. */
+  @keyframes nav-overlay-fade {
+    from { opacity: 0; transform: translateY(-8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
   @media (max-width: 1023px) {
     .navBar[data-open] .link {
       will-change: transform, opacity;
-      animation: nav-fade-drop 800ms cubic-bezier(0.16, 1, 0.3, 1) both;
+      animation: nav-overlay-fade 600ms cubic-bezier(0.16, 1, 0.3, 1) both;
     }
-    .navBar[data-open] .link:nth-child(1) { animation-delay: 0ms; }
-    .navBar[data-open] .link:nth-child(2) { animation-delay: 100ms; }
-    .navBar[data-open] .link:nth-child(3) { animation-delay: 200ms; }
-    .navBar[data-open] .link:nth-child(4) { animation-delay: 300ms; }
-    .navBar[data-open] .link:nth-child(5) { animation-delay: 400ms; }
+    .navBar[data-open] .link:nth-child(1) { animation-delay: 60ms; }
+    .navBar[data-open] .link:nth-child(2) { animation-delay: 120ms; }
+    .navBar[data-open] .link:nth-child(3) { animation-delay: 180ms; }
+    .navBar[data-open] .link:nth-child(4) { animation-delay: 240ms; }
+    .navBar[data-open] .link:nth-child(5) { animation-delay: 300ms; }
   }
 
   .menuToggle,

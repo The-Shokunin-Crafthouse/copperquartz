@@ -5,7 +5,8 @@
  *   - body line: top 542, gold-dark, Commissioner 34→32, 636 wide
  */
 .home {
-  --home-body-top: var(--space-2);    /* 16px gap below hero lockup */
+  --home-body-top: var(--space-2);    /* 16px gap below hero lockup (desktop) */
+  --home-body-top-mobile: var(--space-1);  /* 8px on phones (Fix 3) */
   --home-body-w: 636px;
   --home-hero-w-figma: 769px;       /* Figma text bound for the lockup */
   --home-hero-w-fluid: 50.86vw;     /* 769 / 1512 */
@@ -50,18 +51,24 @@
 /* ---------- Mobile (≤768px) ---------- */
 @media (max-width: 768px) {
   .home {
+    /* Pull both lockup and body higher so they sit clear of the
+       courthouse rising from the footer (Fix 3). Bottom padding goes
+       up by --space-4 (32px) which shifts the centered group up by
+       ~16px. */
     padding-inline: var(--space-4);
-    padding-block: var(--space-12) var(--space-10);
+    padding-block: var(--space-8) calc(var(--space-10) + var(--space-4));
     min-height: calc(100vh - 80px - 360px);
+  }
+  .heroLockup {
+    margin-bottom: var(--home-body-top-mobile);     /* 8px gap (Fix 3) */
   }
   .heroImg {
     width: clamp(var(--home-hero-w-min), 80vw, 480px);
   }
-  /* Body steps down to --text-sm — keeps the lockup the dominant
-     element and lets the invitation read as a quiet subline. */
+  /* Body bumped 2 token sizes (--text-sm → --text-lg, 14 → 18). */
   .body {
-    font-size: var(--text-sm);
-    line-height: 1.5;
+    font-size: var(--text-lg);
+    line-height: 1.45;
   }
 }
 

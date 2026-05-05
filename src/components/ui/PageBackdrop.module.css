@@ -49,9 +49,9 @@
   user-select: none;
 }
 
-/* Courthouse — bottom-right, building base on footer hairline.
-   Pushed --space-4 (32px) past the right edge so the building reads
-   as a tight bleed and the centered body has more breathing room. */
+/* Courthouse — bottom-right, base on footer hairline. Mask gradient
+   fades the top of the building into bg so it doesn't read as a hard
+   crop where it meets the page (Fix 4). */
 .courthouse {
   position: absolute;
   bottom: var(--bd-footer-h);
@@ -62,13 +62,17 @@
   object-fit: contain;
   user-select: none;
   view-transition-name: bd-courthouse;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 22%);
+  mask-image: linear-gradient(to bottom, transparent 0%, #000 22%);
 }
 
-/* Coastal — bottom-left, water on footer hairline. Mirrors courthouse:
-   --space-4 past the left edge to widen the body content lane. */
+/* Coastal — bottom-left, water on footer hairline. Pushed further off
+   the left edge than the courthouse (Fix 5) so the body lane reads
+   more balanced — the asset is squarer than the building so it needs
+   more bleed to look as anchored. */
 .coastal {
   position: absolute;
-  left: calc(-1 * var(--space-4));
+  left: calc(-1 * var(--space-8));
   bottom: var(--bd-footer-h);
   width: clamp(var(--bd-coastal-w-min), var(--bd-coastal-w-fluid), var(--bd-coastal-w-figma));
   height: auto;
@@ -85,7 +89,7 @@
   }
   .coastal {
     width: 200px;
-    left: calc(-1 * var(--space-3));
+    left: calc(-1 * var(--space-5));      /* further left than courthouse */
   }
   .courthouse {
     width: 100px;
