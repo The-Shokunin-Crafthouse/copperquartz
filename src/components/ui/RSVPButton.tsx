@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import styles from './RSVPButton.module.css';
 
 type RSVPButtonProps = {
@@ -16,8 +17,8 @@ export default function RSVPButton({ href, label, disabled = false }: RSVPButton
   }
 
   return (
-    <a href={href} className={styles.button}>
+    <Link href={href} className={styles.button}>
       {label}
-    </a>
+    </Link>
   );
 }
