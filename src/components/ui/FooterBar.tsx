@@ -50,7 +50,7 @@ export default function FooterBar({ weddingDate, rsvpHref }: FooterBarProps) {
           />
           <InfoItem
             label="RECEPTION"
-            value="Cabrillo Pavillon"
+            value="Cabrillo Pavilion"
             href={RECEPTION_HREF}
             fixedWidth={false}
           />
