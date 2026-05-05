@@ -22,6 +22,12 @@
   --bd-footer-h-desktop: 163px;
   --bd-footer-h: var(--bd-footer-h-mobile);
 
+  --bd-palm-w-mobile: 540px;
+  --bd-palm-top-mobile: calc(-1 * var(--space-5));    /* -40px */
+  --bd-palm-left-mobile: calc(-1 * var(--space-4));   /* -32px */
+  --bd-coastal-w-mobile: 200px;
+  --bd-court-w-mobile: 100px;
+
   position: fixed;
   inset: 0;
   z-index: -1;
@@ -62,8 +68,8 @@
   object-fit: contain;
   user-select: none;
   view-transition-name: bd-courthouse;
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 22%);
-  mask-image: linear-gradient(to bottom, transparent 0%, #000 22%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 22%);
+  mask-image: linear-gradient(to bottom, transparent 0%, black 22%);
 }
 
 /* Coastal — bottom-left, water on footer hairline. Pushed further off
@@ -83,16 +89,16 @@
 /* ---------- Mobile (≤768px) — show more palm; tighten the bleeds ---------- */
 @media (max-width: 768px) {
   .palm {
-    width: 540px;          /* up from 360 → more of the leaf reads at small viewports */
-    top: -40px;
-    left: -32px;
+    width: var(--bd-palm-w-mobile);          /* up from 360 → more of the leaf reads at small viewports */
+    top: var(--bd-palm-top-mobile);
+    left: var(--bd-palm-left-mobile);
   }
   .coastal {
-    width: 200px;
+    width: var(--bd-coastal-w-mobile);
     left: calc(-1 * var(--space-5));      /* further left than courthouse */
   }
   .courthouse {
-    width: 100px;
+    width: var(--bd-court-w-mobile);
     right: calc(-1 * var(--space-3));
   }
 }

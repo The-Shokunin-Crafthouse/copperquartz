@@ -4,6 +4,11 @@
  * cadence at ≥1280.
  */
 .item {
+  --info-pillar-h: 36px;
+  --info-pillar-h-desktop: 45px;
+  --info-stack-gap: 2px;
+  --info-stack-fixed-w-desktop: 196px;
+
   display: flex;
   align-items: center;
   gap: var(--space-2);
@@ -12,7 +17,7 @@
 
 .pillar {
   width: var(--border-hairline);
-  height: 36px;
+  height: var(--info-pillar-h);
   background-color: var(--color-gold);
   opacity: 0.5;
   flex-shrink: 0;
@@ -30,7 +35,7 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 2px;
+  gap: var(--info-stack-gap);
 }
 
 .stackLink {
@@ -75,14 +80,14 @@
      the footer row at 1440–1512. ---------- */
 @media (min-width: 1440px) {
   .pillar {
-    height: 45px;
+    height: var(--info-pillar-h-desktop);
   }
   .stack,
   .stackLink {
     gap: var(--space-1);
   }
   .stackFixed {
-    width: 196px;
+    width: var(--info-stack-fixed-w-desktop);
   }
   .value {
     font-size: var(--text-xl);

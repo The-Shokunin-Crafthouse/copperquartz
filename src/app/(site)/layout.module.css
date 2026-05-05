@@ -2,8 +2,15 @@
  * Marketing-route shell. PageBackdrop and FooterBar are both fixed to
  * the viewport, so .main needs bottom padding equal to the footer
  * height to keep its last content visible above the fixed strip.
+ *
+ * --shell-footer-clearance mirrors FooterBar's --footer-h pair. Kept as
+ * a page-scoped var here (rather than imported) because CSS Modules can't
+ * reach into another module's vars; the values must stay in lockstep.
  */
 .shell {
+  --shell-footer-clearance: var(--space-12);            /* 96  — matches FooterBar --footer-h-mobile */
+  --shell-footer-clearance-desktop: 163px;              /*    — matches FooterBar --footer-h-desktop */
+
   min-height: 100vh;
   isolation: isolate;
   position: relative;
@@ -13,12 +20,12 @@
   width: 100%;
   max-width: var(--page-max-width);
   margin-inline: auto;
-  padding-bottom: 96px;          /* matches FooterBar --footer-h-mobile */
+  padding-bottom: var(--shell-footer-clearance);
   view-transition-name: site-main;
 }
 
 @media (min-width: 1440px) {
   .main {
-    padding-bottom: 163px;       /* matches FooterBar --footer-h-desktop */
+    padding-bottom: var(--shell-footer-clearance-desktop);
   }
 }

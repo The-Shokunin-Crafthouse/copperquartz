@@ -18,6 +18,9 @@
   --footer-badge-right: 119px;
   --footer-palm-icon-w: 15px;
   --footer-palm-icon-h: 16px;
+  --footer-mobile-rsvp-pillar-h: 36px;
+  --footer-columns-top-desktop: 70px;
+  --footer-palm-bottom-desktop: var(--space-5);
 
   position: fixed;
   inset: auto 0 0 0;
@@ -103,7 +106,7 @@
 
 .mobileRsvpPillar {
   width: var(--border-hairline);
-  height: 36px;
+  height: var(--footer-mobile-rsvp-pillar-h);
   background-color: var(--color-gold);
   opacity: 0.5;
   flex-shrink: 0;
@@ -134,7 +137,7 @@
      fixed rectangle painted in --color-bg. */
 
   .columnsWrap {
-    top: 70px;
+    top: var(--footer-columns-top-desktop);
     transform: translateX(-50%);
     width: auto;
     max-width: none;
@@ -175,7 +178,7 @@
     height: var(--footer-palm-icon-h);
     pointer-events: none;
     user-select: none;
-    bottom: 40px;
+    bottom: var(--footer-palm-bottom-desktop);
   }
 
   .palmIconBL { left: var(--space-3); }
