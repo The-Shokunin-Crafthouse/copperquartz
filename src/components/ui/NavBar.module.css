@@ -80,8 +80,8 @@
 
 .link {
   font-family: var(--font-sans);
-  font-weight: 600;
-  font-size: var(--text-2xl);                  /* 32px overlay (was 40, Fix 2) */
+  font-weight: 400;                            /* Commissioner Regular for elegance */
+  font-size: calc(var(--text-2xl) - 2px);      /* 30px overlay — soft step under text-2xl */
   color: var(--color-palm-leaf);
   text-decoration: none;
   white-space: nowrap;
@@ -89,6 +89,14 @@
   display: inline-flex;
   align-items: center;
   transition: color 220ms ease-out;
+}
+
+/* Restore the heavier desktop weight on the inline nav (overlay only
+   wants the lighter, more editorial treatment). */
+@media (min-width: 1024px) {
+  .link {
+    font-weight: 600;
+  }
 }
 
 @media (hover: hover) and (pointer: fine) {
