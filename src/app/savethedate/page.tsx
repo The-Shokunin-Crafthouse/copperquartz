@@ -1,3 +1,4 @@
+import { withBase } from '@/src/lib/paths';
 import PrintButton from './PrintButton';
 import styles from './page.module.css';
 
@@ -5,30 +6,26 @@ export default function SaveTheDatePage() {
   return (
     <main className={styles.page} data-scroll-root>
       {/* Page Background ------------------------------------------------- */}
-      {/* TODO: drop /public/images/palm-illustration@2x.jpg (combined palm + watercolor wash) */}
       <img
         className={styles.palmIllustration}
-        src="/images/palm-illustration@2x.jpg"
+        src={withBase('/images/palm-illustration@2x.jpg')}
         alt=""
       />
 
-      {/* Asset: /public/images/coastal-scene@2x.png (transparent PNG)
-          (figma layer is "coastal-illustration@2x"; using filename per drop on disk + original spec). */}
+      {/* Coastal scene — anchored to top of horizontal rule */}
       <img
         className={styles.coastal}
-        src="/images/coastal-scene@2x.png"
+        src={withBase('/images/coastal-scene@2x.png')}
         alt=""
       />
 
       {/* Courthouse + Print CTA — share an anchor so they move together --- */}
       <div className={styles.courthouseAnchor}>
-        {/* TODO: drop /public/images/courthouse-illustration@2x.jpg */}
         <img
           className={styles.courthouse}
-          src="/images/courthouse-illustration@2x.jpg"
+          src={withBase('/images/courthouse-illustration@2x.jpg')}
           alt=""
         />
-        {/* TODO: drop final /public/downloads/save-the-date.pdf before launch */}
         <PrintButton className={styles.printBtn} />
       </div>
 
@@ -38,10 +35,9 @@ export default function SaveTheDatePage() {
 
       {/* H1 lockup + Info bar — both scale via cqw within left column --- */}
       <div className={styles.leftColumn}>
-        {/* TODO: drop /public/images/svg/save-the-date.svg */}
         <img
           className={styles.h1}
-          src="/images/svg/save-the-date.svg"
+          src={withBase('/images/svg/save-the-date.svg')}
           alt="Save the Date"
         />
 
@@ -73,10 +69,9 @@ export default function SaveTheDatePage() {
 
       {/* Right panel ---------------------------------------------------- */}
       <div className={styles.rightPanel}>
-        {/* TODO: drop /public/images/svg/levi-meghan.svg */}
         <img
           className={styles.couple}
-          src="/images/svg/levi-meghan.svg"
+          src={withBase('/images/svg/levi-meghan.svg')}
           alt="Levi & Meghan"
         />
 
@@ -129,10 +124,9 @@ export default function SaveTheDatePage() {
           </p>
         </div>
 
-        {/* TODO: drop /public/images/svg/palm-icon.svg */}
         <img
           className={`${styles.palmIcon} ${styles.palmIconTR}`}
-          src="/images/svg/palm-icon.svg"
+          src={withBase('/images/svg/palm-icon.svg')}
           alt=""
         />
       </div>
@@ -147,21 +141,20 @@ export default function SaveTheDatePage() {
           <p className={styles.footerNote}>invitation to follow</p>
         </div>
 
-        {/* TODO: drop /public/images/badge@2x.png (figma group: Seal@2x) */}
         <img
           className={styles.badge}
-          src="/images/badge@2x.png"
+          src={withBase('/images/badge@2x.png')}
           alt=""
         />
 
         <img
           className={`${styles.palmIcon} ${styles.palmIconBL}`}
-          src="/images/svg/palm-icon.svg"
+          src={withBase('/images/svg/palm-icon.svg')}
           alt=""
         />
         <img
           className={`${styles.palmIcon} ${styles.palmIconBR}`}
-          src="/images/svg/palm-icon.svg"
+          src={withBase('/images/svg/palm-icon.svg')}
           alt=""
         />
       </div>

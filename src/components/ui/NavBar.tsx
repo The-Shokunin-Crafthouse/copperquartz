@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import RSVPButton from './RSVPButton';
+import TransitionLink from './TransitionLink';
 import styles from './NavBar.module.css';
 
 type NavLink = { label: string; href: string };
@@ -14,35 +15,51 @@ type NavBarProps = {
 export default function NavBar({ links, rsvpHref }: NavBarProps) {
   const [open, setOpen] = useState(false);
 
+  /* Close drawer on Escape; lock body scroll while open. */
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setOpen(false);
+    };
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('keydown', onKey);
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [open]);
+
   return (
-    <header className={styles.navBar}>
-      <div className={styles.left}>
-        <button
-          type="button"
-          className={styles.hamburger}
-          aria-expanded={open}
-          aria-controls="navbar-links"
-          aria-label={open ? 'Close menu' : 'Open menu'}
-          onClick={() => setOpen((v) => !v)}
-        >
-          <span className={styles.hamburgerLine} />
-          <span className={styles.hamburgerLine} />
-          <span className={styles.hamburgerLine} />
-        </button>
-      </div>
+    <header className={styles.navBar} data-open={open || undefined}>
+      <button
+        type="button"
+        className={styles.menuToggle}
+        aria-expanded={open}
+        aria-controls="site-nav-links"
+        onClick={() => setOpen((v) => !v)}
+      >
+        {open ? 'CLOSE' : 'MENU'}
+      </button>
 
       <nav
-        id="navbar-links"
-        className={`${styles.links} ${open ? styles.linksOpen : ''}`}
+        id="site-nav-links"
+        className={styles.links}
+        aria-label="Primary"
       >
         {links.map((link) => (
-          <a key={link.href} href={link.href} className={styles.link}>
+          <TransitionLink
+            key={link.href}
+            href={link.href}
+            className={styles.link}
+            onClick={() => setOpen(false)}
+          >
             {link.label}
-          </a>
+          </TransitionLink>
         ))}
       </nav>
 
-      <div className={styles.right}>
+      <div className={styles.rsvp}>
         <RSVPButton href={rsvpHref} label="RSVP" />
       </div>
     </header>

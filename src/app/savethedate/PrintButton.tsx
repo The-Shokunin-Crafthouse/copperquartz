@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState, type MouseEvent } from 'react';
+import { withBase } from '@/src/lib/paths';
 
 type Props = {
   className: string;
@@ -8,8 +9,8 @@ type Props = {
 
 type Mode = 'desktop' | 'mobile-share' | 'mobile-fallback';
 
-const PDF_HREF = '/downloads/save-the-date.pdf';
-const PNG_HREF = '/downloads/save-the-date.png';
+const PDF_HREF = withBase('/downloads/save-the-date.pdf');
+const PNG_HREF = withBase('/downloads/save-the-date.png');
 const PNG_FILENAME = 'save-the-date.png';
 const PNG_MIME = 'image/png';
 

@@ -1,0 +1,125 @@
+/*
+ * Fixed backdrop. Three layered illustrations from Save the Date,
+ * sized to the Figma 1512 canvas with vw fluids for sub-1512 widths.
+ * Anchors:
+ *   palm      → top-left, full bleed
+ *   courthouse → bottom-right, base sits on the footer's top hairline
+ *   coastal   → bottom-left, base sits on the footer's top hairline
+ */
+.backdrop {
+  --bd-palm-w-figma: 1192px;          /* matches Save the Date --pg-palm-w-figma */
+  --bd-palm-w-min: 720px;
+  --bd-palm-w-fluid: 78.83vw;
+  --bd-palm-aspect: 1192 / 727;
+  --bd-court-w-figma: 250px;
+  --bd-court-w-min: 160px;
+  --bd-court-w-fluid: 16.53vw;
+  --bd-court-aspect: 250 / 924;
+  --bd-coastal-w-figma: 254px;
+  --bd-coastal-w-min: 160px;
+  --bd-coastal-w-fluid: 16.8vw;
+  --bd-footer-h-mobile: 96px;
+  --bd-footer-h-desktop: 163px;
+  --bd-footer-h: var(--bd-footer-h-mobile);
+
+  --bd-palm-w-mobile: 540px;
+  --bd-palm-top-mobile: calc(-1 * var(--space-5));    /* -40px */
+  --bd-palm-left-mobile: calc(-1 * var(--space-4));   /* -32px */
+  --bd-coastal-w-mobile: 200px;
+  --bd-court-w-mobile: 100px;
+
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  background-color: var(--color-bg);
+}
+
+@media (min-width: 1440px) {
+  .backdrop {
+    --bd-footer-h: var(--bd-footer-h-desktop);
+  }
+}
+
+/* Palm + watercolor wash combined (Save the Date asset) — top-left bleed. */
+.palm {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: clamp(var(--bd-palm-w-min), var(--bd-palm-w-fluid), var(--bd-palm-w-figma));
+  height: auto;
+  aspect-ratio: var(--bd-palm-aspect);
+  mix-blend-mode: darken;
+  object-fit: contain;
+  user-select: none;
+}
+
+/* Courthouse — bottom-right, base on footer hairline. Mask gradient
+   fades the top of the building into bg so it doesn't read as a hard
+   crop where it meets the page (Fix 4). */
+.courthouse {
+  position: absolute;
+  bottom: var(--bd-footer-h);
+  right: calc(-1 * var(--space-4));
+  width: clamp(var(--bd-court-w-min), var(--bd-court-w-fluid), var(--bd-court-w-figma));
+  height: auto;
+  aspect-ratio: var(--bd-court-aspect);
+  object-fit: contain;
+  user-select: none;
+  view-transition-name: bd-courthouse;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 22%);
+  mask-image: linear-gradient(to bottom, transparent 0%, black 22%);
+}
+
+/* Coastal — bottom-left, water on footer hairline. Pushed further off
+   the left edge than the courthouse (Fix 5) so the body lane reads
+   more balanced — the asset is squarer than the building so it needs
+   more bleed to look as anchored. */
+.coastal {
+  position: absolute;
+  left: calc(-1 * var(--space-8));
+  bottom: var(--bd-footer-h);
+  width: clamp(var(--bd-coastal-w-min), var(--bd-coastal-w-fluid), var(--bd-coastal-w-figma));
+  height: auto;
+  user-select: none;
+  view-transition-name: bd-coastal;
+}
+
+/* ---------- Mobile (≤768px) — show more palm; tighten the bleeds ---------- */
+@media (max-width: 768px) {
+  .palm {
+    width: var(--bd-palm-w-mobile);          /* up from 360 → more of the leaf reads at small viewports */
+    top: var(--bd-palm-top-mobile);
+    left: var(--bd-palm-left-mobile);
+  }
+  .coastal {
+    width: var(--bd-coastal-w-mobile);
+    left: calc(-1 * var(--space-5));      /* further left than courthouse */
+  }
+  .courthouse {
+    width: var(--bd-court-w-mobile);
+    right: calc(-1 * var(--space-3));
+  }
+}
+
+/* ---------- Entrance: mirrors Save the Date specs ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes bd-slide-l {
+    from { opacity: 0; transform: translateX(-32px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes bd-slide-r {
+    from { opacity: 0; transform: translateX(32px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+  .palm,
+  .coastal {
+    animation: bd-slide-l 1400ms cubic-bezier(0.16, 1, 0.3, 1) 0ms both;
+    will-change: transform, opacity;
+  }
+  .courthouse {
+    animation: bd-slide-r 1400ms cubic-bezier(0.16, 1, 0.3, 1) 0ms both;
+    will-change: transform, opacity;
+  }
+}

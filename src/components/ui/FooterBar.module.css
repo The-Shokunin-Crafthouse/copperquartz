@@ -1,46 +1,230 @@
+/*
+ * Site footer — fixed to the viewport bottom so it never scrolls with
+ * page content. Top hairline doubles as the anchor line for the
+ * backdrop's coastal water and courthouse bleeds (PageBackdrop).
+ *
+ *   Mobile / tablet (<1280): 96px tall. Hairline + four compact info
+ *     columns centered horizontally. Badge and palm corner icons are
+ *     omitted — the canvas is too narrow to fit them without crowding.
+ *   Desktop (≥1280): 163px tall, matches Figma frame 22:1011 — wax
+ *     seal anchored right, palm corner icons in the bottom corners.
+ */
 .footer {
-  width: 100%;
-  background-color: var(--color-brown);
-  color: var(--color-bg);
-  padding-block: var(--space-6);
-  padding-inline: var(--space-4);
+  --footer-h-mobile: 96px;
+  --footer-h-desktop: 163px;
+  --footer-h: var(--footer-h-mobile);
+  --footer-side-pad: var(--space-3);
+  --footer-badge-size: 122px;
+  --footer-badge-right: 119px;
+  --footer-palm-icon-w: 15px;
+  --footer-palm-icon-h: 16px;
+  --footer-mobile-rsvp-pillar-h: 36px;
+  --footer-columns-top-desktop: 70px;
+  --footer-palm-bottom-desktop: var(--space-5);
+
+  position: fixed;
+  inset: auto 0 0 0;
+  z-index: 20;                 /* above main + nav (which scroll), below open menu drawer (z 100) */
+  height: var(--footer-h);
+  background-color: var(--color-bg);
+  isolation: isolate;
 }
 
-.list {
+/* Top hairline — always present so the backdrop bleeds anchor to it. */
+.divider {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--border-hairline);
+  background-color: var(--color-palm-leaf);
+}
+
+/* Wrapper holds the scrolling columns row plus a static fade overlay
+   pinned to the right edge (Fix 3). The wrapper is centered in the
+   footer; the scroll container fills it; the fade rides on top. */
+.columnsWrap {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: calc(100vw - var(--space-3) * 2);
+  max-width: 100%;
+}
+
+.columns {
   display: flex;
-  flex-direction: column;
-  gap: 0;
-  margin: 0;
-  padding: 0;
-  list-style: none;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--space-3);
+  white-space: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;       /* hide scrollbar; gesture/swipe still works */
+}
+.columns::-webkit-scrollbar { display: none; }
+
+/* Right-edge swipe affordance — gradient fades the rightmost ~48px
+   of the columns row into --color-bg, signalling there is more content
+   to swipe to. When items fit and end before the fade region the
+   gradient overlays bg → invisible, so it only "appears" when content
+   genuinely overflows. Hidden at desktop where the row has room. */
+.fadeRight {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: var(--space-6);
+  background: linear-gradient(
+    to right,
+    rgb(from var(--color-bg) r g b / 0) 0%,
+    var(--color-bg) 100%
+  );
+  pointer-events: none;
 }
 
-.item {
-  padding-block: var(--space-3);
-  border-block-end: var(--border-hairline) solid var(--color-gold-dark);
+.badge {
+  display: none;
 }
 
-.item:last-child {
-  border-block-end: 0;
+/* Badge appears at ≥1440 — same threshold as the Figma desktop
+   layout. Below that, the seal would collide with the wider 5-item
+   row centered in the footer. */
+
+.palmIcon {
+  display: none;               /* mobile/tablet: omit decorative chrome */
+}
+
+/* Mobile RSVP slot — appended as a 5th info-shaped item (Fix 7).
+   Only visible at <768; hidden via display: none above. */
+.mobileRsvpItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-shrink: 0;
+}
+
+.mobileRsvpPillar {
+  width: var(--border-hairline);
+  height: var(--footer-mobile-rsvp-pillar-h);
+  background-color: var(--color-gold);
+  opacity: 0.5;
+  flex-shrink: 0;
 }
 
 @media (min-width: 768px) {
-  .list {
-    flex-direction: row;
-    justify-content: center;
-    align-items: stretch;
+  .mobileRsvpItem {
+    display: none;
+  }
+}
+
+/* ---------- Desktop (≥1440px): Figma cadence.
+     Below 1440 the new 5-column row + a right-anchored 122px seal
+     don't both fit without the seal overlapping the last column.
+     The 1024–1439 band uses the mobile-row layout with overflow-x
+     scroll + the right-edge swipe fade. */
+
+@media (min-width: 1440px) {
+  .footer {
+    --footer-h: var(--footer-h-desktop);
   }
 
-  .item {
-    padding-block: 0;
-    padding-inline: var(--space-6);
-    border-block-end: 0;
-    border-inline-end: var(--border-hairline) solid var(--color-gold-dark);
-    display: flex;
-    align-items: center;
+  /* Hairline stays at top: 0 across all breakpoints so the backdrop's
+     coastal + courthouse bleeds (anchored bottom: var(--bd-footer-h))
+     sit flush with the visible footer line at every viewport. The
+     33px Figma offset between the footer frame top and the hairline
+     was a designer-canvas artifact — irrelevant once the footer is a
+     fixed rectangle painted in --color-bg. */
+
+  .columnsWrap {
+    top: var(--footer-columns-top-desktop);
+    transform: translateX(-50%);
+    width: auto;
+    max-width: none;
   }
 
-  .item:last-child {
-    border-inline-end: 0;
+  .columns {
+    gap: var(--space-4);
+    overflow: visible;
+  }
+
+  /* No swipe affordance needed at the Figma desktop layout — items fit. */
+  .fadeRight {
+    display: none;
+  }
+
+  /* Wax seal at desktop. Right offset eases in from --space-8 at 1440
+     (so the 5-column row + 122px seal both fit) up to the Figma 119px
+     position once the canvas hits 1512+. */
+  .badge {
+    --footer-badge-size: 122px;
+    --footer-badge-right: var(--space-8);
+    --footer-badge-pop: var(--space-4);
+
+    display: block;
+    position: absolute;
+    top: calc(-1 * var(--footer-badge-pop));
+    right: var(--footer-badge-right);
+    width: var(--footer-badge-size);
+    height: var(--footer-badge-size);
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .palmIcon {
+    display: block;
+    position: absolute;
+    width: var(--footer-palm-icon-w);
+    height: var(--footer-palm-icon-h);
+    pointer-events: none;
+    user-select: none;
+    bottom: var(--footer-palm-bottom-desktop);
+  }
+
+  .palmIconBL { left: var(--space-3); }
+  .palmIconBR { right: var(--space-3); }
+}
+
+/* ---------- Figma canvas (≥1512px): restore the original badge inset ---------- */
+@media (min-width: 1512px) {
+  .badge {
+    --footer-badge-right: 119px;
+  }
+}
+
+/* ---------- Entrance: footer slides up; columns cascade ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes footer-slide-up {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes footer-fade-drop {
+    from { opacity: 0; transform: translateY(-8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .footer {
+    animation: footer-slide-up 1000ms cubic-bezier(0.16, 1, 0.3, 1) 200ms both;
+    will-change: transform, opacity;
+  }
+  .columns > * {
+    animation: footer-fade-drop 800ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    will-change: transform, opacity;
+  }
+  .columns > *:nth-child(1) { animation-delay: 300ms; }
+  .columns > *:nth-child(2) { animation-delay: 400ms; }
+  .columns > *:nth-child(3) { animation-delay: 500ms; }
+  .columns > *:nth-child(4) { animation-delay: 600ms; }
+  /* Seal entrance — slides up from below the viewport, no fade.
+     cubic-bezier(0.34, 1.20, 0.64, 1) softens the previous easeOutBack
+     to ~12% overshoot — keeps the Figma "Gentle" feel without the
+     visible wobble at the top. 200px start offset clears the seal
+     below the viewport at all desktop breakpoints. */
+  @keyframes footer-seal-rise {
+    from { transform: translateY(200px); }
+    to   { transform: translateY(0); }
+  }
+  .badge {
+    animation: footer-seal-rise 1200ms cubic-bezier(0.34, 1.20, 0.64, 1) 700ms backwards;
+    will-change: transform;
   }
 }

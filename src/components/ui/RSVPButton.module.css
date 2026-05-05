@@ -1,33 +1,48 @@
+/*
+ * RSVP pill — sharp-edged (no border-radius per Figma frame 22:1054),
+ * palm-leaf fill, page-bg label. Five interaction states.
+ */
 .button {
+  /* Tap target shaves --space-1 (8px) off the WCAG 44px floor — total
+     button height ≈ 36px. Padding-block uses --space-half (4) on
+     mobile and --space-half + --space-1 (12) on desktop, dropping
+     8px from the previous heights (4 off top, 4 off bottom). */
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: var(--height-tap);
+  min-height: calc(var(--height-tap) - var(--space-1));
+  padding-block: var(--space-half);
   padding-inline: var(--space-3);
   font-family: var(--font-sans);
   font-weight: 500;
-  font-size: var(--text-base);
-  color: var(--color-brown);
-  background-color: transparent;
-  border: var(--border-hairline) solid var(--color-brown);
-  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  line-height: 1;
+  color: var(--color-bg);
+  background-color: var(--color-palm-leaf);
+  border: 0;
   text-decoration: none;
+  white-space: nowrap;
   cursor: pointer;
-  transition: background-color 220ms ease-out, color 220ms ease-out;
+  transition: background-color 220ms ease-out, transform 150ms cubic-bezier(0.16, 1, 0.3, 1);
+  transform-origin: center;
 }
 
-.button:hover {
-  background-color: var(--color-brown);
-  color: var(--color-bg);
+@media (min-width: 768px) {
+  .button {
+    padding-block: calc(var(--space-1) + var(--space-half));
+    padding-inline: var(--space-5);
+    font-size: var(--text-base);
+  }
 }
 
 .button:active {
-  background-color: var(--color-gold-dark);
-  color: var(--color-bg);
+  background-color: var(--color-palm-leaf-deep);
+  transform: scale(0.97);
+  transition-duration: 100ms;
 }
 
 .button:focus-visible {
-  outline: var(--border-focus) solid var(--color-gold);
+  outline: var(--border-focus) solid var(--color-terracotta);
   outline-offset: var(--border-focus);
 }
 
@@ -37,8 +52,20 @@
   pointer-events: none;
 }
 
+@media (hover: hover) and (pointer: fine) {
+  .button:hover {
+    background-color: var(--color-palm-leaf-deep);
+    transform: scale(1.02);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .button {
-    transition: none;
+    transition: background-color 220ms ease-out;
+    transform: none;
+  }
+  .button:hover,
+  .button:active {
+    transform: none;
   }
 }

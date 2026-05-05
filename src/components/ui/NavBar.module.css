@@ -1,76 +1,113 @@
+/*
+ * Site navigation.
+ *
+ *   <1024: 1fr/auto/1fr grid — MENU centered, RSVP anchored right.
+ *     The palm bleed extends across the left edge of the bar; centering
+ *     MENU keeps it legible against background. Tapping MENU swaps the
+ *     page for a full-screen overlay listing the five destinations.
+ *     Body scroll is locked while the drawer is open.
+ *
+ *   ≥1024: nav links sit absolute-centered on the viewport, RSVP pill
+ *     anchored to the courthouse bleed with a min nav-clear gap.
+ */
 .navBar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding-block: var(--space-3);
-  padding-inline: var(--space-4);
-  background-color: var(--color-bg);
+  --nav-side-pad-mobile: var(--space-3);
+  --nav-side-pad-desktop: var(--space-5);
+  --nav-top-pad-desktop: var(--space-5);
+  --nav-overlay-link-size: 30px;          /* one notch under --text-2xl (32) for the drawer */
+
   position: relative;
-}
-
-.left {
-  display: flex;
+  z-index: 5;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
+  padding-block: var(--space-3);
+  padding-inline: var(--nav-side-pad-mobile);
+  background-color: transparent;
 }
 
-.right {
-  display: flex;
-  align-items: center;
-}
+/* ---------- MENU toggle (mobile/tablet only) ---------- */
 
-.hamburger {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  width: var(--space-4);
-  height: var(--space-3);
+.menuToggle {
+  grid-column: 2;
+  justify-self: center;
   background: none;
   border: 0;
   padding: 0;
-  cursor: pointer;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: var(--text-base);
+  letter-spacing: 0.12em;
   color: var(--color-brown);
+  text-transform: uppercase;
+  cursor: pointer;
+  min-height: var(--height-tap);
+  min-width: var(--height-tap);
+  display: inline-flex;
+  align-items: center;
+  position: relative;
+  z-index: 110;             /* sit above the .links overlay so CLOSE is tappable */
+  transition: color 220ms ease-out;
 }
 
-.hamburger:focus-visible {
+.menuToggle:hover {
+  color: var(--color-teal);
+}
+
+.menuToggle:focus-visible {
   outline: var(--border-focus) solid var(--color-gold);
   outline-offset: var(--border-focus);
+  border-radius: var(--radius-sm);
 }
 
-.hamburgerLine {
-  display: block;
-  width: 100%;
-  height: var(--border-hairline);
-  background-color: currentColor;
-}
+/* ---------- Links — full-screen overlay drawer at <1024 ---------- */
 
 .links {
   display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;     /* top-aligned per Fix 2 */
+  gap: var(--space-3);              /* tighter than --space-5 */
+  padding: calc(var(--space-12) + var(--space-3)) var(--space-5) var(--space-12);
+  background-color: var(--color-bg);
 }
 
-.linksOpen {
+.navBar[data-open] .links {
   display: flex;
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  flex-direction: column;
-  gap: var(--space-2);
-  padding: var(--space-3) var(--space-4);
-  background-color: var(--color-bg);
-  border-block-end: var(--border-hairline) solid var(--color-gold);
-  z-index: 1;
 }
 
 .link {
   font-family: var(--font-sans);
-  font-size: var(--text-base);
-  color: var(--color-brown);
+  font-weight: 400;                            /* Commissioner Regular for elegance */
+  font-size: var(--nav-overlay-link-size);     /* 30px overlay — soft step under --text-2xl */
+  color: var(--color-palm-leaf);
   text-decoration: none;
+  white-space: nowrap;
+  min-height: var(--height-tap);
+  display: inline-flex;
+  align-items: center;
   transition: color 220ms ease-out;
 }
 
-.link:hover {
-  color: var(--color-teal);
+/* Restore the heavier desktop weight on the inline nav (overlay only
+   wants the lighter, more editorial treatment). */
+@media (min-width: 1024px) {
+  .link {
+    font-weight: 600;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .link:hover {
+    color: var(--color-teal);
+  }
+}
+
+.link:active {
+  color: var(--color-terracotta);
 }
 
 .link:focus-visible {
@@ -79,35 +116,127 @@
   border-radius: var(--radius-sm);
 }
 
-@media (min-width: 768px) {
+.rsvp {
+  grid-column: 3;
+  justify-self: end;
+  display: flex;
+  align-items: center;
+  position: relative;
+  z-index: 110;            /* keep RSVP visible above the drawer when open */
+}
+
+/* ---------- Desktop (≥1024px) — viewport-centered nav, RSVP anchored
+     to the courthouse bleed.
+
+     --nav-half-width: half-width of the inline nav (5 links at
+       18px Commissioner SemiBold + 4 × 40px gaps ≈ 504px → ~252 + safety).
+     --rsvp-width: inline-flex pill (RSVP label + 40+40 padding) ≈ 110px.
+     --court-w: must mirror PageBackdrop's --bd-court-w-fluid clamp. */
+
+@media (min-width: 1024px) {
   .navBar {
-    display: grid;
-    grid-template-columns: 1fr auto 1fr;
+    --nav-half-width: 270px;
+    --rsvp-width: 110px;
+    --court-w: clamp(160px, 16.53vw, 250px);
+    --rsvp-court-gap: var(--space-3);
+
+    display: block;             /* override the mobile grid */
+    grid-template-columns: none;
+    position: relative;
+    padding-block: var(--nav-top-pad-desktop);
+    padding-inline: 0;
   }
 
-  .hamburger {
+  .menuToggle {
     display: none;
   }
 
-  .links,
-  .linksOpen {
+  .links {
     display: flex;
-    position: static;
+    position: absolute;
+    inset: auto;
+    top: var(--nav-top-pad-desktop);
+    left: 50%;
+    transform: translateX(-50%);
     flex-direction: row;
-    gap: var(--space-4);
+    align-items: center;
     justify-content: center;
+    gap: var(--space-5);
     padding: 0;
     background: transparent;
-    border: 0;
   }
 
-  .right {
-    justify-self: end;
+  .link {
+    font-size: var(--text-lg);
+  }
+
+  .rsvp {
+    position: absolute;
+    top: var(--nav-top-pad-desktop);
+    /* Take the further-right of two anchors:
+         - clear-the-nav: viewport center + nav half-width + nav-item gap
+         - clear-the-courthouse: viewport right − courthouse width − breathing
+       max() picks the larger left value = the right-most position. */
+    left: max(
+      calc(50% + var(--nav-half-width) + var(--space-5)),
+      calc(100% - var(--court-w) - var(--rsvp-court-gap) - var(--rsvp-width))
+    );
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .link {
+  .link,
+  .menuToggle {
     transition: none;
+  }
+}
+
+/* ---------- Entrance: nav links cascade; RSVP drops in ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes nav-fade-drop-sm {
+    from { opacity: 0; transform: translateY(-8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes nav-fade-drop {
+    from { opacity: 0; transform: translateY(-12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Desktop: links live in flow at top of page — animate on page load. */
+  @media (min-width: 1024px) {
+    .link {
+      will-change: transform, opacity;
+      animation: nav-fade-drop-sm 800ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+    .link:nth-child(1) { animation-delay: 0ms; }
+    .link:nth-child(2) { animation-delay: 80ms; }
+    .link:nth-child(3) { animation-delay: 160ms; }
+    .link:nth-child(4) { animation-delay: 240ms; }
+    .link:nth-child(5) { animation-delay: 320ms; }
+  }
+
+  /* Mobile/tablet overlay: links cascade in when MENU is tapped.
+     Smaller translateY (-8) and tighter 60ms stagger keep the entrance
+     subtle — fades in with just a hair of vertical settle. */
+  @keyframes nav-overlay-fade {
+    from { opacity: 0; transform: translateY(-8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @media (max-width: 1023px) {
+    .navBar[data-open] .link {
+      will-change: transform, opacity;
+      animation: nav-overlay-fade 600ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+    .navBar[data-open] .link:nth-child(1) { animation-delay: 60ms; }
+    .navBar[data-open] .link:nth-child(2) { animation-delay: 120ms; }
+    .navBar[data-open] .link:nth-child(3) { animation-delay: 180ms; }
+    .navBar[data-open] .link:nth-child(4) { animation-delay: 240ms; }
+    .navBar[data-open] .link:nth-child(5) { animation-delay: 300ms; }
+  }
+
+  .menuToggle,
+  .rsvp {
+    animation: nav-fade-drop-sm 900ms cubic-bezier(0.16, 1, 0.3, 1) 0ms backwards;
+    will-change: transform, opacity;
   }
 }

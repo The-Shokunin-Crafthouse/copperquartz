@@ -1,21 +1,96 @@
-.infoItem {
+/*
+ * Info column — gold pillar + label/value stack. Sized down at mobile
+ * so all items fit in the fixed footer strip; reverts to the Figma
+ * cadence at ≥1280.
+ */
+.item {
+  --info-pillar-h: 36px;
+  --info-pillar-h-desktop: 45px;
+  --info-stack-gap: 2px;
+  --info-stack-fixed-w-desktop: 196px;
+
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-shrink: 0;
+}
+
+.pillar {
+  width: var(--border-hairline);
+  height: var(--info-pillar-h);
+  background-color: var(--color-gold);
+  opacity: 0.5;
+  flex-shrink: 0;
+}
+
+/*
+ * Two stack variants — a div for static items and an <a> for items
+ * with an `href` — share the same flex column layout. The link variant
+ * resets default anchor color/decoration so the type renders identical
+ * to the static stack; only the cursor and the focus ring signal the
+ * affordance.
+ */
+.stack,
+.stackLink {
   display: flex;
   flex-direction: column;
-  gap: var(--space-1);
-  text-align: center;
+  align-items: flex-start;
+  gap: var(--info-stack-gap);
+}
+
+.stackLink {
+  color: inherit;
+  text-decoration: none;
+}
+
+.stackLink:focus-visible {
+  outline: var(--border-focus) solid var(--color-gold);
+  outline-offset: var(--border-focus);
+  border-radius: var(--radius-sm);
+}
+
+.stackFixed {
+  width: auto;
 }
 
 .label {
+  margin: 0;
   font-family: var(--font-sans);
   font-weight: 400;
   font-size: var(--text-xs);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+  line-height: 1.2;
+  color: var(--color-terracotta);
+  white-space: nowrap;
+  letter-spacing: 0.04em;
 }
 
 .value {
+  margin: 0;
   font-family: var(--font-serif);
   font-weight: 600;
-  font-size: var(--text-2xl);
-  line-height: 1.2;
+  font-size: var(--text-base);
+  line-height: 1.1;
+  color: var(--color-teal);
+  white-space: nowrap;
+}
+
+/* ---------- Desktop (≥1440px) — Figma cadence at the larger value
+     size. --text-xl (24) is a closer match to Figma's 26px than the
+     v1 --text-2xl (32) and leaves room for 5 items + the badge in
+     the footer row at 1440–1512. ---------- */
+@media (min-width: 1440px) {
+  .pillar {
+    height: var(--info-pillar-h-desktop);
+  }
+  .stack,
+  .stackLink {
+    gap: var(--space-1);
+  }
+  .stackFixed {
+    width: var(--info-stack-fixed-w-desktop);
+  }
+  .value {
+    font-size: var(--text-xl);
+    line-height: 1;
+  }
 }

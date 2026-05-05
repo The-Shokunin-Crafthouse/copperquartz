@@ -6,6 +6,7 @@
   --color-terracotta: #C86A4A;
   --color-coral-rose: #F27D72;
   --color-palm-leaf: #4F7A4A;
+  --color-palm-leaf-deep: #468C3E;
   --color-gold: #C2A98B;
   --color-gold-dark: #877660;
   --color-brown: #5D4931;
@@ -29,6 +30,7 @@
   --text-display: 200px;
 
   /* Spacing — 8px grid */
+  --space-half: 4px;        /* dense-surface micro-tweak (button padding) */
   --space-1: 8px;
   --space-2: 16px;
   --space-3: 24px;
