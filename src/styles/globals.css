@@ -114,3 +114,65 @@ button {
     grid-column: span 6;
   }
 }
+
+/* ---------- Route-transition choreography (Fix 4b)
+   When TransitionLink intercepts a click, it wraps router.push in
+   document.startViewTransition. The browser snapshots the outgoing
+   page, runs the navigation, then animates the named pseudo-elements
+   between old/new states. We name three regions:
+
+     bd-coastal   → slides off the left edge as it leaves; new instance
+                    slides in from the same direction.
+     bd-courthouse → slides off the right edge; new instance slides in
+                     from the right.
+     site-main    → cross-fades (out first, new fades in slightly after
+                    so the swap reads as crisp rather than crossed).
+
+   Browsers without the View Transitions API (Firefox today) fall back
+   to an instant route swap with no animation. ---------- */
+
+@media (prefers-reduced-motion: no-preference) {
+  ::view-transition-old(site-main) {
+    animation: vt-main-fade-out 280ms cubic-bezier(0.4, 0, 1, 1) both;
+  }
+  ::view-transition-new(site-main) {
+    animation: vt-main-fade-in 480ms cubic-bezier(0.16, 1, 0.3, 1) 240ms both;
+  }
+  ::view-transition-old(bd-coastal) {
+    animation: vt-coastal-out 460ms cubic-bezier(0.4, 0, 1, 1) both;
+  }
+  ::view-transition-new(bd-coastal) {
+    animation: vt-coastal-in 760ms cubic-bezier(0.16, 1, 0.3, 1) 200ms both;
+  }
+  ::view-transition-old(bd-courthouse) {
+    animation: vt-courthouse-out 460ms cubic-bezier(0.4, 0, 1, 1) both;
+  }
+  ::view-transition-new(bd-courthouse) {
+    animation: vt-courthouse-in 760ms cubic-bezier(0.16, 1, 0.3, 1) 200ms both;
+  }
+
+  @keyframes vt-main-fade-out {
+    from { opacity: 1; }
+    to   { opacity: 0; }
+  }
+  @keyframes vt-main-fade-in {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  @keyframes vt-coastal-out {
+    from { transform: translateX(0); opacity: 1; }
+    to   { transform: translateX(-110%); opacity: 0; }
+  }
+  @keyframes vt-coastal-in {
+    from { transform: translateX(-110%); opacity: 0; }
+    to   { transform: translateX(0); opacity: 1; }
+  }
+  @keyframes vt-courthouse-out {
+    from { transform: translateX(0); opacity: 1; }
+    to   { transform: translateX(110%); opacity: 0; }
+  }
+  @keyframes vt-courthouse-in {
+    from { transform: translateX(110%); opacity: 0; }
+    to   { transform: translateX(0); opacity: 1; }
+  }
+}

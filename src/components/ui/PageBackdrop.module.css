@@ -49,40 +49,47 @@
   user-select: none;
 }
 
-/* Courthouse — bottom-right, building base anchored to footer-top hairline. */
+/* Courthouse — bottom-right, building base on footer hairline.
+   Pushed --space-4 (32px) past the right edge so the building reads
+   as a tight bleed and the centered body has more breathing room. */
 .courthouse {
   position: absolute;
   bottom: var(--bd-footer-h);
-  right: 0;
+  right: calc(-1 * var(--space-4));
   width: clamp(var(--bd-court-w-min), var(--bd-court-w-fluid), var(--bd-court-w-figma));
   height: auto;
   aspect-ratio: var(--bd-court-aspect);
   object-fit: contain;
   user-select: none;
+  view-transition-name: bd-courthouse;
 }
 
-/* Coastal — bottom-left, water sits on footer-top hairline. */
+/* Coastal — bottom-left, water on footer hairline. Mirrors courthouse:
+   --space-4 past the left edge to widen the body content lane. */
 .coastal {
   position: absolute;
-  left: 0;
+  left: calc(-1 * var(--space-4));
   bottom: var(--bd-footer-h);
   width: clamp(var(--bd-coastal-w-min), var(--bd-coastal-w-fluid), var(--bd-coastal-w-figma));
   height: auto;
   user-select: none;
+  view-transition-name: bd-coastal;
 }
 
-/* ---------- Mobile (≤768px) — pull palm bleed back, narrow coastal/courthouse ---------- */
+/* ---------- Mobile (≤768px) — show more palm; tighten the bleeds ---------- */
 @media (max-width: 768px) {
   .palm {
-    width: 360px;
+    width: 540px;          /* up from 360 → more of the leaf reads at small viewports */
     top: -40px;
     left: -32px;
   }
   .coastal {
     width: 200px;
+    left: calc(-1 * var(--space-3));
   }
   .courthouse {
     width: 100px;
+    right: calc(-1 * var(--space-3));
   }
 }
 

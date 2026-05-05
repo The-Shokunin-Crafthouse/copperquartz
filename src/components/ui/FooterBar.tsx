@@ -1,11 +1,14 @@
 import { withBase } from '@/src/lib/paths';
 import InfoItem from './InfoItem';
 import CountdownValue from './CountdownValue';
+import RSVPButton from './RSVPButton';
 import styles from './FooterBar.module.css';
 
 type FooterBarProps = {
   /** Wedding date — drives the build-time countdown. */
   weddingDate: string; // ISO yyyy-mm-dd
+  /** Where the mobile-only RSVP slot points. */
+  rsvpHref: string;
 };
 
 /*
@@ -13,7 +16,7 @@ type FooterBarProps = {
  * (Countdown / Date / Location / Venue), wax seal anchored right,
  * palm icons in the bottom corners. Mirrors Figma frame 22:1011.
  */
-export default function FooterBar({ weddingDate }: FooterBarProps) {
+export default function FooterBar({ weddingDate, rsvpHref }: FooterBarProps) {
   return (
     <footer className={styles.footer}>
       <div className={styles.divider} aria-hidden />
@@ -37,6 +40,13 @@ export default function FooterBar({ weddingDate }: FooterBarProps) {
             </a>
           }
         />
+
+        {/* Mobile-only 5th slot — RSVP button positioned where a value
+            would normally sit, with the same gold pillar to the left. */}
+        <div className={styles.mobileRsvpItem}>
+          <div className={styles.mobileRsvpPillar} aria-hidden />
+          <RSVPButton href={rsvpHref} label="RSVP" />
+        </div>
       </div>
 
       <img

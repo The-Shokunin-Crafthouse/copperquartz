@@ -57,6 +57,12 @@
   .heroImg {
     width: clamp(var(--home-hero-w-min), 80vw, 480px);
   }
+  /* Body steps down to --text-sm — keeps the lockup the dominant
+     element and lets the invitation read as a quiet subline. */
+  .body {
+    font-size: var(--text-sm);
+    line-height: 1.5;
+  }
 }
 
 /* ---------- Motion: mirrors Save the Date entrance vocabulary ---------- */

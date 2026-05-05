@@ -28,7 +28,7 @@ export default function SiteLayout({ children }: { children: React.ReactNode }) 
       <PageBackdrop />
       <NavBar links={NAV_LINKS} rsvpHref={RSVP_HREF} />
       <main className={styles.main}>{children}</main>
-      <FooterBar weddingDate={WEDDING_DATE} />
+      <FooterBar weddingDate={WEDDING_DATE} rsvpHref={RSVP_HREF} />
     </div>
   );
 }

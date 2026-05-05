@@ -54,9 +54,56 @@
 }
 .columns::-webkit-scrollbar { display: none; }
 
-.badge,
+/* Wax seal — hidden below 1024 because the centered 4-column row
+   collides with a right-anchored seal at narrower widths. At 1024+
+   the columns leave the right edge clear, the seal scales smaller
+   than its desktop size; at ≥1280 it goes full Figma. */
+.badge {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .badge {
+    --footer-badge-size: 96px;
+    --footer-badge-right: var(--space-5);
+    --footer-badge-pop: var(--space-3);
+
+    display: block;
+    position: absolute;
+    top: calc(-1 * var(--footer-badge-pop));
+    right: var(--footer-badge-right);
+    width: var(--footer-badge-size);
+    height: var(--footer-badge-size);
+    pointer-events: none;
+    user-select: none;
+  }
+}
+
 .palmIcon {
   display: none;               /* mobile/tablet: omit decorative chrome */
+}
+
+/* Mobile RSVP slot — appended as a 5th info-shaped item (Fix 7).
+   Only visible at <768; hidden via display: none above. */
+.mobileRsvpItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-shrink: 0;
+}
+
+.mobileRsvpPillar {
+  width: var(--border-hairline);
+  height: 36px;
+  background-color: var(--color-gold);
+  opacity: 0.5;
+  flex-shrink: 0;
+}
+
+@media (min-width: 768px) {
+  .mobileRsvpItem {
+    display: none;
+  }
 }
 
 /* ---------- Desktop (≥1280px): Figma cadence ---------- */
@@ -81,20 +128,12 @@
     overflow: visible;
   }
 
-  /* Wax seal — Figma anchors it 3px above the footer frame top
-     (asset y=914, footer y=917), placing ~36px of the medallion
-     above the visible hairline. Snap to --space-4 (32px) above so
-     the seal floats over body content scrolling beneath it. The
-     fixed footer's z-index 20 keeps the seal above .main content. */
+  /* Wax seal at desktop — Figma anchors 3px above frame top, ~36px
+     above the visible hairline. Snap to --space-4 (32px). */
   .badge {
-    display: block;
-    position: absolute;
-    top: calc(-1 * var(--space-4));
-    right: var(--footer-badge-right);
-    width: var(--footer-badge-size);
-    height: var(--footer-badge-size);
-    pointer-events: none;
-    user-select: none;
+    --footer-badge-size: 122px;
+    --footer-badge-right: 119px;
+    --footer-badge-pop: var(--space-4);
   }
 
   .palmIcon {
@@ -134,19 +173,16 @@
   .columns > *:nth-child(3) { animation-delay: 500ms; }
   .columns > *:nth-child(4) { animation-delay: 600ms; }
   /* Seal entrance — slides up from below the viewport, no fade.
-     Easing approximates Figma's "Gentle" spring (mass 1, stiffness 100,
-     damping 15 → ~25% overshoot before settling). cubic-bezier
-     (0.34, 1.56, 0.64, 1) is the easeOutBack curve, the closest
-     single-curve approximation; 1200ms holds the gentle settle.
-     200px start offset clears the seal below the viewport at all
-     desktop breakpoints (seal sits ~73px above viewport bottom in
-     final state, 200 - 73 = 127px below the bottom edge to start). */
+     cubic-bezier(0.34, 1.20, 0.64, 1) softens the previous easeOutBack
+     to ~12% overshoot — keeps the Figma "Gentle" feel without the
+     visible wobble at the top. 200px start offset clears the seal
+     below the viewport at all desktop breakpoints. */
   @keyframes footer-seal-rise {
     from { transform: translateY(200px); }
     to   { transform: translateY(0); }
   }
   .badge {
-    animation: footer-seal-rise 1200ms cubic-bezier(0.34, 1.56, 0.64, 1) 700ms backwards;
+    animation: footer-seal-rise 1200ms cubic-bezier(0.34, 1.20, 0.64, 1) 700ms backwards;
     will-change: transform;
   }
 }

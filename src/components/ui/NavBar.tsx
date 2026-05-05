@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import RSVPButton from './RSVPButton';
+import TransitionLink from './TransitionLink';
 import styles from './NavBar.module.css';
 
 type NavLink = { label: string; href: string };
@@ -47,14 +48,14 @@ export default function NavBar({ links, rsvpHref }: NavBarProps) {
         aria-label="Primary"
       >
         {links.map((link) => (
-          <a
+          <TransitionLink
             key={link.href}
             href={link.href}
             className={styles.link}
             onClick={() => setOpen(false)}
           >
             {link.label}
-          </a>
+          </TransitionLink>
         ))}
       </nav>
 
