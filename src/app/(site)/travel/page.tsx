@@ -33,7 +33,7 @@ export default function TravelPage() {
           min to downtown so you can easily Uber to your lodging accommodations.
         </p>
         <img
-          className={styles.mediaImage}
+          className={`${styles.mediaImage} ${styles.media}`}
           src={withBase('/images/sba.jpg')}
           alt="Santa Barbara Airport tarmac with mountains beyond."
           loading="lazy"
@@ -96,15 +96,67 @@ export default function TravelPage() {
           availability so please reach out if you wish to stay here and they
           are no longer available.
         </p>
-        <VideoFrame
-          src="/videos/mar-monte.mp4"
-          label="Mar Monte Hyatt aerial view"
-          objectPosition="center bottom"
+        <div className={styles.media}>
+          <VideoFrame
+            src="/videos/mar-monte.mp4"
+            label="Mar Monte Hyatt aerial view"
+            objectPosition="center bottom"
+          />
+        </div>
+        <p className={styles.body}>
+          <span className={styles.label}>Cabrillo Inn:</span>{' '}
+          <a
+            className={styles.coral}
+            href="https://hotels.cloudbeds.com/en/reservation/cksufF/?currency=usd&checkin=2026-09-28&checkout=2026-09-30&adults=2&rid=290024"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Book your room
+          </a>{' '}
+          Notes: Add &ldquo;returning guest discount&rdquo;
+          <br />
+          <span className={styles.label}>Address:</span>{' '}
+          <a
+            className={styles.coral}
+            href="https://maps.app.goo.gl/5mQAfp2qjKUcRucv8"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            931 E Cabrillo Blvd, Santa Barbara, CA 93103
+          </a>
+          <br />
+          <span className={styles.label}>Website:</span>{' '}
+          <a
+            className={styles.coral}
+            href="https://cabrilloinn.com"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            https://cabrilloinn.com
+          </a>{' '}
+          (although the website has been down)
+          <br />
+          This hotel is a 4 minute walk from the reception venue.
+          Unfortunately they do not provide room blocks but we got the
+          hook up. My Aunt spoke with the manager and was able to get us
+          a cheaper rate. With that discount you can get a Deluxe Ocean
+          view with two queen beds or king for $199 a night. Or a
+          standard king for $144 a night. Make sure you add &ldquo;
+          <span className={styles.label}>returning guest discount</span>
+          &rdquo; in the notes section before checkout.
+        </p>
+        <img
+          className={`${styles.mediaImage} ${styles.media}`}
+          src={withBase('/images/cabrillo-inn.jpeg')}
+          alt="Cabrillo Inn courtyard with palm trees and ocean view."
+          loading="lazy"
         />
         <p className={styles.body}>
           <span className={styles.label}>Note:</span>{' '}
           We are still working on a cheaper hotel room block and will add
-          that here if that becomes available.
+          that here if that becomes available. There are a ton of places
+          to stay however if you want to be closer to the courthouse and
+          plan to walk State street while you are here.
         </p>
       </section>
 
@@ -180,10 +232,12 @@ export default function TravelPage() {
           </a>
           .
         </p>
-        <VideoFrame
-          src="/videos/santa-barbara.mp4"
-          label="Santa Barbara County Courthouse and downtown"
-        />
+        <div className={styles.media}>
+          <VideoFrame
+            src="/videos/santa-barbara.mp4"
+            label="Santa Barbara County Courthouse and downtown"
+          />
+        </div>
       </section>
     </article>
   );

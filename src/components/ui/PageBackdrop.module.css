@@ -121,18 +121,21 @@
    Sibling of `.backdrop`, lives inside the (site) `.shell` (relative,
    isolated stacking context). Position absolute anchors to the top of
    the document so it scrolls with the page. Hidden by default; only
-   appears at ≤768. */
+   appears at ≤768.
+
+   IMPORTANT: every value here is hardcoded or sourced from :root
+   tokens. The `--bd-*` vars in this file are scoped to `.backdrop`
+   and do NOT cascade to this sibling — using them here would resolve
+   to `unset`, dropping width/aspect-ratio entirely and rendering the
+   palm asset at its natural 2x JPEG size (taking over the viewport). */
 .mobilePalm {
   display: none;
   position: absolute;
-  top: var(--bd-palm-top-mobile);
-  left: var(--bd-palm-left-mobile);
-  /* Scrolling palm scales with the viewport so the leaf reads as a
-     corner accent at 360 (not a takeover) and grows to the canonical
-     mobile size as the viewport approaches the breakpoint. */
-  width: clamp(280px, 78vw, var(--bd-palm-w-mobile));
+  top: calc(-1 * var(--space-3));      /* -24 — slight bleed above content */
+  left: calc(-1 * var(--space-4));     /* -32 — bleed left of column */
+  width: clamp(180px, 50vw, 320px);    /* corner accent, never dominant */
   height: auto;
-  aspect-ratio: var(--bd-palm-aspect);
+  aspect-ratio: 1192 / 727;            /* matches the palm asset */
   mix-blend-mode: darken;
   object-fit: contain;
   pointer-events: none;

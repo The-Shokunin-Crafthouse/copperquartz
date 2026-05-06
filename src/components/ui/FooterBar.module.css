@@ -28,7 +28,11 @@
   height: var(--footer-h);
   background-color: var(--color-bg);
   isolation: isolate;
+  /* Same rationale as .navBar — name the footer so route changes do
+     not cross-fade it as part of the root snapshot. */
+  view-transition-name: site-footer;
 }
+
 
 /* Top hairline — always present so the backdrop bleeds anchor to it. */
 .divider {

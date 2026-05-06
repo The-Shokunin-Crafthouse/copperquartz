@@ -24,7 +24,15 @@
   padding-block: var(--space-3);
   padding-inline: var(--nav-side-pad-mobile);
   background-color: transparent;
+  /* Name the nav so View Transitions track it as its own region rather
+     than folding it into the cross-faded "root". Without this the nav
+     appears to flicker between routes (root cross-fade catches the
+     active-link color change). With its own name we suppress the
+     animation below — the nav simply stays put and the active-link
+     color shift handles itself via the .link color transition. */
+  view-transition-name: site-nav;
 }
+
 
 /* ---------- MENU toggle (mobile/tablet only) ---------- */
 

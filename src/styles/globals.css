@@ -151,6 +151,19 @@ button {
     animation: vt-courthouse-in 760ms cubic-bezier(0.16, 1, 0.3, 1) 200ms both;
   }
 
+  /* Pin chrome elements during route transitions. NavBar and FooterBar
+     are named so the browser tracks them across pages, but we suppress
+     animation entirely — they should appear stationary while the inner
+     `.main` content cross-fades. Without this, the chrome was being
+     captured into the default root cross-fade and reading as a flicker
+     between pages (Sprint 2 fix #3). */
+  ::view-transition-old(site-nav),
+  ::view-transition-new(site-nav),
+  ::view-transition-old(site-footer),
+  ::view-transition-new(site-footer) {
+    animation: none;
+  }
+
   @keyframes vt-main-fade-out {
     from { opacity: 1; }
     to   { opacity: 0; }
