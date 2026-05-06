@@ -76,6 +76,44 @@
   margin-bottom: 0;
 }
 
+/* Hotel metadata — definition list. Each row is a label + value pair on
+   one line at desktop (label fixed-width column, value flows right);
+   stacks at mobile so long values don't truncate. */
+.meta {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: 400;
+  font-size: var(--text-lg);
+  line-height: 31px;
+  color: var(--color-brown);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.metaRow {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  column-gap: var(--space-2);
+  align-items: baseline;
+}
+
+.metaRow dt {
+  font-weight: 500;             /* Commissioner Medium — matches .label */
+  color: var(--color-brown);
+}
+
+.metaRow dd {
+  margin: 0;
+  min-width: 0;                  /* allow long values to wrap */
+}
+
+/* Trailing inline aside next to a value ("— add 'returning guest discount'",
+   "(currently down)"). Same brown body color, slightly de-emphasized. */
+.metaInline {
+  color: var(--color-gold-dark);
+}
+
 .coral {
   font-weight: 500;
   color: var(--color-coral-rose);
@@ -137,12 +175,24 @@
     font-size: var(--text-2xl);          /* 32 — full editorial register on phone */
     line-height: 1.2;
   }
+  /* Body leading tightens 28→24 (1.75→1.5) — desktop reads airy on phones,
+     and 1.5 is the floor we use across the rest of the site. */
   .body {
     font-size: var(--text-base);         /* 16 */
-    line-height: 28px;
+    line-height: 24px;
   }
   .body p + p {
-    margin-top: 28px;
+    margin-top: var(--space-2);          /* 16 — tighter than the leading drop */
+  }
+  /* dl stacks: long values (full address, booking URL) wrap awkwardly when
+     paired with a 110px label column on a 360-wide screen. Stack instead. */
+  .meta {
+    font-size: var(--text-base);
+    line-height: 24px;
+  }
+  .metaRow {
+    grid-template-columns: 1fr;
+    gap: 2px;
   }
 }
 

@@ -3,7 +3,7 @@ export const colors = {
   sandLinen: '#F3E6D3',
   teal: '#2F7F7B',
   terracotta: '#C86A4A',
-  coralRose: '#F27D72',
+  coralRose: '#B5432F',
   palmLeaf: '#4F7A4A',
   gold: '#C2A98B',
   goldDark: '#877660',
