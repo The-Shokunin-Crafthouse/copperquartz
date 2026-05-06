@@ -10,9 +10,16 @@
  */
 
 .travel {
-  --travel-col-w: 650px;
+  /* Sprint 2 fix: column widened from 650 → 770 so body copy and
+     media share the same width (no offset). 770 = the previous
+     650 column + the 60px-each-side breakout the user liked. */
+  --travel-col-w: 770px;
   --travel-section-gap: var(--space-8);   /* 64 — between sections */
   --travel-stack-gap: var(--space-4);     /* 32 — within a section */
+  --travel-hotel-trailing: var(--space-5); /* 40 — extra below each hotel
+                                                 video/image so it groups
+                                                 with the hotel above and
+                                                 separates from the next */
 
   position: relative;
   width: 100%;
@@ -88,22 +95,14 @@
   background-color: var(--color-sand-linen);
 }
 
-/* Wide-media wrapper — extends videos and images 60px past the body
-   column on each side at viewports wide enough to fit (≥768). At ≤768
-   the column already fills the viewport, so the breakout would push
-   the media off-screen — keep media flush at mobile. Aspect ratio is
-   set on the inner element, so growing width grows height in lockstep
-   (per Sprint 2 fix #2). */
-.media {
+/* Hotel-media spacer — wraps the Mar Monte video and the Cabrillo
+   Inn image to add extra space below each so the media reads as
+   grouped with the hotel copy above it, separated from the next
+   block. 8pt token (--space-5 = 40), combined with the .section
+   gap (32) → 72px effective separation, vs 32 elsewhere. */
+.hotelMedia {
   width: 100%;
-}
-
-@media (min-width: 768px) {
-  .media {
-    width: calc(100% + 120px);
-    margin-inline: -60px;
-    max-width: none;
-  }
+  margin-bottom: var(--travel-hotel-trailing);
 }
 
 @media (hover: hover) and (pointer: fine) {

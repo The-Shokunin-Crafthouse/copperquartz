@@ -33,7 +33,7 @@ export default function TravelPage() {
           min to downtown so you can easily Uber to your lodging accommodations.
         </p>
         <img
-          className={`${styles.mediaImage} ${styles.media}`}
+          className={styles.mediaImage}
           src={withBase('/images/sba.jpg')}
           alt="Santa Barbara Airport tarmac with mountains beyond."
           loading="lazy"
@@ -96,7 +96,7 @@ export default function TravelPage() {
           availability so please reach out if you wish to stay here and they
           are no longer available.
         </p>
-        <div className={styles.media}>
+        <div className={styles.hotelMedia}>
           <VideoFrame
             src="/videos/mar-monte.mp4"
             label="Mar Monte Hyatt aerial view"
@@ -145,12 +145,14 @@ export default function TravelPage() {
           <span className={styles.label}>returning guest discount</span>
           &rdquo; in the notes section before checkout.
         </p>
-        <img
-          className={`${styles.mediaImage} ${styles.media}`}
-          src={withBase('/images/cabrillo-inn.jpeg')}
-          alt="Cabrillo Inn courtyard with palm trees and ocean view."
-          loading="lazy"
-        />
+        <div className={styles.hotelMedia}>
+          <img
+            className={styles.mediaImage}
+            src={withBase('/images/cabrillo-inn.jpeg')}
+            alt="Cabrillo Inn courtyard with palm trees and ocean view."
+            loading="lazy"
+          />
+        </div>
         <p className={styles.body}>
           <span className={styles.label}>Note:</span>{' '}
           We are still working on a cheaper hotel room block and will add
@@ -232,12 +234,10 @@ export default function TravelPage() {
           </a>
           .
         </p>
-        <div className={styles.media}>
-          <VideoFrame
-            src="/videos/santa-barbara.mp4"
-            label="Santa Barbara County Courthouse and downtown"
-          />
-        </div>
+        <VideoFrame
+          src="/videos/santa-barbara.mp4"
+          label="Santa Barbara County Courthouse and downtown"
+        />
       </section>
     </article>
   );

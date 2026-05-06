@@ -131,9 +131,12 @@
 .mobilePalm {
   display: none;
   position: absolute;
-  top: calc(-1 * var(--space-3));      /* -24 — slight bleed above content */
-  left: calc(-1 * var(--space-4));     /* -32 — bleed left of column */
-  width: clamp(180px, 50vw, 320px);    /* corner accent, never dominant */
+  /* Match the mobile homepage palm exactly (--bd-palm-w-mobile = 540,
+     top -40, left -32). Sprint 2 fix #2: previous clamp(180,50vw,320)
+     read as "barely there" on phone. */
+  top: calc(-1 * var(--space-5));      /* -40 — same as home backdrop */
+  left: calc(-1 * var(--space-4));     /* -32 — same as home backdrop */
+  width: 540px;                         /* same as home --bd-palm-w-mobile */
   height: auto;
   aspect-ratio: 1192 / 727;            /* matches the palm asset */
   mix-blend-mode: darken;
