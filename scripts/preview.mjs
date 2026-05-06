@@ -28,6 +28,11 @@ const SECTIONS = {
     fullPage: true,
     description: 'Save the Date one-pager',
   },
+  travel: {
+    route: '/travel',
+    fullPage: true,
+    description: 'Travel — flights, hotel, things to do',
+  },
 };
 
 const BREAKPOINTS = [360, 768, 1024, 1440];

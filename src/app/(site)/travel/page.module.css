@@ -1,0 +1,164 @@
+/*
+ * Travel page composition. Single centered column at 650px (Figma
+ * canvas). Three sections: Fly like a bird, Hotel Accommodations,
+ * Things to do — separated by --space-8 (64px) gaps. Within a section,
+ * heading → meta → media → tail copy stack at --space-4 (32px).
+ *
+ * Mobile reflow uses a single @media (max-width: 768px) block per
+ * decisions/decisions.md 2026-04-25 — no DOM changes, all sizing and
+ * spacing snaps to existing tokens.
+ */
+
+.travel {
+  /* Sprint 2 fix: column widened from 650 → 770 so body copy and
+     media share the same width (no offset). 770 = the previous
+     650 column + the 60px-each-side breakout the user liked. */
+  --travel-col-w: 770px;
+  --travel-section-gap: var(--space-8);   /* 64 — between sections */
+  --travel-stack-gap: var(--space-4);     /* 32 — within a section */
+  --travel-hotel-trailing: var(--space-5); /* 40 — extra below each hotel
+                                                 video/image so it groups
+                                                 with the hotel above and
+                                                 separates from the next */
+
+  position: relative;
+  width: 100%;
+  max-width: var(--travel-col-w);
+  margin-inline: auto;
+  padding-block: var(--space-10) var(--space-12);
+  padding-inline: var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--travel-section-gap);
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--travel-stack-gap);
+  width: 100%;
+}
+
+.heading {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-weight: 600;             /* Cormorant Garamond SemiBold */
+  font-size: var(--text-3xl);   /* 40 — snap from Figma 42 */
+  line-height: 1.15;
+  color: var(--color-palm-leaf);
+  text-align: center;
+}
+
+.body {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: 400;             /* Commissioner Regular */
+  font-size: var(--text-lg);    /* 18 */
+  line-height: 31px;            /* matches Figma leading */
+  color: var(--color-brown);
+}
+
+.body p {
+  margin: 0;
+}
+
+.body p + p {
+  margin-top: 31px;
+}
+
+.label {
+  font-weight: 500;             /* Commissioner Medium */
+}
+
+.eyebrow {
+  display: block;
+  font-weight: 600;             /* Commissioner SemiBold for the section eyebrow */
+  margin-bottom: 0;
+}
+
+.coral {
+  font-weight: 500;
+  color: var(--color-coral-rose);
+  text-decoration: none;
+  transition: color var(--motion-fast) ease-out;
+  border-radius: var(--radius-sm);
+}
+
+/* Static-image media slot — SBA, Cabrillo Inn. Same 2.76:1 crop as
+   VideoFrame so airport, hotel, and city visuals share one ratio. */
+.mediaImage {
+  display: block;
+  width: 100%;
+  aspect-ratio: var(--video-aspect);
+  object-fit: cover;
+  border-radius: var(--radius-md);
+  background-color: var(--color-sand-linen);
+}
+
+/* Hotel-media spacer — wraps the Mar Monte video and the Cabrillo
+   Inn image to add extra space below each so the media reads as
+   grouped with the hotel copy above it, separated from the next
+   block. 8pt token (--space-5 = 40), combined with the .section
+   gap (32) → 72px effective separation, vs 32 elsewhere. */
+.hotelMedia {
+  width: 100%;
+  margin-bottom: var(--travel-hotel-trailing);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .coral:hover {
+    color: var(--color-terracotta);
+  }
+}
+
+.coral:active {
+  color: var(--color-terracotta);
+}
+
+.coral:focus-visible {
+  outline: var(--border-focus) solid var(--color-gold);
+  outline-offset: var(--border-focus);
+}
+
+/* ---------- Mobile (≤768px) ----------
+   Tighter side padding, smaller block padding. Heading and body keep
+   their token sizes — Figma's mobile frame for Travel is not authored,
+   so we follow the established pattern from Save the Date and Home. */
+@media (max-width: 768px) {
+  .travel {
+    padding-block: var(--space-6) var(--space-10);
+    padding-inline: var(--space-3);
+    gap: var(--space-6);                 /* 48 — slightly tighter section gap */
+  }
+  .section {
+    gap: var(--space-3);                 /* 24 — within-section */
+  }
+  .heading {
+    font-size: var(--text-2xl);          /* 32 — full editorial register on phone */
+    line-height: 1.2;
+  }
+  .body {
+    font-size: var(--text-base);         /* 16 */
+    line-height: 28px;
+  }
+  .body p + p {
+    margin-top: 28px;
+  }
+}
+
+/* ---------- Entrance: each section fades + drops together ----------
+   Mirrors the Home / Save the Date motion vocabulary
+   (decisions.md 2026-05-01). Reduced-motion gate handled below. */
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes travel-section-in {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .section {
+    animation: travel-section-in var(--motion-std) var(--ease-out-soft) both;
+    will-change: transform, opacity;
+  }
+  .section:nth-of-type(1) { animation-delay: 120ms; }
+  .section:nth-of-type(2) { animation-delay: 240ms; }
+  .section:nth-of-type(3) { animation-delay: 360ms; }
+}

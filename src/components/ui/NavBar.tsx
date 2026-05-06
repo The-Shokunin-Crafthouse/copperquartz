@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { usePathname } from 'next/navigation';
 import RSVPButton from './RSVPButton';
 import TransitionLink from './TransitionLink';
 import styles from './NavBar.module.css';
@@ -12,8 +13,13 @@ type NavBarProps = {
   rsvpHref: string;
 };
 
+/* Strip trailing slash so /travel and /travel/ both resolve to the same key. */
+const norm = (p: string) => (p !== '/' && p.endsWith('/') ? p.slice(0, -1) : p);
+
 export default function NavBar({ links, rsvpHref }: NavBarProps) {
   const [open, setOpen] = useState(false);
+  const pathname = usePathname();
+  const here = pathname ? norm(pathname) : '';
 
   /* Close drawer on Escape; lock body scroll while open. */
   useEffect(() => {
@@ -47,16 +53,21 @@ export default function NavBar({ links, rsvpHref }: NavBarProps) {
         className={styles.links}
         aria-label="Primary"
       >
-        {links.map((link) => (
-          <TransitionLink
-            key={link.href}
-            href={link.href}
-            className={styles.link}
-            onClick={() => setOpen(false)}
-          >
-            {link.label}
-          </TransitionLink>
-        ))}
+        {links.map((link) => {
+          const target = norm(link.href);
+          const isCurrent = here === target || (target !== '/' && here.startsWith(target));
+          return (
+            <TransitionLink
+              key={link.href}
+              href={link.href}
+              className={styles.link}
+              aria-current={isCurrent ? 'page' : undefined}
+              onClick={() => setOpen(false)}
+            >
+              {link.label}
+            </TransitionLink>
+          );
+        })}
       </nav>
 
       <div className={styles.rsvp}>

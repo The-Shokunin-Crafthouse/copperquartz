@@ -14,6 +14,14 @@
   min-height: 100vh;
   isolation: isolate;
   position: relative;
+  /* Mobile interior pages render PageBackdrop's MobilePalm as an
+     `absolute` sibling of .main; the palm asset bleeds beyond the
+     viewport on phones (-32px left / 540px wide vs 360px viewport).
+     `overflow-x: clip` keeps the palm visually bled but prevents it
+     from extending the document width and triggering horizontal scroll
+     or stretching the fullPage snapshot. Vertical scroll passes
+     through. */
+  overflow-x: clip;
 }
 
 .main {

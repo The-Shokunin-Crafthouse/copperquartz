@@ -64,4 +64,18 @@
   --border-hairline: 1px;
   --border-focus: 2px;
   --height-tap: 44px;
+
+  /* Motion — durations + easing curves promoted from inline literals so
+     all sections share one motion vocabulary. Source of truth is
+     token-map.md §Motion. */
+  --motion-fast: 220ms;       /* hover/state change */
+  --motion-std: 800ms;        /* entrance fade/drop */
+  --motion-orchestrated: 1800ms;  /* hero zoom-in scale */
+  --ease-out-soft: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-quint: cubic-bezier(0.4, 0, 1, 1);
+
+  /* Media — single canonical aspect ratio for in-page video frames.
+     2.76:1 cinematic crop, applied at the frame level so the source
+     video's native aspect is masked uniformly across the site. */
+  --video-aspect: 2.76 / 1;
 }

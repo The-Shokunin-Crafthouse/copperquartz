@@ -86,20 +86,76 @@
   view-transition-name: bd-coastal;
 }
 
-/* ---------- Mobile (≤768px) — show more palm; tighten the bleeds ---------- */
+/* ---------- Home mode mobile — preserve the original bleeds ---------- */
 @media (max-width: 768px) {
-  .palm {
-    width: var(--bd-palm-w-mobile);          /* up from 360 → more of the leaf reads at small viewports */
+  .backdrop[data-mode='home'] .palm {
+    width: var(--bd-palm-w-mobile);
     top: var(--bd-palm-top-mobile);
     left: var(--bd-palm-left-mobile);
   }
-  .coastal {
+  .backdrop[data-mode='home'] .coastal {
     width: var(--bd-coastal-w-mobile);
-    left: calc(-1 * var(--space-5));      /* further left than courthouse */
+    left: calc(-1 * var(--space-5));
   }
-  .courthouse {
+  .backdrop[data-mode='home'] .courthouse {
     width: var(--bd-court-w-mobile);
     right: calc(-1 * var(--space-3));
+  }
+}
+
+/* ---------- Interior pages mobile — drop the fixed bleeds ----------
+   Sprint 2 fix: on phones the fixed palm/courthouse/coastal sit
+   underneath in-flow content as guests scroll multi-section pages.
+   Hiding all three removes the overlap; the palm reappears as a
+   scrolling sibling (.mobilePalm) that slides up out of view as the
+   page scrolls past it. */
+@media (max-width: 768px) {
+  .backdrop[data-mode='interior'] .palm,
+  .backdrop[data-mode='interior'] .coastal,
+  .backdrop[data-mode='interior'] .courthouse {
+    display: none;
+  }
+}
+
+/* ---------- Scrolling palm — interior pages mobile only ----------
+   Sibling of `.backdrop`, lives inside the (site) `.shell` (relative,
+   isolated stacking context). Position absolute anchors to the top of
+   the document so it scrolls with the page. Hidden by default; only
+   appears at ≤768.
+
+   IMPORTANT: every value here is hardcoded or sourced from :root
+   tokens. The `--bd-*` vars in this file are scoped to `.backdrop`
+   and do NOT cascade to this sibling — using them here would resolve
+   to `unset`, dropping width/aspect-ratio entirely and rendering the
+   palm asset at its natural 2x JPEG size (taking over the viewport). */
+.mobilePalm {
+  display: none;
+  position: absolute;
+  /* Match the mobile homepage palm exactly (--bd-palm-w-mobile = 540,
+     top -40, left -32). Sprint 2 fix #2: previous clamp(180,50vw,320)
+     read as "barely there" on phone. */
+  top: calc(-1 * var(--space-5));      /* -40 — same as home backdrop */
+  left: calc(-1 * var(--space-4));     /* -32 — same as home backdrop */
+  width: 540px;                         /* same as home --bd-palm-w-mobile */
+  height: auto;
+  aspect-ratio: 1192 / 727;            /* matches the palm asset */
+  mix-blend-mode: darken;
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+  z-index: -1;
+}
+
+@media (max-width: 768px) {
+  .mobilePalm {
+    display: block;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .mobilePalm {
+    animation: bd-slide-l 1400ms cubic-bezier(0.16, 1, 0.3, 1) 0ms both;
+    will-change: transform, opacity;
   }
 }
 
