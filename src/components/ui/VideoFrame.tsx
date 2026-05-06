@@ -9,6 +9,10 @@ type VideoFrameProps = {
   src: string;             /* path under /public, eg "/videos/mar-monte.mp4" */
   poster?: string;         /* optional poster path */
   label: string;           /* a11y label — describes the clip ("Mar Monte Hyatt") */
+  objectPosition?: string; /* CSS object-position value ("center bottom",
+                              "center 30%", etc). Default is "center" — only
+                              override when the source's subject sits high or
+                              low and the cinematic crop would chop it. */
 };
 
 /*
@@ -20,12 +24,20 @@ type VideoFrameProps = {
  * provided), and the dialog video also stays paused — guests who opt
  * out get a still frame, not autoplay.
  */
-export default function VideoFrame({ src, poster, label }: VideoFrameProps) {
+export default function VideoFrame({
+  src,
+  poster,
+  label,
+  objectPosition,
+}: VideoFrameProps) {
   const [open, setOpen] = useState(false);
   const dialogRef = useRef<HTMLDialogElement>(null);
 
   const resolvedSrc = withBase(src);
   const resolvedPoster = poster ? withBase(poster) : undefined;
+  const positionStyle = objectPosition
+    ? ({ objectPosition } as React.CSSProperties)
+    : undefined;
 
   useEffect(() => {
     const node = dialogRef.current;
@@ -59,6 +71,7 @@ export default function VideoFrame({ src, poster, label }: VideoFrameProps) {
         className={styles.video}
         src={resolvedSrc}
         poster={resolvedPoster}
+        style={positionStyle}
         autoPlay
         loop
         muted
@@ -90,6 +103,7 @@ export default function VideoFrame({ src, poster, label }: VideoFrameProps) {
             className={styles.dialogVideo}
             src={resolvedSrc}
             poster={resolvedPoster}
+            style={positionStyle}
             autoPlay={open}
             loop
             muted

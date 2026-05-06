@@ -99,6 +99,7 @@ export default function TravelPage() {
         <VideoFrame
           src="/videos/mar-monte.mp4"
           label="Mar Monte Hyatt aerial view"
+          objectPosition="center bottom"
         />
         <p className={styles.body}>
           <span className={styles.label}>Note:</span>{' '}

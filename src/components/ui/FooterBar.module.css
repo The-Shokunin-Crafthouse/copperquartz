@@ -64,23 +64,50 @@
 }
 .columns::-webkit-scrollbar { display: none; }
 
-/* Right-edge swipe affordance — gradient fades the rightmost ~48px
-   of the columns row into --color-bg, signalling there is more content
-   to swipe to. When items fit and end before the fade region the
-   gradient overlays bg → invisible, so it only "appears" when content
-   genuinely overflows. Hidden at desktop where the row has room. */
+/* Edge swipe affordances — gradients fade ~48px of the columns row
+   into --color-bg, signalling there is more content in that direction.
+   FooterColumns toggles `data-scroll-edge` on the wrap based on the
+   current scrollLeft (start | middle | end | none). Sprint 2 fix: at
+   the right edge the right gradient retracts and the left gradient
+   appears, so the fade is never on top of the RSVP pill that lives at
+   the end of the row. */
+.fadeLeft,
 .fadeRight {
   position: absolute;
   top: 0;
   bottom: 0;
-  right: 0;
   width: var(--space-6);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--motion-fast) ease-out;
+}
+
+.fadeLeft {
+  left: 0;
+  background: linear-gradient(
+    to left,
+    rgb(from var(--color-bg) r g b / 0) 0%,
+    var(--color-bg) 100%
+  );
+}
+
+.fadeRight {
+  right: 0;
   background: linear-gradient(
     to right,
     rgb(from var(--color-bg) r g b / 0) 0%,
     var(--color-bg) 100%
   );
-  pointer-events: none;
+}
+
+.columnsWrap[data-scroll-edge='start'] .fadeRight,
+.columnsWrap[data-scroll-edge='middle'] .fadeRight {
+  opacity: 1;
+}
+
+.columnsWrap[data-scroll-edge='middle'] .fadeLeft,
+.columnsWrap[data-scroll-edge='end'] .fadeLeft {
+  opacity: 1;
 }
 
 .badge {
@@ -149,6 +176,7 @@
   }
 
   /* No swipe affordance needed at the Figma desktop layout — items fit. */
+  .fadeLeft,
   .fadeRight {
     display: none;
   }
