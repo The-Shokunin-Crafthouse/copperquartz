@@ -69,6 +69,11 @@ Thumbs.db
 # Figma bulk exports (keep structure, not assets)
 stages/02-design/figma/exports/
 
+# Raw camera-roll dump for the wedding-photo gallery. Optimized output
+# lives at public/images/wedding-photos/ (kebab-case, tracked).
+# Re-run `node scripts/optimize-photos.mjs` after dropping new photos.
+public/images/wedding photos/
+
 # model-local artifacts
 .claude-cache/
 .cursor-cache/

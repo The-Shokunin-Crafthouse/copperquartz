@@ -1,0 +1,115 @@
+/*
+ * Our Story page composition. Mirrors the Travel page's column rhythm
+ * (770px max, --space-8 between sections, --space-4 within) so the
+ * site reads as one editorial system. The gallery section breaks that
+ * rule: it matches the column to keep the eye locked, but the gallery
+ * itself spans the full column.
+ */
+
+.story {
+  --story-col-w: 770px;
+  --story-section-gap: var(--space-8);   /* 64 between sections */
+  --story-stack-gap: var(--space-4);     /* 32 within a section */
+
+  position: relative;
+  width: 100%;
+  max-width: var(--story-col-w);
+  margin-inline: auto;
+  padding-block: var(--space-10) var(--space-12);
+  padding-inline: var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--story-section-gap);
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--story-stack-gap);
+  width: 100%;
+}
+
+.heading {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-weight: 600;             /* Cormorant Garamond SemiBold */
+  font-size: var(--text-3xl);   /* 40 — Travel snap of Figma 42 */
+  line-height: 1.15;
+  color: var(--color-palm-leaf);
+  text-align: center;
+}
+
+.body {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: 400;             /* Commissioner Regular */
+  font-size: var(--text-lg);    /* 18 */
+  line-height: 31px;            /* matches Figma leading */
+  color: var(--color-brown);
+}
+
+.body p {
+  margin: 0;
+}
+
+.body p + p {
+  margin-top: 31px;
+}
+
+.label {
+  font-weight: 500;             /* Commissioner Medium */
+}
+
+/* Spotify embed — token-driven container so the iframe sits inside
+   the same column rhythm as body copy and the video frame above it.
+   Spotify's embed renders a fixed 352px-tall track card. */
+.spotify {
+  width: 100%;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background-color: var(--color-sand-linen);
+  isolation: isolate;
+}
+
+.spotify iframe {
+  display: block;
+  width: 100%;
+  border: 0;
+}
+
+/* ---------- Mobile (≤768px) ---------- */
+@media (max-width: 768px) {
+  .story {
+    padding-block: var(--space-6) var(--space-10);
+    padding-inline: var(--space-3);
+    gap: var(--space-6);                 /* 48 — slightly tighter */
+  }
+  .section {
+    gap: var(--space-3);                 /* 24 — within-section */
+  }
+  .heading {
+    font-size: var(--text-2xl);          /* 32 — match Travel mobile */
+    line-height: 1.2;
+  }
+  .body {
+    font-size: var(--text-base);         /* 16 */
+    line-height: 24px;
+  }
+  .body p + p {
+    margin-top: var(--space-2);          /* 16 */
+  }
+}
+
+/* ---------- Entrance: each section fades + drops together ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes story-section-in {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .section {
+    animation: story-section-in var(--motion-std) var(--ease-out-soft) both;
+    will-change: transform, opacity;
+  }
+  .section:nth-of-type(1) { animation-delay: 120ms; }
+  .section:nth-of-type(2) { animation-delay: 240ms; }
+}

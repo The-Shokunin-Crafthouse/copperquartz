@@ -33,6 +33,18 @@ const SECTIONS = {
     fullPage: true,
     description: 'Travel — flights, hotel, things to do',
   },
+  'our-story': {
+    route: '/our-story',
+    fullPage: true,
+    /* 170-photo gallery makes the document tens of thousands of px tall.
+       At PNG + 2x DPR a fullPage capture lands north of 100 MB and won't
+       fit in a GitHub PR comment. JPEG q80 + 1x DPR brings it back into
+       the same ballpark as the other sections (~5–15 MB). */
+    format: 'jpeg',
+    quality: 80,
+    deviceScaleFactor: 1,
+    description: 'Our Story — story, video, song, photo gallery',
+  },
 };
 
 const BREAKPOINTS = [360, 768, 1024, 1440];
@@ -93,15 +105,19 @@ try {
     const url = `http://${HOST}:${PORT}${config.route}`;
     console.log(`[preview] target=${url}`);
 
+    const format = config.format ?? 'png';
+    const ext = format === 'jpeg' ? 'jpg' : 'png';
+    const dpr = config.deviceScaleFactor ?? 2;
+
     for (const width of BREAKPOINTS) {
       const height = HEIGHTS[width] ?? HEIGHT_DEFAULT;
       const context = await browser.newContext({
         viewport: { width, height },
-        deviceScaleFactor: 2,
+        deviceScaleFactor: dpr,
         reducedMotion: 'reduce',     /* freezes entrance animations for stable snapshots */
       });
       const page = await context.newPage();
-      const file = join(outDir, `${width}.png`);
+      const file = join(outDir, `${width}.${ext}`);
 
       const consoleErrors = [];
       page.on('pageerror', (err) => consoleErrors.push(`pageerror: ${err.message}`));
@@ -109,7 +125,7 @@ try {
         if (msg.type() === 'error') consoleErrors.push(`console.error: ${msg.text()}`);
       });
 
-      await page.goto(url, { waitUntil: 'networkidle', timeout: 30_000 });
+      await page.goto(url, { waitUntil: 'networkidle', timeout: 60_000 });
       await page.waitForLoadState('domcontentloaded');
       await page.evaluate(() => document.fonts?.ready);
       /* Strip the Next.js dev indicator overlay so it doesn't bleed into snapshots. */
@@ -121,7 +137,48 @@ try {
           [data-nextjs-dev-tools-button] { display: none !important; }
         `,
       });
-      await page.screenshot({ path: file, fullPage: !!config.fullPage });
+      /* Materialize every lazy image: scroll the entire page once so the
+         IntersectionObserver fires for every off-screen <img>, then wait
+         until they're all decoded, then scroll back to the top so the
+         fullPage capture starts at y=0. Setting loading=eager alone
+         doesn't re-trigger a fetch on already-rendered lazy images. */
+      await page.evaluate(async () => {
+        const docHeight = () =>
+          Math.max(
+            document.body.scrollHeight,
+            document.documentElement.scrollHeight,
+          );
+        const step = window.innerHeight * 0.85;
+        let y = 0;
+        const max = docHeight();
+        while (y < max) {
+          window.scrollTo(0, y);
+          await new Promise((r) => setTimeout(r, 80));
+          y += step;
+        }
+        window.scrollTo(0, max);
+        await new Promise((r) => setTimeout(r, 200));
+        const imgs = Array.from(document.images);
+        await Promise.all(
+          imgs.map((img) =>
+            img.complete && img.naturalWidth > 0
+              ? Promise.resolve()
+              : new Promise((resolve) => {
+                  img.addEventListener('load', resolve, { once: true });
+                  img.addEventListener('error', resolve, { once: true });
+                }),
+          ),
+        );
+        window.scrollTo(0, 0);
+        await new Promise((r) => setTimeout(r, 200));
+      });
+      await page.waitForLoadState('networkidle', { timeout: 60_000 });
+      await page.screenshot({
+        path: file,
+        fullPage: !!config.fullPage,
+        type: format,
+        ...(format === 'jpeg' ? { quality: config.quality ?? 80 } : {}),
+      });
 
       const size = (await stat(file)).size;
       if (size < MIN_BYTES) {
