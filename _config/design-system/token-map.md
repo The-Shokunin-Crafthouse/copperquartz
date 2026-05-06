@@ -115,13 +115,23 @@ Helpers: `.grid-page`, `.col-full`, `.col-content` (span 8, offset 2 at lg+), `.
 
 ## Motion
 
-v1 ships interactive transitions only — no orchestrated entrances yet.
+| Token | Definition | Use |
+| --- | --- | --- |
+| `--motion-fast` | `220ms` | Hover / state change on buttons, links, icons |
+| `--motion-std` | `800ms` | Entrance fade-drop (body copy, nav links) |
+| `--motion-orchestrated` | `1800ms` | Orchestrated zoom-in (hero lockups) |
+| `--ease-out-soft` | `cubic-bezier(0.16, 1, 0.3, 1)` | Default easing for entrances and reveals |
+| `--ease-out-quint` | `cubic-bezier(0.4, 0, 1, 1)` | Exit-side easing for view transitions |
+
+`prefers-reduced-motion: reduce` collapses transitions to none and blocks autoplay (videos default to paused, replaced by poster).
+
+## Media
 
 | Token | Definition | Use |
 | --- | --- | --- |
-| (inline) | `220ms ease-out` | Hover/state change on buttons and links |
+| `--video-aspect` | `2.76 / 1` | Cinematic crop applied to all in-page video frames |
 
-`prefers-reduced-motion: reduce` collapses transitions to none. Tokenized motion scale to be defined when stage 03 build expands.
+Frames mask the source video uniformly — source aspect is irrelevant; the box owns the ratio.
 
 ## Structural primitives
 

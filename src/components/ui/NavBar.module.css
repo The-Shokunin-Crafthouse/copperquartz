@@ -51,7 +51,7 @@
 }
 
 .menuToggle:hover {
-  color: var(--color-teal);
+  color: var(--color-palm-leaf);
 }
 
 .menuToggle:focus-visible {
@@ -83,13 +83,13 @@
   font-family: var(--font-sans);
   font-weight: 400;                            /* Commissioner Regular for elegance */
   font-size: var(--nav-overlay-link-size);     /* 30px overlay — soft step under --text-2xl */
-  color: var(--color-palm-leaf);
+  color: var(--color-terracotta);              /* default → terracotta */
   text-decoration: none;
   white-space: nowrap;
   min-height: var(--height-tap);
   display: inline-flex;
   align-items: center;
-  transition: color 220ms ease-out;
+  transition: color var(--motion-fast) ease-out;
 }
 
 /* Restore the heavier desktop weight on the inline nav (overlay only
@@ -102,12 +102,13 @@
 
 @media (hover: hover) and (pointer: fine) {
   .link:hover {
-    color: var(--color-teal);
+    color: var(--color-palm-leaf);
   }
 }
 
-.link:active {
-  color: var(--color-terracotta);
+.link:active,
+.link[aria-current='page'] {
+  color: var(--color-palm-leaf);
 }
 
 .link:focus-visible {

@@ -1,0 +1,166 @@
+/*
+ * Cinematic 2.76:1 video frame, used uniformly across all in-page videos
+ * site-wide. The source video's native aspect is irrelevant — the frame
+ * masks via object-fit: cover. An expand-icon overlay opens a fullscreen
+ * dialog rendering the same crop ratio.
+ *
+ * Aspect token: --video-aspect (= 2.76 / 1) lives in tokens.css.
+ */
+
+.frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: var(--video-aspect);
+  overflow: hidden;
+  border-radius: var(--radius-md);
+  background-color: var(--color-sand-linen);
+  isolation: isolate;
+}
+
+.video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.expand {
+  position: absolute;
+  bottom: var(--space-2);
+  right: var(--space-2);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-full);
+  background-color: rgba(93, 73, 49, 0.55);  /* brown @ 55% */
+  color: var(--color-bg);
+  cursor: pointer;
+  transition: background-color var(--motion-fast) ease-out,
+              transform var(--motion-fast) ease-out;
+  z-index: 1;
+  -webkit-tap-highlight-color: transparent;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .expand:hover {
+    background-color: var(--color-palm-leaf);
+    transform: scale(1.06);
+  }
+}
+
+.expand:active {
+  background-color: var(--color-palm-leaf-deep);
+  transform: scale(0.96);
+}
+
+.expand:focus-visible {
+  outline: var(--border-focus) solid var(--color-gold);
+  outline-offset: var(--border-focus);
+}
+
+/* ---------- Fullscreen dialog ---------- */
+
+/* Native <dialog> is display:none until showModal() flips the [open]
+   attribute. Gate every layout rule on [open] so the closed dialog
+   stays out of flow even if a parent stylesheet wins specificity. */
+.dialog {
+  display: none;
+}
+
+.dialog[open] {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+  background-color: rgba(93, 73, 49, 0.92);  /* brown wash */
+  border: 0;
+  margin: 0;
+  width: 100vw;
+  height: 100vh;
+  max-width: none;
+  max-height: none;
+  overflow: hidden;
+}
+
+.dialog::backdrop {
+  background-color: rgba(93, 73, 49, 0.92);
+}
+
+/* The fullscreen video frame keeps the same 2.76:1 ratio, sized to fit
+   the viewport width and constrained so it never pushes off-screen
+   vertically on tall windows. */
+.dialogFrame {
+  position: relative;
+  width: 100%;
+  max-width: min(100%, calc((100vh - var(--space-12)) * 2.76));
+  aspect-ratio: var(--video-aspect);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background-color: var(--color-sand-linen);
+}
+
+.dialogVideo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.close {
+  position: absolute;
+  top: var(--space-3);
+  right: var(--space-3);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-full);
+  background-color: var(--color-bg);
+  color: var(--color-brown);
+  cursor: pointer;
+  transition: background-color var(--motion-fast) ease-out,
+              transform var(--motion-fast) ease-out;
+  z-index: 2;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .close:hover {
+    background-color: var(--color-coral-rose);
+    color: var(--color-bg);
+    transform: scale(1.06);
+  }
+}
+
+.close:active {
+  transform: scale(0.96);
+}
+
+.close:focus-visible {
+  outline: var(--border-focus) solid var(--color-gold);
+  outline-offset: var(--border-focus);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .expand,
+  .close {
+    transition: none;
+  }
+  .expand:hover,
+  .close:hover {
+    transform: none;
+  }
+}
