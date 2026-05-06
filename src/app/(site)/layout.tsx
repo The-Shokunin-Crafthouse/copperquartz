@@ -1,18 +1,17 @@
 import NavBar from '@/src/components/ui/NavBar';
 import FooterBar from '@/src/components/ui/FooterBar';
 import PageBackdrop from '@/src/components/ui/PageBackdrop';
-import { withBase } from '@/src/lib/paths';
 import styles from './layout.module.css';
 
 const NAV_LINKS = [
-  { label: 'Our Story', href: withBase('/our-story') },
-  { label: 'Venue', href: withBase('/venue') },
-  { label: 'Travel', href: withBase('/travel') },
-  { label: 'Registry', href: withBase('/registry') },
-  { label: 'Q&A', href: withBase('/qa') },
+  { label: 'Our Story', href: '/our-story' },
+  { label: 'Venue', href: '/venue' },
+  { label: 'Travel', href: '/travel' },
+  { label: 'Registry', href: '/registry' },
+  { label: 'Q&A', href: '/qa' },
 ];
 
-const RSVP_HREF = withBase('/rsvp');
+const RSVP_HREF = '/rsvp';
 const WEDDING_DATE = '2026-09-29';
 
 /*
