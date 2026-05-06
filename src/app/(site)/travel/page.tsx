@@ -61,36 +61,50 @@ export default function TravelPage() {
           Hotel Accommodations
         </h2>
         <p className={styles.body}>
-          <span className={styles.label}>Mar Monte Hyatt:</span>{' '}
-          <a
-            className={styles.coral}
-            href="https://www.hyatt.com/events/en-US/group-booking/SBARS/G-BAHN"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Book your room with our discount, $200 off
-          </a>
-          <br />
-          <span className={styles.label}>Address:</span>{' '}
-          <a
-            className={styles.coral}
-            href="https://maps.app.goo.gl/RPGXMm2QDShZS7qi6"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            1111 East Cabrillo Boulevard, Santa Barbara, CA 93103
-          </a>
-          <br />
-          <span className={styles.label}>Website:</span>{' '}
-          <a
-            className={styles.coral}
-            href="https://marmontehotel.com/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            https://marmontehotel.com/
-          </a>
-          <br />
+          <span className={styles.label}>Mar Monte Hyatt</span>
+        </p>
+        <dl className={styles.meta}>
+          <div className={styles.metaRow}>
+            <dt>Booking</dt>
+            <dd>
+              <a
+                className={styles.coral}
+                href="https://www.hyatt.com/events/en-US/group-booking/SBARS/G-BAHN"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Book your room with our discount, $200 off
+              </a>
+            </dd>
+          </div>
+          <div className={styles.metaRow}>
+            <dt>Address</dt>
+            <dd>
+              <a
+                className={styles.coral}
+                href="https://maps.app.goo.gl/RPGXMm2QDShZS7qi6"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                1111 East Cabrillo Boulevard, Santa Barbara, CA 93103
+              </a>
+            </dd>
+          </div>
+          <div className={styles.metaRow}>
+            <dt>Website</dt>
+            <dd>
+              <a
+                className={styles.coral}
+                href="https://marmontehotel.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                marmontehotel.com
+              </a>
+            </dd>
+          </div>
+        </dl>
+        <p className={styles.body}>
           This hotel is directly across the street from the reception and
           where the bride and groom will be staying. There is limited
           availability so please reach out if you wish to stay here and they
@@ -104,44 +118,60 @@ export default function TravelPage() {
           />
         </div>
         <p className={styles.body}>
-          <span className={styles.label}>Cabrillo Inn:</span>{' '}
-          <a
-            className={styles.coral}
-            href="https://hotels.cloudbeds.com/en/reservation/cksufF/?currency=usd&checkin=2026-09-28&checkout=2026-09-30&adults=2&rid=290024"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Book your room
-          </a>{' '}
-          Notes: Add &ldquo;returning guest discount&rdquo;
-          <br />
-          <span className={styles.label}>Address:</span>{' '}
-          <a
-            className={styles.coral}
-            href="https://maps.app.goo.gl/5mQAfp2qjKUcRucv8"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            931 E Cabrillo Blvd, Santa Barbara, CA 93103
-          </a>
-          <br />
-          <span className={styles.label}>Website:</span>{' '}
-          <a
-            className={styles.coral}
-            href="https://cabrilloinn.com"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            https://cabrilloinn.com
-          </a>{' '}
-          (although the website has been down)
-          <br />
-          This hotel is a 4 minute walk from the reception venue.
-          Unfortunately they do not provide room blocks but we got the
-          hook up. My Aunt spoke with the manager and was able to get us
-          a cheaper rate. With that discount you can get a Deluxe Ocean
-          view with two queen beds or king for $199 a night. Or a
-          standard king for $144 a night. Make sure you add &ldquo;
+          <span className={styles.label}>Cabrillo Inn</span>
+        </p>
+        <dl className={styles.meta}>
+          <div className={styles.metaRow}>
+            <dt>Booking</dt>
+            <dd>
+              <a
+                className={styles.coral}
+                href="https://hotels.cloudbeds.com/en/reservation/cksufF/?currency=usd&checkin=2026-09-28&checkout=2026-09-30&adults=2&rid=290024"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Book your room
+              </a>{' '}
+              <span className={styles.metaInline}>
+                — add &ldquo;returning guest discount&rdquo; in the notes
+              </span>
+            </dd>
+          </div>
+          <div className={styles.metaRow}>
+            <dt>Address</dt>
+            <dd>
+              <a
+                className={styles.coral}
+                href="https://maps.app.goo.gl/5mQAfp2qjKUcRucv8"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                931 E Cabrillo Blvd, Santa Barbara, CA 93103
+              </a>
+            </dd>
+          </div>
+          <div className={styles.metaRow}>
+            <dt>Website</dt>
+            <dd>
+              <a
+                className={styles.coral}
+                href="https://cabrilloinn.com"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                cabrilloinn.com
+              </a>{' '}
+              <span className={styles.metaInline}>
+                (currently down)
+              </span>
+            </dd>
+          </div>
+        </dl>
+        <p className={styles.body}>
+          A 4-minute walk from the reception venue. They don&rsquo;t offer a
+          room block, but my Aunt arranged a cheaper rate with the manager:
+          a Deluxe Ocean View (two queens or one king) for $199/night, or a
+          standard king for $144/night. Make sure to add &ldquo;
           <span className={styles.label}>returning guest discount</span>
           &rdquo; in the notes section before checkout.
         </p>
