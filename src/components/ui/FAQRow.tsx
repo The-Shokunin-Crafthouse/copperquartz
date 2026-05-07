@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useId, useState } from 'react';
 import type { FaqBlock, FaqInline } from '@/src/lib/parseFaqMarkdown';
 import styles from './FAQRow.module.css';
@@ -79,13 +80,35 @@ function renderBlock(block: FaqBlock, key: number) {
 }
 
 function renderInline(runs: FaqInline[]) {
-  return runs.map((run, i) =>
-    run.type === 'strong' ? (
-      <strong className={styles.strong} key={i}>
-        {run.text}
-      </strong>
-    ) : (
-      <span key={i}>{run.text}</span>
-    ),
-  );
+  return runs.map((run, i) => {
+    if (run.type === 'strong') {
+      return (
+        <strong className={styles.strong} key={i}>
+          {run.text}
+        </strong>
+      );
+    }
+    if (run.type === 'link') {
+      const internal = run.href.startsWith('/');
+      if (internal) {
+        return (
+          <Link className={styles.link} href={run.href} key={i}>
+            {run.text}
+          </Link>
+        );
+      }
+      return (
+        <a
+          className={styles.link}
+          href={run.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          key={i}
+        >
+          {run.text}
+        </a>
+      );
+    }
+    return <span key={i}>{run.text}</span>;
+  });
 }

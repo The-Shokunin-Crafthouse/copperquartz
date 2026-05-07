@@ -18,7 +18,8 @@
 
 export type FaqInline =
   | { type: 'text'; text: string }
-  | { type: 'strong'; text: string };
+  | { type: 'strong'; text: string }
+  | { type: 'link'; text: string; href: string };
 
 export type FaqBlock =
   | { type: 'paragraph'; runs: FaqInline[] }
@@ -145,9 +146,13 @@ export function parseFaqMarkdown(source: string): FaqDocument {
   return { sections, closingNote };
 }
 
+/* Token order matters: `[**bold link**](href)` is rare in practice but
+   the link regex runs first so the bold inside the label stays
+   unprocessed (kept as plain text inside the link). Keep the markdown
+   simple — one inline style per run. */
 function parseInline(text: string): FaqInline[] {
   const runs: FaqInline[] = [];
-  const re = /\*\*(.+?)\*\*/g;
+  const re = /\[([^\]]+)\]\(([^)]+)\)|\*\*(.+?)\*\*/g;
   let lastIndex = 0;
   let match: RegExpExecArray | null;
 
@@ -155,7 +160,11 @@ function parseInline(text: string): FaqInline[] {
     if (match.index > lastIndex) {
       runs.push({ type: 'text', text: text.slice(lastIndex, match.index) });
     }
-    runs.push({ type: 'strong', text: match[1] });
+    if (match[1] !== undefined && match[2] !== undefined) {
+      runs.push({ type: 'link', text: match[1], href: match[2] });
+    } else if (match[3] !== undefined) {
+      runs.push({ type: 'strong', text: match[3] });
+    }
     lastIndex = re.lastIndex;
   }
   if (lastIndex < text.length) {

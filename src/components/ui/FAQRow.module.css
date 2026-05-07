@@ -25,7 +25,10 @@
   justify-content: space-between;
   gap: var(--space-3);                       /* 24 — desktop default */
   width: 100%;
-  padding-block: var(--space-3);
+  /* Top pad (24) sets the line→question gap; bottom pad (16) plus the
+     answer's own zero top pad gives a question→answer gap that's exactly
+     8px tighter than the line→question gap (24 − 8 = 16). */
+  padding-block: var(--space-3) var(--space-2);
   padding-inline: 0;
   background: none;
   border: 0;
@@ -118,7 +121,11 @@
   font-size: var(--text-lg);
   line-height: 31px;
   color: var(--color-brown);
-  padding-block: var(--space-1) var(--space-3);
+  /* Top pad: 0 — gap is owned by the question's bottom pad alone, so the
+     question→answer gap stays exactly 16 (8 less than the 24 line→question
+     gap). Bottom pad: 24 — same as the line→question gap on the next row,
+     so opened rows feel evenly inset top and bottom. */
+  padding-block: 0 var(--space-3);
 }
 
 .paragraph {
@@ -153,6 +160,31 @@
 .strong {
   font-weight: 500;
   color: var(--color-brown);
+}
+
+/* Inline link — same coral vocabulary as the global .coral link style
+   used on /travel and elsewhere. Hover lifts toward terracotta. */
+.link {
+  font-weight: 500;
+  color: var(--color-coral-rose);
+  text-decoration: none;
+  transition: color var(--motion-fast) ease-out;
+  border-radius: var(--radius-sm);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .link:hover {
+    color: var(--color-terracotta);
+  }
+}
+
+.link:active {
+  color: var(--color-terracotta);
+}
+
+.link:focus-visible {
+  outline: var(--border-focus) solid var(--color-gold);
+  outline-offset: var(--border-focus);
 }
 
 /* ---------- Mobile (≤768px) ----------

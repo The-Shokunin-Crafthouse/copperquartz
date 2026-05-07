@@ -11,8 +11,8 @@ The ceremony is held outdoors in the Sunken Gardens at the Santa Barbara Courtho
 **Where do I park?**
 Three options, all close:
 
-- **City Lot 7 (Anacapa Parking)** — 1115 Anacapa St. Directly across the street from the courthouse. This is your easiest bet.
-- **City Lot 2 (Chapala Parking)** — 1119 Chapala St. One block away.
+- **City Lot 7 (Anacapa Parking)** — 1115 Anacapa St. Directly across the street from the courthouse. This is your easiest bet. First 75 minutes free, $3/hour after.
+- **City Lot 2 (Chapala Parking)** — 1119 Chapala St. One block away. First 75 minutes free, $3/hour after.
 - **Street Parking** — Available on Anacapa, Figueroa, and Santa Barbara streets. Check posted signs for 75-minute limits and meter fees.
 
 **Is there transportation between the ceremony and reception?**
@@ -59,17 +59,17 @@ Yes. The buffet includes vegetarian options throughout. If you have allergies or
 ### Travel & Accommodations
 
 **Is there a hotel room block?**
-Yes. Head to the Travel page for booking links and all the details.
+Yes. Head to the [Travel page](/travel) for booking links and all the details.
 
 **What airport should I fly into?**
-Santa Barbara Airport (SBA) is 15 to 20 minutes from downtown and serves all five major airlines. It's the easiest option. Visit the Travel page for more on getting around once you're here.
+Santa Barbara Airport (SBA) is 15 to 20 minutes from downtown and serves all five major airlines. It's the easiest option. Visit the [Travel page](/travel) for more on getting around once you're here.
 
 ---
 
 ### Gifts
 
 **I can't make it. Is there somewhere I can send a gift?**
-We know we planned this on a tight timeline. No obligation at all, but if you'd like to do something, visit the Registry page and consider donating to one of our charities. That means more to us than anything off a list.
+We know we planned this on a tight timeline. No obligation at all, but if you'd like to do something, visit the [Registry page](/registry) and consider donating to one of our charities. That means more to us than anything off a list.
 
 ---
 
