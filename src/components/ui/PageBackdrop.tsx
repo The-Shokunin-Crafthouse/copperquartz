@@ -25,7 +25,12 @@ export default function PageBackdrop() {
 
   return (
     <>
-      <div className={styles.backdrop} data-mode={mode} aria-hidden>
+      <div
+        className={styles.backdrop}
+        data-mode={mode}
+        data-page-backdrop
+        aria-hidden
+      >
         <img
           className={styles.palm}
           src={withBase('/images/palm-illustration@2x.jpg')}
@@ -48,6 +53,7 @@ export default function PageBackdrop() {
           src={withBase('/images/palm-illustration@2x.jpg')}
           alt=""
           aria-hidden
+          data-page-backdrop
         />
       )}
     </>

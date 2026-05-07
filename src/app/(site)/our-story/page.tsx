@@ -2,6 +2,7 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import VideoFrame from '@/src/components/ui/VideoFrame';
 import PhotoGallery, { type Photo } from '@/src/components/ui/PhotoGallery';
+import { withBase } from '@/src/lib/paths';
 import styles from './page.module.css';
 
 /*
@@ -96,6 +97,20 @@ export default function OurStoryPage() {
             ordinary days feel extraordinary. And it all started with a
             simple cup of coffee. ☕
           </p>
+        </div>
+
+        <div className={styles.palmBreak} aria-hidden>
+          <span className={styles.palmBreakIcon}>
+            <img
+              src={withBase('/images/svg/palm-break.svg')}
+              alt=""
+              width={32}
+              height={85}
+            />
+          </span>
+        </div>
+
+        <div className={styles.body}>
           <p>
             <span className={styles.label}>
               So why Copper and Quartz you ask?
