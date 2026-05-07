@@ -51,7 +51,7 @@
 }
 
 .body + .body {
-  margin-top: var(--space-1);   /* paragraph rhythm — 8 above the 31 leading */
+  margin-top: 31px;             /* paragraph rhythm — matches /travel desktop cadence */
 }
 
 /* Venue metadata — definition list. Label + value on one row at desktop
