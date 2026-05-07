@@ -129,6 +129,17 @@
   .spotify iframe {
     height: 80px;
   }
+  /* Mobile palm-break: collapse the 85×32 landscape slot to a 24×24
+     square. The SVG ships preserveAspectRatio="none" so the cream
+     ground + palm path scale uniformly within the smaller box. */
+  .palmBreakIcon {
+    width: 24px;
+    height: 24px;
+  }
+  .palmBreakIcon img {
+    width: 24px;
+    height: 24px;
+  }
 }
 
 /* ---------- Mobile (≤768px) ---------- */

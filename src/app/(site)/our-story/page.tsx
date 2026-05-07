@@ -51,7 +51,7 @@ export default function OurStoryPage() {
         <div className={styles.body}>
           <p>
             Meghan and Levi&rsquo;s story started the way a lot of great love
-            stories do&mdash;simply, over coffee in 2022. Meghan, a Colorado
+            stories do. Simply, over coffee in 2022. Meghan, a Colorado
             native at heart and a Denver-based educator and singer-songwriter,
             was already deeply rooted in her career and community. Levi had
             just recently traded the fast pace of New York for the mountains,
@@ -62,9 +62,9 @@ export default function OurStoryPage() {
           <p>
             From that first coffee date, it didn&rsquo;t take long to realize
             something special was unfolding. They quickly discovered a shared
-            love for the outdoors&mdash;camping under the stars, hiking
+            love for the outdoors: camping under the stars, hiking
             Colorado trails, and chasing new adventures together. Just as
-            much, they found joy in the quieter moments: cozy nights at home,
+            much, they found joy in the quieter moments. Cozy nights at home,
             good conversation, and making each other laugh endlessly.
           </p>
         </div>
@@ -74,18 +74,18 @@ export default function OurStoryPage() {
         <div className={styles.body}>
           <p>
             In 2023, their little family grew by four paws with the arrival
-            of their puppy, Tarone&mdash;who quickly became the center of
+            of their puppy, Tarone, who quickly became the center of
             their world and the most spoiled (and loved) member of the
             household. On her 2025 album <em>Shadows of a Ghost Town</em>,
-            Meghan wrote a song for Levi called <em>Copper and Quartz</em>{' '}
-            &mdash; hence the name of the story and loosely tied to the
+            Meghan wrote a song for Levi called <em>Copper and Quartz</em>,
+            hence the name of the story and loosely tied to the
             wedding colors as well.
           </p>
           <p>
             What makes Meghan and Levi work so well is how deeply they
             support one another. Levi is Meghan&rsquo;s biggest fan,
             cheering her on in her music career, while Meghan encourages
-            Levi&rsquo;s passions&mdash;whether that&rsquo;s a day on the
+            Levi&rsquo;s passions, whether that&rsquo;s a day on the
             golf course, time spent dirt biking, or bringing his ever-growing
             woodworking business to life. They show up for each other in big
             ways and small ones, always with love, humor, and a lot of
@@ -118,7 +118,7 @@ export default function OurStoryPage() {
             Meghan wrote a beautiful song for Levi after a hike they had
             visiting Meghan&rsquo;s family in Arizona. The story goes
             something like &ldquo;whenever you find quartz, copper is
-            nearby&rdquo; &mdash; or something like that. You can ask
+            nearby,&rdquo; or something like that. You can ask
             Stefanie at the wedding for the proper explanation.
           </p>
         </div>
