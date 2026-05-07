@@ -129,8 +129,8 @@
   padding: 0;
   border: 0;
   border-radius: var(--radius-full);
-  background-color: var(--color-bg);
-  color: var(--color-brown);
+  background-color: var(--color-terracotta);
+  color: var(--color-bg);
   cursor: pointer;
   transition: background-color var(--motion-fast) ease-out,
               transform var(--motion-fast) ease-out;
@@ -140,7 +140,6 @@
 @media (hover: hover) and (pointer: fine) {
   .close:hover {
     background-color: var(--color-coral-rose);
-    color: var(--color-bg);
     transform: scale(1.06);
   }
 }

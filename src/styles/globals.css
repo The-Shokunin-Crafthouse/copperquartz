@@ -43,6 +43,16 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* PhotoGallery's lightbox toggles `body.lightbox-open`. The PageBackdrop
+   palm uses mix-blend-mode: darken, which has long-standing cross-browser
+   bugs when stacked under a <dialog>'s top layer — most notably a hue
+   shift that grows after a few next/prev navigations. Force every
+   backdrop element off while the lightbox is open so the dialog renders
+   on a clean cream surface. */
+body.lightbox-open [data-page-backdrop] {
+  display: none !important;
+}
+
 a {
   color: inherit;
 }
