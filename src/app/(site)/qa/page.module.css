@@ -1,8 +1,6 @@
 /*
- * Q&A page composition. Mirrors Travel/Our Story column rhythm but the
- * Figma column is narrower (663px) than the editorial column (770px).
- * We honor 663 → falls between --content-max-width (650) and the wider
- * editorial column; centered, padded by --space-3 on phones.
+ * Q&A page composition. 770px matches --travel-col-w / --venue-col-w —
+ * same page-family rhythm.
  *
  * Section grouping (Logistics, Dress Code, …) renders as a small-caps
  * eyebrow above each accordion stack — proposed in the sprint contract,
@@ -10,7 +8,7 @@
  */
 
 .qa {
-  --qa-col-w: 663px;
+  --qa-col-w: 770px;
   --qa-section-gap: var(--space-6);     /* 48 — between eyebrow groups */
   --qa-row-gap: var(--space-3);         /* 24 — between rows in a group */
 
@@ -96,7 +94,7 @@
 /* ---------- Entrance: heading drops in, then sections cascade ---------- */
 @media (prefers-reduced-motion: no-preference) {
   @keyframes qa-in {
-    from { opacity: 0; transform: translateY(12px); }
+    from { opacity: 0; transform: translateY(var(--space-2)); }
     to   { opacity: 1; transform: translateY(0); }
   }
   .heading,

@@ -38,7 +38,7 @@
   font-family: var(--font-sans);
   font-weight: 500;
   font-size: var(--text-lg);
-  line-height: 31px;
+  line-height: 1.55;
   color: var(--color-brown);
 }
 
@@ -120,7 +120,7 @@
   font-family: var(--font-sans);
   font-weight: 400;
   font-size: var(--text-lg);
-  line-height: 31px;
+  line-height: 1.55;
   color: var(--color-brown);
   /* Top pad 0 — the question's 16px bottom pad is the entire question→
      answer gap. Bottom pad var(--space-3) leaves a 24px breath below the
@@ -197,11 +197,11 @@
     gap: var(--space-3);                     /* 24 — explicit per spec */
     padding-block: var(--space-2);
     font-size: var(--text-base);             /* 16 */
-    line-height: 24px;
+    line-height: 1.55;
   }
   .answer {
     font-size: var(--text-base);
-    line-height: 24px;
+    line-height: 1.55;
   }
 }
 

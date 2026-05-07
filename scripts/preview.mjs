@@ -59,6 +59,11 @@ const SECTIONS = {
     route: '/qa',
     fullPage: true,
     description: 'Q&A — accordion FAQ',
+    /* Pre-open the parking question on every breakpoint so the snapshot
+       captures the open accordion state — palm-leaf icon bg, 180° chevron
+       flip, expanded answer with bulleted sub-list, surrounding rows
+       pushed down. Targeted by accessible name (the question text). */
+    preOpen: { role: 'button', name: 'Where do I park?' },
   },
 };
 
@@ -192,6 +197,18 @@ try {
         await new Promise((r) => setTimeout(r, 200));
       });
       await page.waitForLoadState('networkidle', { timeout: 60_000 });
+      if (config.preOpen) {
+        /* Click after lazy-image materialization so accordion height and
+           hairline positions are fully measured. reducedMotion:'reduce'
+           on the context collapses the row's grid-rows transition to
+           instant — no need to wait for animation timings. Scroll back
+           to top after click so fullPage capture starts at y=0. */
+        await page
+          .getByRole(config.preOpen.role, { name: config.preOpen.name })
+          .click();
+        await page.evaluate(() => window.scrollTo(0, 0));
+        await page.waitForTimeout(120);
+      }
       await page.screenshot({
         path: file,
         fullPage: !!config.fullPage,
