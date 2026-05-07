@@ -1,15 +1,17 @@
 'use client';
 
+import Link from 'next/link';
 import { useId, useState } from 'react';
+import type { FaqBlock, FaqInline } from '@/src/lib/parseFaqMarkdown';
 import styles from './FAQRow.module.css';
 
 type FAQRowProps = {
   question: string;
-  answer: string;
+  blocks: FaqBlock[];
   defaultOpen?: boolean;
 };
 
-export default function FAQRow({ question, answer, defaultOpen = false }: FAQRowProps) {
+export default function FAQRow({ question, blocks, defaultOpen = false }: FAQRowProps) {
   const [open, setOpen] = useState(defaultOpen);
   const answerId = useId();
 
@@ -23,13 +25,90 @@ export default function FAQRow({ question, answer, defaultOpen = false }: FAQRow
         onClick={() => setOpen((v) => !v)}
       >
         <span className={styles.questionText}>{question}</span>
-        <span className={styles.icon} aria-hidden="true">
-          {open ? '−' : '+'}
+        <span
+          className={styles.iconBubble}
+          data-open={open ? 'true' : 'false'}
+          aria-hidden="true"
+        >
+          <svg
+            className={styles.iconChevron}
+            data-open={open ? 'true' : 'false'}
+            viewBox="0 0 24 24"
+            width="14"
+            height="14"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <polyline points="6 9 12 15 18 9" />
+          </svg>
         </span>
       </button>
-      <div id={answerId} className={styles.answerWrap} hidden={!open}>
-        <p className={styles.answer}>{answer}</p>
+      <div
+        id={answerId}
+        className={styles.answerWrap}
+        data-open={open ? 'true' : 'false'}
+        role="region"
+      >
+        <div className={styles.answerInner}>
+          <div className={styles.answer}>
+            {blocks.map((block, i) => renderBlock(block, i))}
+          </div>
+        </div>
       </div>
     </div>
   );
+}
+
+function renderBlock(block: FaqBlock, key: number) {
+  if (block.type === 'paragraph') {
+    return (
+      <p className={styles.paragraph} key={key}>
+        {renderInline(block.runs)}
+      </p>
+    );
+  }
+  return (
+    <ul className={styles.list} key={key}>
+      {block.items.map((runs, i) => (
+        <li key={i}>{renderInline(runs)}</li>
+      ))}
+    </ul>
+  );
+}
+
+function renderInline(runs: FaqInline[]) {
+  return runs.map((run, i) => {
+    if (run.type === 'strong') {
+      return (
+        <strong className={styles.strong} key={i}>
+          {run.text}
+        </strong>
+      );
+    }
+    if (run.type === 'link') {
+      const internal = run.href.startsWith('/');
+      if (internal) {
+        return (
+          <Link className={styles.link} href={run.href} key={i}>
+            {run.text}
+          </Link>
+        );
+      }
+      return (
+        <a
+          className={styles.link}
+          href={run.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          key={i}
+        >
+          {run.text}
+        </a>
+      );
+    }
+    return <span key={i}>{run.text}</span>;
+  });
 }
