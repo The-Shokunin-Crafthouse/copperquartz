@@ -74,7 +74,7 @@
   align-items: center;
   justify-content: center;
   padding: var(--space-4);
-  background-color: rgba(93, 73, 49, 0.92);    /* matches VideoFrame */
+  background-color: var(--color-bg);           /* matches the site background */
   border: 0;
   margin: 0;
   width: 100vw;
@@ -87,7 +87,7 @@
 }
 
 .dialog::backdrop {
-  background-color: rgba(93, 73, 49, 0.92);
+  background-color: var(--color-bg);
 }
 
 /* Image stage. The image element below uses max-width/height to fit
@@ -129,8 +129,8 @@
   padding: 0;
   border: 0;
   border-radius: var(--radius-full);
-  background-color: var(--color-bg);
-  color: var(--color-brown);
+  background-color: var(--color-terracotta);
+  color: var(--color-bg);
   cursor: pointer;
   transition: background-color var(--motion-fast) ease-out,
               transform var(--motion-fast) ease-out,
@@ -152,7 +152,6 @@
   }
   .nav:hover {
     background-color: var(--color-coral-rose);
-    color: var(--color-bg);
     transform: translateY(-50%) scale(1.06);
   }
 }
@@ -179,8 +178,8 @@
   padding: 0;
   border: 0;
   border-radius: var(--radius-full);
-  background-color: var(--color-bg);
-  color: var(--color-brown);
+  background-color: var(--color-terracotta);
+  color: var(--color-bg);
   cursor: pointer;
   transition: background-color var(--motion-fast) ease-out,
               transform var(--motion-fast) ease-out,
@@ -191,7 +190,6 @@
 @media (hover: hover) and (pointer: fine) {
   .close:hover {
     background-color: var(--color-coral-rose);
-    color: var(--color-bg);
     transform: scale(1.06);
   }
 }
