@@ -25,10 +25,11 @@
   justify-content: space-between;
   gap: var(--space-3);                       /* 24 — desktop default */
   width: 100%;
-  /* Top pad (24) sets the line→question gap; bottom pad (16) plus the
-     answer's own zero top pad gives a question→answer gap that's exactly
-     8px tighter than the line→question gap (24 − 8 = 16). */
-  padding-block: var(--space-3) var(--space-2);
+  /* Symmetric 16/16. Closed state: the question is vertically centered
+     between the line above and the line below. Open state: the answer's
+     zero top pad keeps the question→answer gap at 16, equal to the
+     line→question gap so the read flow is uniform top to bottom. */
+  padding-block: var(--space-2);
   padding-inline: 0;
   background: none;
   border: 0;
@@ -121,10 +122,10 @@
   font-size: var(--text-lg);
   line-height: 31px;
   color: var(--color-brown);
-  /* Top pad: 0 — gap is owned by the question's bottom pad alone, so the
-     question→answer gap stays exactly 16 (8 less than the 24 line→question
-     gap). Bottom pad: 24 — same as the line→question gap on the next row,
-     so opened rows feel evenly inset top and bottom. */
+  /* Top pad 0 — the question's 16px bottom pad is the entire question→
+     answer gap. Bottom pad var(--space-3) leaves a 24px breath below the
+     answer before the next row's hairline; intentionally heavier than the
+     16/16 question rhythm so the answer reads as the closing beat. */
   padding-block: 0 var(--space-3);
 }
 
