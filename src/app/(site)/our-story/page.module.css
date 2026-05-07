@@ -99,7 +99,11 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%) rotate(-90deg);
+  /* +90 instead of -90: the asset's leaf is on the upper half of its
+     32×85 portrait canvas, so a -90 rotation lands the leaf pointing
+     downward — matching what the user reported as "upside down".
+     Rotating the other way puts the leaf above the trunk. */
+  transform: translate(-50%, -50%) rotate(90deg);
 }
 
 /* Spotify embed — token-driven container so the iframe sits inside
