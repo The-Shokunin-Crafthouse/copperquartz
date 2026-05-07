@@ -1,0 +1,163 @@
+/*
+ * Venue page composition. Single centered column at 770px (matches the
+ * Travel column rhythm established Sprint 2). Two sections — Sunken
+ * Garden, Cabrillo Pavilion — separated by --space-8 (64). Within a
+ * section, heading → meta → media → body stack at --space-4 (32).
+ *
+ * Mobile reflow uses a single @media (max-width: 768px) block — no DOM
+ * changes, all sizing snaps to existing tokens.
+ */
+
+.venue {
+  --venue-col-w: 770px;
+  --venue-section-gap: var(--space-8);   /* 64 — between sections */
+  --venue-stack-gap: var(--space-4);     /* 32 — within a section */
+
+  position: relative;
+  width: 100%;
+  max-width: var(--venue-col-w);
+  margin-inline: auto;
+  padding-block: var(--space-10) var(--space-12);
+  padding-inline: var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--venue-section-gap);
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--venue-stack-gap);
+  width: 100%;
+}
+
+.heading {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-weight: 600;             /* Cormorant Garamond SemiBold */
+  font-size: var(--text-3xl);   /* 40 — snap from Figma 42 */
+  line-height: 1.15;
+  color: var(--color-palm-leaf);
+  text-align: center;
+}
+
+.body {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: 400;             /* Commissioner Regular */
+  font-size: var(--text-lg);    /* 18 */
+  line-height: 31px;            /* matches Figma leading */
+  color: var(--color-brown);
+}
+
+.body + .body {
+  margin-top: 31px;             /* paragraph rhythm — matches /travel desktop cadence */
+}
+
+/* Venue metadata — definition list. Label + value on one row at desktop
+   (label fixed-width column, value flows right); stacks on mobile so
+   long addresses don't truncate. Mirrors /travel .meta. */
+.meta {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: 400;
+  font-size: var(--text-lg);
+  line-height: 31px;
+  color: var(--color-brown);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.metaRow {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  column-gap: var(--space-2);
+  align-items: baseline;
+}
+
+.metaRow dt {
+  font-weight: 500;             /* Commissioner Medium */
+  color: var(--color-brown);
+}
+
+.metaRow dt::after {
+  content: ':';
+}
+
+.metaRow dd {
+  margin: 0;
+  min-width: 0;
+}
+
+.coral {
+  font-weight: 500;
+  color: var(--color-coral-rose);
+  text-decoration: none;
+  transition: color var(--motion-fast) ease-out;
+  border-radius: var(--radius-sm);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .coral:hover {
+    color: var(--color-terracotta);
+  }
+}
+
+.coral:active {
+  color: var(--color-terracotta);
+}
+
+.coral:focus-visible {
+  outline: var(--border-focus) solid var(--color-gold);
+  outline-offset: var(--border-focus);
+}
+
+/* ---------- Mobile (≤768px) ----------
+   Tighter side padding, smaller block padding. Heading drops to 32 and
+   body leading tightens 31→24, matching the /travel mobile pattern. */
+@media (max-width: 768px) {
+  .venue {
+    padding-block: var(--space-6) var(--space-10);
+    padding-inline: var(--space-3);
+    gap: var(--space-6);                 /* 48 — slightly tighter section gap */
+  }
+  .section {
+    gap: var(--space-3);                 /* 24 — within-section */
+  }
+  .heading {
+    font-size: var(--text-2xl);          /* 32 */
+    line-height: 1.2;
+  }
+  .body {
+    font-size: var(--text-base);         /* 16 */
+    line-height: 24px;
+  }
+  .body + .body {
+    margin-top: var(--space-2);          /* 16 */
+  }
+  .meta {
+    font-size: var(--text-base);
+    line-height: 24px;
+  }
+  .metaRow {
+    grid-template-columns: 1fr;
+    gap: 2px;
+  }
+}
+
+/* ---------- Entrance: each section fades + drops together ----------
+   Mirrors /home, /savethedate, /travel motion vocabulary
+   (decisions.md 2026-05-01). */
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes venue-section-in {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .section {
+    animation: venue-section-in var(--motion-std) var(--ease-out-soft) both;
+    will-change: transform, opacity;
+  }
+  .section:nth-of-type(1) { animation-delay: 120ms; }
+  .section:nth-of-type(2) { animation-delay: 240ms; }
+}

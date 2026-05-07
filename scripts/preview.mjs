@@ -45,6 +45,16 @@ const SECTIONS = {
     deviceScaleFactor: 1,
     description: 'Our Story — story, video, song, photo gallery',
   },
+  venue: {
+    route: '/venue',
+    fullPage: true,
+    description: 'Venue — Sunken Garden ceremony + Cabrillo Pavilion reception',
+    /* sunken-garden.mp4 is large; networkidle never fires while it streams.
+       Abort .mp4 so the page settles — the VideoFrame box has a sand-linen
+       background and reserves its 2.76:1 aspect via CSS, so the snapshot
+       verifies layout even with media aborted. */
+    abortMedia: true,
+  },
 };
 
 const BREAKPOINTS = [360, 768, 1024, 1440];
@@ -118,6 +128,10 @@ try {
       });
       const page = await context.newPage();
       const file = join(outDir, `${width}.${ext}`);
+
+      if (config.abortMedia) {
+        await page.route('**/*.{mp4,webm,mov}', (route) => route.abort());
+      }
 
       const consoleErrors = [];
       page.on('pageerror', (err) => consoleErrors.push(`pageerror: ${err.message}`));
