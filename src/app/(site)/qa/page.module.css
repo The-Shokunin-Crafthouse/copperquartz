@@ -1,0 +1,117 @@
+/*
+ * Q&A page composition. Mirrors Travel/Our Story column rhythm but the
+ * Figma column is narrower (663px) than the editorial column (770px).
+ * We honor 663 → falls between --content-max-width (650) and the wider
+ * editorial column; centered, padded by --space-3 on phones.
+ *
+ * Section grouping (Logistics, Dress Code, …) renders as a small-caps
+ * eyebrow above each accordion stack — proposed in the sprint contract,
+ * approved by the studio.
+ */
+
+.qa {
+  --qa-col-w: 663px;
+  --qa-section-gap: var(--space-6);     /* 48 — between eyebrow groups */
+  --qa-row-gap: var(--space-3);         /* 24 — between rows in a group */
+
+  position: relative;
+  width: 100%;
+  max-width: var(--qa-col-w);
+  margin-inline: auto;
+  padding-block: var(--space-10) var(--space-12);
+  padding-inline: var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);                  /* 32 — heading → list */
+}
+
+.heading {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-weight: 600;                     /* Cormorant Garamond SemiBold */
+  font-size: var(--text-3xl);           /* 40 — Figma 42 snap */
+  line-height: 1.15;
+  color: var(--color-palm-leaf);
+  text-align: center;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--qa-section-gap);
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);                  /* 16 — eyebrow → first row */
+}
+
+/* Section eyebrow — small caps, coral, letterspaced. Same vocabulary
+   as the Travel page's inline eyebrow but promoted to a heading. */
+.eyebrow {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: var(--text-xs);            /* 12 */
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-coral-rose);
+}
+
+.rows {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Closing italic note — centered, serif, brown. */
+.closing {
+  margin: 0;
+  margin-top: var(--space-4);
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: var(--text-lg);
+  line-height: 1.5;
+  color: var(--color-brown);
+  text-align: center;
+}
+
+/* ---------- Mobile (≤768px) ---------- */
+@media (max-width: 768px) {
+  .qa {
+    padding-block: var(--space-6) var(--space-10);
+    padding-inline: var(--space-3);
+    gap: var(--space-3);                /* 24 — heading → list, tighter */
+  }
+  .heading {
+    font-size: var(--text-2xl);         /* 32 — match Travel/Our Story */
+    line-height: 1.2;
+  }
+  .closing {
+    font-size: var(--text-base);        /* 16 */
+    margin-top: var(--space-3);
+  }
+}
+
+/* ---------- Entrance: heading drops in, then sections cascade ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes qa-in {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .heading,
+  .section,
+  .closing {
+    animation: qa-in var(--motion-std) var(--ease-out-soft) both;
+    will-change: transform, opacity;
+  }
+  .heading                  { animation-delay: 80ms; }
+  .section:nth-of-type(1)   { animation-delay: 200ms; }
+  .section:nth-of-type(2)   { animation-delay: 260ms; }
+  .section:nth-of-type(3)   { animation-delay: 320ms; }
+  .section:nth-of-type(4)   { animation-delay: 380ms; }
+  .section:nth-of-type(5)   { animation-delay: 440ms; }
+  .section:nth-of-type(6)   { animation-delay: 500ms; }
+  .section:nth-of-type(7)   { animation-delay: 560ms; }
+  .closing                  { animation-delay: 640ms; }
+}

@@ -55,6 +55,11 @@ const SECTIONS = {
        verifies layout even with media aborted. */
     abortMedia: true,
   },
+  'qa-page': {
+    route: '/qa',
+    fullPage: true,
+    description: 'Q&A — accordion FAQ',
+  },
 };
 
 const BREAKPOINTS = [360, 768, 1024, 1440];

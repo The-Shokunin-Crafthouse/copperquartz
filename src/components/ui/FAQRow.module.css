@@ -1,3 +1,20 @@
+/*
+ * FAQRow — accordion row for the QA page (Figma 22:1243).
+ *
+ * Layout
+ *   row             — outer container, hairline below the question button
+ *   question        — flex row: text + 24px circular icon, full-width <button>
+ *   answerWrap      — grid-rows 0fr ↔ 1fr for height animation (push/reveal)
+ *   answerInner     — overflow:hidden track for the expanding row
+ *
+ * Animation (Emil-style)
+ *   open/close      — grid-template-rows + opacity, 220ms --ease-out-soft.
+ *                     Transitions (not keyframes) so rapid toggles retarget.
+ *   icon bubble     — bg color crossfades terracotta ↔ palm-leaf.
+ *   icon chevron    — rotates 180° on toggle.
+ *   reduced motion  — instant; state still toggles, no movement.
+ */
+
 .row {
   border-block-end: var(--border-hairline) solid var(--color-gold);
 }
@@ -6,6 +23,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: var(--space-3);                       /* 24 — desktop default */
   width: 100%;
   padding-block: var(--space-3);
   padding-inline: 0;
@@ -16,6 +34,7 @@
   font-family: var(--font-sans);
   font-weight: 500;
   font-size: var(--text-lg);
+  line-height: 31px;
   color: var(--color-brown);
 }
 
@@ -27,22 +46,143 @@
 
 .questionText {
   flex: 1;
+  min-width: 0;
 }
 
-.icon {
-  margin-inline-start: var(--space-2);
-  font-family: var(--font-sans);
-  font-size: var(--text-xl);
-  color: var(--color-brown);
-  line-height: 1;
+/* Icon — 24x24 circle, color crossfades on toggle. */
+.iconBubble {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-full);
+  background-color: var(--color-terracotta);
+  color: var(--color-bg);
+  transition: background-color var(--motion-fast) var(--ease-out-soft),
+              transform var(--motion-fast) var(--ease-out-soft);
+}
+
+.iconBubble[data-open='true'] {
+  background-color: var(--color-palm-leaf);
+}
+
+/* Chevron flips 180° when the row opens. */
+.iconChevron {
+  display: block;
+  transform-origin: 50% 50%;
+  transition: transform var(--motion-fast) var(--ease-out-soft);
+}
+
+.iconChevron[data-open='true'] {
+  transform: rotate(180deg);
+}
+
+/* Hover/press feedback — every pressable element confirms it heard you. */
+@media (hover: hover) and (pointer: fine) {
+  .question:hover .iconBubble {
+    transform: scale(1.06);
+  }
+}
+
+.question:active .iconBubble {
+  transform: scale(0.94);
+}
+
+/* Push-reveal height animation. The grid-rows 0fr → 1fr trick lets the
+   browser animate `height: auto` cleanly; .answerInner has overflow
+   hidden so children clip during the transition. Opacity rides the
+   same curve so content fades in as the row expands. */
+.answerWrap {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition: grid-template-rows var(--motion-fast) var(--ease-out-soft),
+              opacity var(--motion-fast) var(--ease-out-soft);
+}
+
+.answerWrap[data-open='true'] {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+.answerInner {
+  overflow: hidden;
+  min-height: 0;
 }
 
 .answer {
-  margin: 0;
-  padding-block-end: var(--space-3);
   font-family: var(--font-sans);
   font-weight: 400;
-  font-size: var(--text-base);
+  font-size: var(--text-lg);
+  line-height: 31px;
   color: var(--color-brown);
-  line-height: 1.6;
+  padding-block: var(--space-1) var(--space-3);
+}
+
+.paragraph {
+  margin: 0;
+}
+
+.paragraph + .paragraph {
+  margin-top: var(--space-2);
+}
+
+.paragraph + .list,
+.list + .paragraph {
+  margin-top: var(--space-2);
+}
+
+.list {
+  margin: 0;
+  padding-inline-start: var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.list li {
+  padding-inline-start: var(--space-1);
+}
+
+.list li::marker {
+  color: var(--color-gold-dark);
+}
+
+.strong {
+  font-weight: 500;
+  color: var(--color-brown);
+}
+
+/* ---------- Mobile (≤768px) ----------
+   Per spec: 24px gap between the question text and the icon. The desktop
+   gap is already var(--space-3) (24), so the rule is the same here —
+   keep it explicit so it never drifts when desktop changes. */
+@media (max-width: 768px) {
+  .question {
+    gap: var(--space-3);                     /* 24 — explicit per spec */
+    padding-block: var(--space-2);
+    font-size: var(--text-base);             /* 16 */
+    line-height: 24px;
+  }
+  .answer {
+    font-size: var(--text-base);
+    line-height: 24px;
+  }
+}
+
+/* ---------- Reduced motion ----------
+   Comprehension-aiding state changes stay (color, visibility); movement
+   is removed. The grid-rows transition collapses to instant. */
+@media (prefers-reduced-motion: reduce) {
+  .answerWrap,
+  .iconBubble,
+  .iconChevron {
+    transition: none;
+  }
+  .question:hover .iconBubble,
+  .question:active .iconBubble {
+    transform: none;
+  }
 }
