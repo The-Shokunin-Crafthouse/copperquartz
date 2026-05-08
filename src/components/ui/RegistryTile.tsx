@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useId, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 import { withBase } from '@/src/lib/paths';
 import RegistryButton from './RegistryButton';
 import styles from './RegistryTile.module.css';
@@ -19,21 +19,18 @@ export type TileCrop = {
 };
 
 type Props = {
-  imageSrc: string;             /* path under /public, eg "/images/honeymoon.jpg" */
+  imageSrc: string;             /* path under /public, eg "/images/honeymoon-desktop.jpg" */
   imageAlt: string;
-  /* Optional decorative wordmark/logo node. Caller passes an inline
-     `<svg>` element (eg <HoneymoonWordmark className={...} />) — not
-     an <img>, since a CSS drop-shadow on an SVG <img> rasterizes at
-     logical-pixel resolution and reads blurry on Retina mobile. */
-  logo?: ReactNode;
+  /* Optional mobile-specific image. When provided, a <picture> element
+     swaps to `imageSrc` at min-width: 769px and serves this file below.
+     Use when the desktop and mobile crops differ enough that one source
+     can't satisfy both (eg the honeymoon tile, where the wordmark is
+     baked into a different framing per breakpoint). */
+  imageSrcMobile?: string;
   /* Per-breakpoint Figma-exact crop. The CSS module reads both via
      custom props and switches at min-width: 769px. */
   desktopCrop: TileCrop;
   mobileCrop: TileCrop;
-  /* Wordmark width as % of tile width per breakpoint. Falls through to
-     a sane default if a tile has no logo. */
-  desktopLogoWidth?: string;
-  mobileLogoWidth?: string;
   overlayCopy: string;
   ctaLabel: string;
   ctaIcon?: 'heart';
@@ -53,11 +50,9 @@ type Props = {
 export default function RegistryTile({
   imageSrc,
   imageAlt,
-  logo,
+  imageSrcMobile,
   desktopCrop,
   mobileCrop,
-  desktopLogoWidth = '68%',
-  mobileLogoWidth = '87%',
   overlayCopy,
   ctaLabel,
   ctaIcon,
@@ -86,12 +81,10 @@ export default function RegistryTile({
     '--image-w-mobile': mobileCrop.imageW,
     '--image-left-mobile': mobileCrop.imageLeft,
     '--image-top-mobile': mobileCrop.imageTop,
-    '--logo-w-mobile': mobileLogoWidth,
     '--tile-aspect-desktop': desktopCrop.aspect,
     '--image-w-desktop': desktopCrop.imageW,
     '--image-left-desktop': desktopCrop.imageLeft,
     '--image-top-desktop': desktopCrop.imageTop,
-    '--logo-w-desktop': desktopLogoWidth,
   } as React.CSSProperties;
 
   return (
@@ -101,15 +94,27 @@ export default function RegistryTile({
       data-open={open ? 'true' : 'false'}
       style={styleVars}
     >
-      <img
-        className={styles.image}
-        src={withBase(imageSrc)}
-        alt={imageAlt}
-        loading="lazy"
-        decoding="async"
-      />
+      {imageSrcMobile ? (
+        <picture className={styles.picture}>
+          <source media="(min-width: 769px)" srcSet={withBase(imageSrc)} />
+          <img
+            className={styles.image}
+            src={withBase(imageSrcMobile)}
+            alt={imageAlt}
+            loading="lazy"
+            decoding="async"
+          />
+        </picture>
+      ) : (
+        <img
+          className={styles.image}
+          src={withBase(imageSrc)}
+          alt={imageAlt}
+          loading="lazy"
+          decoding="async"
+        />
+      )}
       <div className={styles.tint} aria-hidden="true" />
-      {logo ? <div className={styles.logo}>{logo}</div> : null}
 
       {/* Full-tile trigger. On hover-capable pointers it's a no-op (CSS
           hover handles reveal) so we mark it cursor:default in CSS. On

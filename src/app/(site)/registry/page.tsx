@@ -1,4 +1,3 @@
-import HoneymoonWordmark from '@/src/components/ui/HoneymoonWordmark';
 import RegistryTile, { type TileCrop } from '@/src/components/ui/RegistryTile';
 import styles from './page.module.css';
 
@@ -18,23 +17,23 @@ export const metadata = {
     'If you wish to give beyond your presence — honeymoon contributions, Howlin’ Dog Music Group, and Kiva micro-loans.',
 };
 
-/* Honeymoon — image 1200×960. Desktop tile 770×340 (aspect 2.265:1);
-   mobile tile 354×236 (aspect 1.5:1). Image scaled larger than cover
-   on both breakpoints and shifted up so the visible window centers
-   on the treehouse bar (mid-photo). Desktop column updated to 770
-   in Figma (eval round 3) — the wordmark grew much larger relative
-   to the photo, hence DESKTOP_LOGO_W = 95%. */
+/* Honeymoon — wordmark is baked into the source files at the right
+   framing per breakpoint. honeymoon-desktop.jpg is 1540×680 (2× of
+   770×340), honeymoon-mobile.jpg is 708×472 (2× of 354×236). Because
+   the source already matches the tile aspect exactly, the crop spec
+   is full-bleed: 100% width, no offsets. <picture> swaps the two
+   files at min-width: 769px. */
 const HONEYMOON_DESKTOP: TileCrop = {
   aspect: '770 / 340',
-  imageW: '103.08%',
-  imageLeft: '0.02%',
-  imageTop: '-77.92%',
+  imageW: '100%',
+  imageLeft: '0%',
+  imageTop: '0%',
 };
 const HONEYMOON_MOBILE: TileCrop = {
   aspect: '354 / 236',
-  imageW: '159.64%',
-  imageLeft: '-7.89%',
-  imageTop: '-73.96%',
+  imageW: '100%',
+  imageLeft: '0%',
+  imageTop: '0%',
 };
 
 /* Howlin' Dog — image 1053×513 (vinyl + landscape composition).
@@ -87,13 +86,11 @@ export default function RegistryPage() {
           </h3>
           <div className={styles.tiles}>
             <RegistryTile
-              imageSrc="/images/honeymoon.jpg"
-              imageAlt="Tropical resort with palm trees and a thatched-roof bar at dusk"
-              logo={<HoneymoonWordmark />}
+              imageSrc="/images/honeymoon-desktop.jpg"
+              imageSrcMobile="/images/honeymoon-mobile.jpg"
+              imageAlt="Honeymoon — bamboo treehouse villa nestled in a tropical jungle canopy"
               desktopCrop={HONEYMOON_DESKTOP}
               mobileCrop={HONEYMOON_MOBILE}
-              desktopLogoWidth="95%"
-              mobileLogoWidth="87%"
               overlayCopy="Help us enjoy our Honeymoon even more by contributing to our extra adventures fund."
               ctaLabel="Gift"
               ctaIcon="heart"
