@@ -65,6 +65,17 @@ const SECTIONS = {
        pushed down. Targeted by accessible name (the question text). */
     preOpen: { role: 'button', name: 'Where do I park?' },
   },
+  registry: {
+    route: '/registry',
+    fullPage: true,
+    description: 'Registry — Honeymoon + Charities tiles with reveal overlays',
+    /* All three reveal-overlay panels start hidden (opacity 0). Open every
+       tile so the snapshot captures the dark panel + CTA — the only state
+       worth verifying for design fidelity. The trigger buttons all share
+       an `aria-label` of the form "Show <CTA> details" — regex name
+       matches every tile. preview.mjs clicks all matched locators. */
+    preOpen: { role: 'button', name: /^Show .+ details$/ },
+  },
 };
 
 const BREAKPOINTS = [360, 768, 1024, 1440];
@@ -198,15 +209,29 @@ try {
       });
       await page.waitForLoadState('networkidle', { timeout: 60_000 });
       if (config.preOpen) {
-        /* Click after lazy-image materialization so accordion height and
-           hairline positions are fully measured. reducedMotion:'reduce'
-           on the context collapses the row's grid-rows transition to
-           instant — no need to wait for animation timings. Scroll back
-           to top after click so fullPage capture starts at y=0. */
-        await page
-          .getByRole(config.preOpen.role, { name: config.preOpen.name })
-          .click();
+        /* Pin scroll at top BEFORE clicking so the click does not trigger
+           a tile's scroll-to-dismiss listener (Registry tiles close their
+           overlay on any scroll event). reducedMotion:'reduce' on the
+           context collapses transitions to instant — no need to wait for
+           animation timings. `name` may be a string (single match) or a
+           regex (multi-match); .all() + per-locator click handles both
+           cases without strict-mode violations. */
         await page.evaluate(() => window.scrollTo(0, 0));
+        await page.waitForTimeout(50);
+        const targets = await page
+          .getByRole(config.preOpen.role, { name: config.preOpen.name })
+          .all();
+        for (const target of targets) {
+          /* Programmatic click via DOM rather than Playwright's pointer
+             simulation. Two reasons: (a) Registry tiles auto-reveal an
+             overlay on CSS :hover above the trigger (intercepts pointer
+             clicks), and (b) Playwright's click auto-scrolls the target
+             into view, which fires Registry's scroll-to-dismiss listener
+             on each iteration and closes every previously-opened tile.
+             el.click() dispatches the React handler with no cursor and
+             no scroll. */
+          await target.evaluate((el) => (el).click());
+        }
         await page.waitForTimeout(120);
       }
       await page.screenshot({

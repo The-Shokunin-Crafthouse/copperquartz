@@ -20,6 +20,7 @@ Nominal palette. No raw hex anywhere except here and `src/styles/tokens.css`.
 | `--color-gold` | `#C2A98B` | Hairline borders, focus ring |
 | `--color-gold-dark` | `#877660` | Footer dividers, pressed state |
 | `--color-brown` | `#5D4931` | Body copy, primary border, footer fill |
+| `--color-ink-deep` | `#0E2122` | Registry tile reveal-overlay panel; deep teal-ink, near-black on cream — used only as a content-on-image surface where contrast must dominate |
 
 ## Typography
 
