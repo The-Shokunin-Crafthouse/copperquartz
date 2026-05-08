@@ -68,8 +68,16 @@
 
 /* Optional logo/wordmark overlay (Honeymoon wordmark). Width is
    per-breakpoint; vertically centered via translate so the wordmark
-   anchors on tile center regardless of aspect ratio. The SVG carries
-   a baked-in drop-shadow filter so no CSS shadow is layered here. */
+   anchors on tile center regardless of aspect ratio.
+
+   The shadow is rendered at runtime via CSS `filter: drop-shadow`
+   rather than baked into the SVG. The Figma source SVG used
+   `filterUnits="userSpaceOnUse"` with a fixed 654×228 filter region —
+   when the browser scales that SVG to a different size, the
+   pre-rasterized blur output also scales, picking up bilinear-
+   interpolation softness at small mobile sizes. CSS drop-shadow runs
+   in browser native units at full DPR, so the wordmark reads sharp
+   at every breakpoint. */
 .logo {
   position: absolute;
   top: 50%;
@@ -79,6 +87,9 @@
   transform: translate(-50%, -50%);
   pointer-events: none;
   user-select: none;
+  filter:
+    drop-shadow(0 0 12px rgb(0 0 0 / 0.35))
+    drop-shadow(0 4px 24px rgb(0 0 0 / 0.45));
 }
 
 .trigger {

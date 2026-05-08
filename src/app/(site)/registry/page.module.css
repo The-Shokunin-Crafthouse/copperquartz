@@ -1,8 +1,9 @@
 /*
  * Registry page composition. 770 column matches QA / Travel / Venue —
- * same page-family rhythm. Tile aspect ratios derive from the Figma
- * mask sizes (810×320 honeymoon / 810×280 charities), held as
- * aspect-ratio so the tiles scale without CLS at any breakpoint.
+ * same page-family rhythm and the latest Figma frame (22:1243). Tile
+ * aspect ratios derive from the Figma mask sizes — 770×340 honeymoon,
+ * 770×280 charities — held as aspect-ratio so the tiles scale without
+ * CLS at any breakpoint.
  *
  * Section grouping mirrors QA — small-caps eyebrow over a stack —
  * so the wedding-site editorial register stays consistent.

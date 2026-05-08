@@ -17,14 +17,16 @@ export const metadata = {
     'If you wish to give beyond your presence — honeymoon contributions, Howlin’ Dog Music Group, and Kiva micro-loans.',
 };
 
-/* Honeymoon — image 1200×960. Desktop tile 810×340 (aspect 2.382:1);
+/* Honeymoon — image 1200×960. Desktop tile 770×340 (aspect 2.265:1);
    mobile tile 354×236 (aspect 1.5:1). Image scaled larger than cover
    on both breakpoints and shifted up so the visible window centers
-   on the treehouse bar (mid-photo). */
+   on the treehouse bar (mid-photo). Desktop column updated to 770
+   in Figma (eval round 3) — the wordmark grew much larger relative
+   to the photo, hence DESKTOP_LOGO_W = 95%. */
 const HONEYMOON_DESKTOP: TileCrop = {
-  aspect: '810 / 340',
+  aspect: '770 / 340',
   imageW: '103.08%',
-  imageLeft: '-1.54%',
+  imageLeft: '0.02%',
   imageTop: '-77.92%',
 };
 const HONEYMOON_MOBILE: TileCrop = {
@@ -35,11 +37,11 @@ const HONEYMOON_MOBILE: TileCrop = {
 };
 
 /* Howlin' Dog — image 1053×513 (vinyl + landscape composition).
-   Desktop 810×280; mobile 354×236. Image slightly wider than column
+   Desktop 770×280; mobile 354×236. Image slightly wider than column
    on both, shifted left so the vinyl record + Howlin' Dog wordmark
    centers in the visible window. */
 const HDMG_DESKTOP: TileCrop = {
-  aspect: '810 / 280',
+  aspect: '770 / 280',
   imageW: '107.16%',
   imageLeft: '-4.32%',
   imageTop: '-28.21%',
@@ -52,10 +54,10 @@ const HDMG_MOBILE: TileCrop = {
 };
 
 /* Kiva — image 1200×513 (terraced fields, kiva wordmark baked in).
-   Desktop 810×280; mobile 354×236. Mobile zooms ~156% so the kiva
+   Desktop 770×280; mobile 354×236. Mobile zooms ~156% so the kiva
    wordmark fills the frame the way Figma stages it. */
 const KIVA_DESKTOP: TileCrop = {
-  aspect: '810 / 280',
+  aspect: '770 / 280',
   imageW: '100%',
   imageLeft: '0%',
   imageTop: '-11.79%',
@@ -90,7 +92,7 @@ export default function RegistryPage() {
               logoAlt=""
               desktopCrop={HONEYMOON_DESKTOP}
               mobileCrop={HONEYMOON_MOBILE}
-              desktopLogoWidth="68%"
+              desktopLogoWidth="95%"
               mobileLogoWidth="87%"
               overlayCopy="Help us enjoy our Honeymoon even more by contributing to our extra adventures fund."
               ctaLabel="Gift"
