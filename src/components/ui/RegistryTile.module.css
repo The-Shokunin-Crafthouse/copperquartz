@@ -42,25 +42,30 @@
   outline-offset: var(--border-focus);
 }
 
-/* The <picture> wrapper (used when desktop and mobile share a tile but
-   want different source files) must not become a layout box of its own —
-   `display: contents` flattens it so the inner <img> resolves its
-   absolute positioning against the tile, exactly like a bare <img>. */
-.picture {
-  display: contents;
-}
-
+/* `<picture>` is the positioned element; the inner `<img>` fills it
+   100% wide with native aspect driving the rendered height. We tried
+   `display: contents` on picture so the img could be positioned
+   directly — Chrome ignored the `<source media="…">` selection and
+   left `currentSrc` empty (the picture stops behaving as a picture
+   when removed from the layout tree). Keeping picture in flow with
+   `display: block` resolves both source matching and lazy loading.
+   Do NOT set object-fit — the image is sized, not fitted. */
 .image {
   position: absolute;
+  display: block;
   width: var(--image-w-mobile);
   left: var(--image-left-mobile);
   top: var(--image-top-mobile);
   height: auto;
-  /* Native aspect drives height via height:auto; do not set
-     object-fit — image is sized, not fitted. */
   border-radius: 0;
   pointer-events: none;
   user-select: none;
+}
+
+.image img {
+  display: block;
+  width: 100%;
+  height: auto;
 }
 
 /* The 5% cream wash that color-balances the photo lazily — present at

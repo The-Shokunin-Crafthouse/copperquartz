@@ -94,26 +94,17 @@ export default function RegistryTile({
       data-open={open ? 'true' : 'false'}
       style={styleVars}
     >
-      {imageSrcMobile ? (
-        <picture className={styles.picture}>
+      <picture className={styles.image}>
+        {imageSrcMobile ? (
           <source media="(min-width: 769px)" srcSet={withBase(imageSrc)} />
-          <img
-            className={styles.image}
-            src={withBase(imageSrcMobile)}
-            alt={imageAlt}
-            loading="lazy"
-            decoding="async"
-          />
-        </picture>
-      ) : (
+        ) : null}
         <img
-          className={styles.image}
-          src={withBase(imageSrc)}
+          src={withBase(imageSrcMobile ?? imageSrc)}
           alt={imageAlt}
           loading="lazy"
           decoding="async"
         />
-      )}
+      </picture>
       <div className={styles.tint} aria-hidden="true" />
 
       {/* Full-tile trigger. On hover-capable pointers it's a no-op (CSS
