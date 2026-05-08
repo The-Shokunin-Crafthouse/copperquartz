@@ -60,6 +60,7 @@ export async function createCheckoutSession(
         fund: params.fund,
         referenceUrl: params.referenceUrl ?? '',
         lendersChoice: String(params.lendersChoice ?? false),
+        message: params.message ?? '',
       },
       success_url: `${siteUrl}/registry?success=true`,
       cancel_url: `${siteUrl}/registry`,

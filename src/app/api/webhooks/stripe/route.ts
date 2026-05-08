@@ -41,6 +41,7 @@ export async function POST(request: Request): Promise<Response> {
 
       const referenceUrl = metadata.referenceUrl?.trim();
       const lendersChoice = metadata.lendersChoice === 'true';
+      const messageValue = metadata.message?.trim();
 
       const supabase = createServiceClient();
       const { error: insertError } = await supabase.from('contributions').insert({
@@ -52,19 +53,18 @@ export async function POST(request: Request): Promise<Response> {
         lenders_choice: lendersChoice,
         self_reported: false,
         stripe_session_id: session.id,
+        message: messageValue ? messageValue : null,
       });
 
       if (insertError) {
-        return NextResponse.json(
-          { error: `Database insert failed: ${insertError.message}` },
-          { status: 500 },
-        );
+        console.error('Stripe webhook insert failed:', insertError);
+        return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
       }
     }
 
     return NextResponse.json({ received: true }, { status: 200 });
   } catch (err) {
-    const message = err instanceof Error ? err.message : 'Unknown error';
-    return NextResponse.json({ error: message }, { status: 500 });
+    console.error('Stripe webhook handler failed:', err);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

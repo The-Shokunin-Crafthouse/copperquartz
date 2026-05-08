@@ -30,6 +30,8 @@ export async function selfReportContribution(
     return { error: 'Amount must be a positive whole number of cents' };
   }
 
+  const trimmedMessage = params.message?.trim();
+
   try {
     const supabase = createServiceClient();
     const { error: insertError } = await supabase.from('contributions').insert({
@@ -41,6 +43,7 @@ export async function selfReportContribution(
       lenders_choice: false,
       self_reported: true,
       stripe_session_id: null,
+      message: trimmedMessage ? trimmedMessage : null,
     });
 
     if (insertError) {
