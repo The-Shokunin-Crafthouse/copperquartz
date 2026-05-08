@@ -46,10 +46,10 @@
 .backdrop {
   position: absolute;
   inset: 0;
-  /* Figma — Background blur, Uniform 12, fill #0E2122 @ 94%. The hex
-     resolves to --color-ink-deep (token-map.md). color-mix is the
-     cross-browser-stable way to apply opacity to a CSS custom property. */
-  background-color: color-mix(in srgb, var(--color-ink-deep) 94%, transparent);
+  /* Per-overlay shade #092729 @ 70% — slightly cooler / deeper than
+     --color-ink-deep (#0E2122), used only here on the modal backdrop.
+     If this hue ends up reused, promote it to tokens.css. */
+  background-color: color-mix(in srgb, #092729 70%, transparent);
   /* Page blur — applied here rather than on .shell so it composites
      uniformly across every element behind the modal. The modal portals
      to body, so this backdrop sits above every stacking context inside
