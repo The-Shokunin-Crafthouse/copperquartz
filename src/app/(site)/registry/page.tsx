@@ -117,7 +117,7 @@ export default function RegistryPage() {
               imageAlt="Kiva — terraced rice paddies with palms and a rainbow at the horizon"
               desktopCrop={KIVA_DESKTOP}
               mobileCrop={KIVA_MOBILE}
-              overlayCopy="Donate a loan to help small business all over the world."
+              overlayCopy="Donate a loan to help small business owners all over the world."
               ctaLabel="Donate"
               ctaAriaLabel="Donate to Kiva micro-loans"
             />
