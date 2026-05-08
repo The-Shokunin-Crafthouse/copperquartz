@@ -36,36 +36,33 @@ const HONEYMOON_MOBILE: TileCrop = {
   imageTop: '0%',
 };
 
-/* Howlin' Dog — image 1053×513 (vinyl + landscape composition).
-   Desktop 770×280; mobile 354×236. Image slightly wider than column
-   on both, shifted left so the vinyl record + Howlin' Dog wordmark
-   centers in the visible window. */
+/* HDMG and Kiva — same per-breakpoint baked-in pattern as Honeymoon.
+   Desktop sources are 1540×560 (2× of 770×280); mobile sources are
+   708×472 (2× of 354×236). Each file is already framed for its tile,
+   so the crop spec is full-bleed on both breakpoints. */
 const HDMG_DESKTOP: TileCrop = {
   aspect: '770 / 280',
-  imageW: '107.16%',
-  imageLeft: '-4.32%',
-  imageTop: '-28.21%',
+  imageW: '100%',
+  imageLeft: '0%',
+  imageTop: '0%',
 };
 const HDMG_MOBILE: TileCrop = {
   aspect: '354 / 236',
-  imageW: '136.72%',
-  imageLeft: '-19.77%',
+  imageW: '100%',
+  imageLeft: '0%',
   imageTop: '0%',
 };
 
-/* Kiva — image 1200×513 (terraced fields, kiva wordmark baked in).
-   Desktop 770×280; mobile 354×236. Mobile zooms ~156% so the kiva
-   wordmark fills the frame the way Figma stages it. */
 const KIVA_DESKTOP: TileCrop = {
   aspect: '770 / 280',
   imageW: '100%',
   imageLeft: '0%',
-  imageTop: '-11.79%',
+  imageTop: '0%',
 };
 const KIVA_MOBILE: TileCrop = {
   aspect: '354 / 236',
-  imageW: '155.94%',
-  imageLeft: '-27.97%',
+  imageW: '100%',
+  imageLeft: '0%',
   imageTop: '0%',
 };
 
@@ -105,7 +102,8 @@ export default function RegistryPage() {
           </h3>
           <div className={styles.tiles}>
             <RegistryTile
-              imageSrc="/images/hdmg.jpg"
+              imageSrc="/images/hdmg-desktop.jpg"
+              imageSrcMobile="/images/hdmg-mobile.jpg"
               imageAlt="Howlin’ Dog Music Group — vinyl record over a desert horizon at dusk"
               desktopCrop={HDMG_DESKTOP}
               mobileCrop={HDMG_MOBILE}
@@ -114,7 +112,8 @@ export default function RegistryPage() {
               ctaAriaLabel="Donate to Howlin’ Dog Music Group"
             />
             <RegistryTile
-              imageSrc="/images/kiva.jpg"
+              imageSrc="/images/kiva-desktop.jpg"
+              imageSrcMobile="/images/kiva-mobile.jpg"
               imageAlt="Kiva — terraced rice paddies with palms and a rainbow at the horizon"
               desktopCrop={KIVA_DESKTOP}
               mobileCrop={KIVA_MOBILE}
