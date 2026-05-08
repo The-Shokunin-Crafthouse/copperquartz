@@ -1,0 +1,478 @@
+/*
+ * Shared form vocabulary for Registry modals — labels, inputs, textareas,
+ * radio cards, checkboxes, the primary submit button, and inline error /
+ * helper text. All three modals import this module so the form rhythm
+ * stays identical across them.
+ *
+ * Token-bound. No raw hex; the only computed values are color-mix() shifts
+ * from existing palette tokens (hover darken on the submit, faint surfaces
+ * on the radio cards). Press feedback follows Emil's rule — scale(0.97)
+ * on every primary surface, gated against reduced-motion.
+ */
+
+.heading {
+  margin: 0 0 var(--space-1);
+  font-family: var(--font-serif);
+  font-weight: 600;
+  font-size: var(--text-3xl);
+  line-height: 1.15;
+  color: var(--color-brown);
+  letter-spacing: -0.01em;
+  /* Leave room for the absolute close button so a long heading does not
+     run under it. */
+  padding-right: var(--space-5);
+}
+
+@media (max-width: 768px) {
+  .heading {
+    font-size: var(--text-2xl);
+    line-height: 1.2;
+  }
+}
+
+.eyebrow {
+  margin: 0 0 var(--space-1);
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: var(--text-xs);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-terracotta);
+}
+
+.intro {
+  margin: 0 0 var(--space-3);
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-style: italic;
+  font-size: var(--text-base);
+  line-height: 1.55;
+  color: var(--color-brown);
+}
+
+.body {
+  margin: 0 0 var(--space-3);
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: var(--text-base);
+  line-height: 1.55;
+  color: var(--color-brown);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px; /* tightest pairing — label sits close to its input */
+}
+
+.label {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: var(--text-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-brown);
+}
+
+.input,
+.textarea {
+  width: 100%;
+  font-family: var(--font-sans);
+  font-weight: 400;
+  font-size: var(--text-base);
+  line-height: 1.4;
+  color: var(--color-brown);
+  background-color: var(--color-bg);
+  border: var(--border-hairline) solid var(--color-gold);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  min-height: var(--height-tap);
+  transition:
+    border-color var(--motion-fast) ease,
+    background-color var(--motion-fast) ease;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.textarea {
+  min-height: 96px;
+  resize: vertical;
+  font-family: var(--font-serif);
+  line-height: 1.5;
+}
+
+.input:focus-visible,
+.textarea:focus-visible {
+  outline: var(--border-focus) solid var(--color-gold);
+  outline-offset: var(--border-focus);
+  border-color: var(--color-teal);
+}
+
+.input::placeholder,
+.textarea::placeholder {
+  color: var(--color-gold-dark);
+  opacity: 1;
+}
+
+/* Amount input — $ prefix glyph layered as an ::before on the wrapper
+   so the input keeps a single tab stop and a clean form value. */
+.amountWrap {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+}
+
+.amountWrap::before {
+  content: '$';
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: var(--text-base);
+  color: var(--color-brown);
+  pointer-events: none;
+}
+
+.amountWrap .input {
+  padding-left: 26px;
+}
+
+.feeRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  color: var(--color-brown);
+  cursor: pointer;
+  user-select: none;
+  /* Tap-target padding so the click area extends slightly beyond the
+     visual checkbox + label run. */
+  padding-block: 6px;
+}
+
+.feeCheckbox {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: var(--color-teal);
+  cursor: pointer;
+}
+
+.feeCheckbox:focus-visible {
+  outline: var(--border-focus) solid var(--color-gold);
+  outline-offset: var(--border-focus);
+}
+
+.feeReadout {
+  margin: 0;
+  padding-left: 26px; /* aligns with checkbox text run */
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  color: var(--color-gold-dark);
+  line-height: 1.4;
+}
+
+/* Radio card — large click target with a check glyph so selection is
+   readable without relying on color alone. Two stacked at mobile, two
+   columns from 480px on. */
+.radioGroup {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-1);
+  border: 0;
+  padding: 0;
+  margin: 0;
+  margin-bottom: var(--space-2);
+}
+
+@media (min-width: 480px) {
+  .radioGroup {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.radioGroup legend {
+  /* Visually hidden but available to screen readers. The dialog heading
+     answers the visual "what am I choosing" question. */
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.radioCard {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: var(--space-2);
+  background-color: var(--color-bg);
+  border: var(--border-hairline) solid var(--color-gold);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition:
+    border-color var(--motion-fast) ease,
+    background-color var(--motion-fast) ease,
+    transform 160ms ease-out;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .radioCard:hover {
+    border-color: var(--color-teal);
+  }
+}
+
+.radioCard:active {
+  transform: scale(0.99);
+}
+
+.radioCard input[type='radio'] {
+  margin-top: 3px; /* optical alignment with the first text line */
+  width: 16px;
+  height: 16px;
+  accent-color: var(--color-teal);
+  cursor: pointer;
+  flex: 0 0 auto;
+}
+
+.radioCard input[type='radio']:focus-visible {
+  outline: var(--border-focus) solid var(--color-gold);
+  outline-offset: var(--border-focus);
+}
+
+.radioCard[data-selected='true'] {
+  border-color: var(--color-teal);
+  background-color: color-mix(in oklab, var(--color-teal) 6%, var(--color-bg));
+}
+
+.radioCardLabel {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: var(--text-base);
+  color: var(--color-brown);
+  line-height: 1.3;
+}
+
+.helperTeal {
+  margin: var(--space-1) 0 0;
+  font-family: var(--font-serif);
+  font-size: var(--text-sm);
+  line-height: 1.5;
+  color: var(--color-teal);
+}
+
+.helperMuted {
+  margin: var(--space-1) 0 0;
+  font-family: var(--font-serif);
+  font-size: var(--text-sm);
+  line-height: 1.5;
+  color: var(--color-gold-dark);
+}
+
+.helperLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 4px;
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  color: var(--color-terracotta);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color var(--motion-fast) ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .helperLink:hover {
+    color: var(--color-coral-rose);
+  }
+}
+
+.helperLink:focus-visible {
+  outline: var(--border-focus) solid var(--color-gold);
+  outline-offset: var(--border-focus);
+  border-radius: var(--radius-sm);
+}
+
+/* Inline error — icon + text, never color alone. */
+.error {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  margin-top: var(--space-1);
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  color: var(--color-coral-rose);
+  line-height: 1.4;
+}
+
+.errorIcon {
+  flex: 0 0 auto;
+  margin-top: 2px;
+  width: 14px;
+  height: 14px;
+}
+
+/* Primary submit button — teal field, sand text, full width. Mirrors
+   RegistryButton's state vocabulary (hover darken, gold focus, active
+   press, disabled mute) but with the teal palette the modals demand. */
+.submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  width: 100%;
+  margin-top: var(--space-2);
+  padding-block: 12px;
+  padding-inline: var(--space-4);
+  min-height: var(--height-tap);
+  border: 0;
+  border-radius: var(--radius-md);
+  background-color: var(--color-teal);
+  color: var(--color-sand-linen);
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: var(--text-base);
+  line-height: 1;
+  letter-spacing: 0;
+  cursor: pointer;
+  transition:
+    background-color var(--motion-fast) ease,
+    transform 160ms ease-out,
+    opacity var(--motion-fast) ease;
+  will-change: transform;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .submit:hover:not(:disabled):not([aria-busy='true']) {
+    background-color: color-mix(in oklab, var(--color-teal) 88%, black);
+  }
+}
+
+.submit:focus-visible {
+  outline: var(--border-focus) solid var(--color-gold);
+  outline-offset: var(--border-focus);
+}
+
+.submit:active:not(:disabled):not([aria-busy='true']) {
+  transform: scale(0.97);
+}
+
+.submit:disabled,
+.submit[aria-busy='true'] {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Loading spinner — paired with the button label so the button never
+   collapses width while sending. CSS animation only; reduced-motion
+   freezes the spinner. */
+.submitSpinner {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid color-mix(in oklab, var(--color-sand-linen) 40%, transparent);
+  border-top-color: var(--color-sand-linen);
+  animation: forms-spin 700ms linear infinite;
+}
+
+@keyframes forms-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Thank-you state for the HDMG self-report path. Same Cormorant heading
+   weight as the modal heading, but pulled to display register so it
+   reads as a moment, not a form completion. */
+.thanksHeading {
+  margin: 0 0 var(--space-1);
+  font-family: var(--font-serif);
+  font-weight: 500;
+  font-size: var(--text-3xl);
+  line-height: 1.1;
+  color: var(--color-brown);
+  letter-spacing: -0.01em;
+}
+
+.thanksBody {
+  margin: 0 0 var(--space-3);
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: var(--text-base);
+  line-height: 1.55;
+  color: var(--color-brown);
+}
+
+.thanksClose {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding-block: 12px;
+  padding-inline: var(--space-4);
+  min-height: var(--height-tap);
+  border: var(--border-hairline) solid var(--color-teal);
+  border-radius: var(--radius-md);
+  background-color: transparent;
+  color: var(--color-teal);
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: var(--text-base);
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    background-color var(--motion-fast) ease,
+    transform 160ms ease-out;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .thanksClose:hover {
+    background-color: color-mix(in oklab, var(--color-teal) 8%, transparent);
+  }
+}
+
+.thanksClose:focus-visible {
+  outline: var(--border-focus) solid var(--color-gold);
+  outline-offset: var(--border-focus);
+}
+
+.thanksClose:active {
+  transform: scale(0.97);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .input,
+  .textarea,
+  .radioCard,
+  .helperLink,
+  .submit,
+  .thanksClose {
+    transition: none;
+  }
+  .radioCard:active,
+  .submit:active,
+  .thanksClose:active {
+    transform: none;
+  }
+  .submitSpinner {
+    animation: none;
+    border-top-color: transparent;
+  }
+}

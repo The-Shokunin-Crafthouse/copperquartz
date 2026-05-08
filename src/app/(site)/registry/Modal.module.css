@@ -1,0 +1,161 @@
+/*
+ * Modal — sand-linen card on a softly blurred backdrop. Centered overlay
+ * (transform-origin: center; modals are not tied to a trigger, so the
+ * popover origin-aware rule does not apply — see Emil's review checklist).
+ *
+ * Motion vocabulary:
+ *   - Entry: @starting-style snaps opacity 0 + scale(0.96), then transitions
+ *     to 1 / 1 over `--motion-fast` (220ms) on `--ease-out-soft`.
+ *   - Exit: `data-state="closing"` returns to the same starting values,
+ *     transitioned the same way. Token-map only ships one fast duration,
+ *     so enter and exit share it; both feel decisive at 220ms.
+ *   - Backdrop transitions opacity only (animating backdrop-filter is
+ *     expensive, particularly on Safari). The `backdrop-filter: blur(...)`
+ *     value is held constant.
+ *   - prefers-reduced-motion: collapses transitions; the dialog appears
+ *     and disappears instantly.
+ */
+
+.root {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: var(--space-3);
+  /* Outer click target = backdrop. The dialog stops propagation so an
+     intra-modal click does not close. */
+  cursor: default;
+}
+
+.backdrop {
+  position: absolute;
+  inset: 0;
+  background-color: rgb(0 0 0 / 0.4);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  opacity: 1;
+  transition: opacity var(--motion-fast) var(--ease-out-soft);
+}
+
+.dialog {
+  position: relative;
+  width: 100%;
+  max-width: 480px;
+  max-height: calc(100dvh - var(--space-6));
+  overflow-y: auto;
+  background-color: var(--color-sand-linen);
+  border: var(--border-hairline) solid var(--color-gold);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  /* Soft shadow — refined, not material. Two layers: a long ambient
+     wash + a tighter contact shadow so the card lifts cleanly off the
+     blurred backdrop without a heavy halo. */
+  box-shadow:
+    0 20px 50px rgb(14 33 34 / 0.18),
+    0 4px 12px rgb(14 33 34 / 0.08);
+  opacity: 1;
+  transform: scale(1);
+  transition:
+    opacity var(--motion-fast) var(--ease-out-soft),
+    transform var(--motion-fast) var(--ease-out-soft);
+  /* Center-anchored — modals are not tied to a trigger. */
+  transform-origin: center;
+  will-change: opacity, transform;
+}
+
+@media (min-width: 768px) {
+  .dialog {
+    padding: var(--space-6);
+  }
+}
+
+/* Entry — only applies during the element's first style-resolution
+   after insertion. Combined with the default (opacity:1, scale:1) styles
+   above, the element transitions from these values to those. */
+@starting-style {
+  .root .dialog {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  .root .backdrop {
+    opacity: 0;
+  }
+}
+
+/* Exit — driven by React state. The dialog and backdrop snap back to
+   the entry values, transitioning the same direction as enter so the
+   motion stays cohesive. */
+.root[data-state='closing'] .dialog {
+  opacity: 0;
+  transform: scale(0.96);
+}
+
+.root[data-state='closing'] .backdrop {
+  opacity: 0;
+}
+
+.close {
+  position: absolute;
+  top: var(--space-2);
+  right: var(--space-2);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--color-brown);
+  cursor: pointer;
+  border-radius: var(--radius-full);
+  transition:
+    color var(--motion-fast) ease,
+    background-color var(--motion-fast) ease,
+    transform 160ms ease-out;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .close:hover {
+    color: var(--color-teal);
+    background-color: rgb(47 127 123 / 0.08);
+  }
+}
+
+.close:focus-visible {
+  outline: var(--border-focus) solid var(--color-gold);
+  outline-offset: var(--border-focus);
+}
+
+.close:active {
+  transform: scale(0.97);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .backdrop,
+  .dialog,
+  .close {
+    transition: none;
+  }
+  /* Do not run the @starting-style transition into reduce-motion. The
+     dialog still appears centered and visible because the default
+     styles above are already its resting state. */
+  @starting-style {
+    .root .dialog {
+      opacity: 1;
+      transform: none;
+    }
+    .root .backdrop {
+      opacity: 1;
+    }
+  }
+  .root[data-state='closing'] .dialog,
+  .root[data-state='closing'] .backdrop {
+    opacity: 1;
+    transform: none;
+  }
+  .close:active {
+    transform: none;
+  }
+}

@@ -35,6 +35,10 @@ type Props = {
   ctaLabel: string;
   ctaIcon?: 'heart';
   ctaAriaLabel?: string;        /* extra context for screen readers */
+  /* Modal trigger. Receives the originating button so the modal owner
+     can restore focus to it on close. The CTA still stops propagation
+     so the underlying tile trigger doesn't toggle. */
+  onCtaClick?: (button: HTMLButtonElement) => void;
 };
 
 /*
@@ -57,6 +61,7 @@ export default function RegistryTile({
   ctaLabel,
   ctaIcon,
   ctaAriaLabel,
+  onCtaClick,
 }: Props) {
   const [open, setOpen] = useState(false);
   const overlayId = useId();
@@ -124,8 +129,13 @@ export default function RegistryTile({
         <RegistryButton
           icon={ctaIcon}
           aria-label={ctaAriaLabel}
-          /* Stop click on CTA from re-toggling the trigger underneath. */
-          onClick={(e) => e.stopPropagation()}
+          /* Stop click on CTA from re-toggling the trigger underneath.
+             Forward the button element to the parent so it can return
+             focus there when the modal closes. */
+          onClick={(e) => {
+            e.stopPropagation();
+            onCtaClick?.(e.currentTarget);
+          }}
         >
           {ctaLabel}
         </RegistryButton>
