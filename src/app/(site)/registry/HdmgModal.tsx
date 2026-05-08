@@ -3,6 +3,7 @@
 import { useId, useState, type FormEvent } from 'react';
 import { selfReportContribution } from '@/src/app/actions/selfReportContribution';
 import Modal from './Modal';
+import { parseDollarsToCents } from './cents';
 import styles from './forms.module.css';
 
 type Props = {
@@ -10,14 +11,6 @@ type Props = {
   onClose: () => void;
   returnFocusTo?: HTMLElement | null;
 };
-
-function parseDollarsToCents(input: string): number | null {
-  const trimmed = input.trim().replace(/[$,]/g, '');
-  if (!trimmed) return null;
-  if (!/^\d+(\.\d{1,2})?$/.test(trimmed)) return null;
-  const cents = Math.round(parseFloat(trimmed) * 100);
-  return cents > 0 ? cents : null;
-}
 
 export default function HdmgModal({ open, onClose, returnFocusTo }: Props) {
   const titleId = useId();
@@ -95,13 +88,13 @@ export default function HdmgModal({ open, onClose, returnFocusTo }: Props) {
       open={open}
       onClose={handleClose}
       titleId={titleId}
+      title="Howlin Dog Music Group"
+      eyebrow="Meghan’s pick"
       returnFocusTo={returnFocusTo}
     >
       {thanked ? (
         <>
-          <h2 id={titleId} className={styles.thanksHeading}>
-            Thank you.
-          </h2>
+          <h3 className={styles.thanksHeading}>Thank you.</h3>
           <p className={styles.thanksBody}>
             We mean that. It means a lot to both of us.
           </p>
@@ -115,13 +108,10 @@ export default function HdmgModal({ open, onClose, returnFocusTo }: Props) {
         </>
       ) : (
         <>
-          <p className={styles.eyebrow}>Meghan&rsquo;s pick</p>
-          <h2 id={titleId} className={styles.heading}>
-            Howlin Dog Music Group
-          </h2>
-          <p className={styles.intro}>
-            You&rsquo;ve opened the Howlin Dog page in a new tab. Once you&rsquo;ve
-            donated there, let us know here so we can thank you properly.
+          <p className={styles.body}>
+            You&rsquo;ve opened the Howlin Dog page in a new tab. Once
+            you&rsquo;ve donated there, let us know here so we can thank you
+            properly.
           </p>
 
           <form className={styles.form} onSubmit={handleSubmit} noValidate>

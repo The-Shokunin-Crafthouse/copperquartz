@@ -1,61 +1,27 @@
 /*
- * Shared form vocabulary for Registry modals — labels, inputs, textareas,
- * radio cards, checkboxes, the primary submit button, and inline error /
- * helper text. All three modals import this module so the form rhythm
- * stays identical across them.
+ * Shared form vocabulary for Registry modals — body copy, labels, inputs,
+ * textareas, radio cards, checkboxes, the primary submit button, and
+ * inline error / helper text. All three modals import this module so
+ * the form rhythm stays identical across them.
  *
  * Token-bound. No raw hex; the only computed values are color-mix() shifts
- * from existing palette tokens (hover darken on the submit, faint surfaces
- * on the radio cards). Press feedback follows Emil's rule — scale(0.97)
- * on every primary surface, gated against reduced-motion.
+ * from existing palette tokens (faint surface on the selected radio
+ * card). Submit button matches RSVPButton.module.css exactly — palm-leaf
+ * fill, cream label, palm-leaf-deep hover with scale(1.02), scale(0.97)
+ * on active, terracotta focus ring. Same five states as the RSVP pill.
  */
 
-.heading {
-  margin: 0 0 var(--space-1);
-  font-family: var(--font-serif);
-  font-weight: 600;
-  font-size: var(--text-3xl);
-  line-height: 1.15;
-  color: var(--color-brown);
-  letter-spacing: -0.01em;
-  /* Leave room for the absolute close button so a long heading does not
-     run under it. */
-  padding-right: var(--space-5);
-}
-
-@media (max-width: 768px) {
-  .heading {
-    font-size: var(--text-2xl);
-    line-height: 1.2;
-  }
-}
-
-.eyebrow {
-  margin: 0 0 var(--space-1);
-  font-family: var(--font-sans);
-  font-weight: 600;
-  font-size: var(--text-xs);
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--color-terracotta);
-}
-
-.intro {
-  margin: 0 0 var(--space-3);
-  font-family: var(--font-serif);
-  font-weight: 400;
-  font-style: italic;
-  font-size: var(--text-base);
-  line-height: 1.55;
-  color: var(--color-brown);
-}
-
+/* Description paragraphs that sit at the top of the modal body, beneath
+   the palm-leaf header band. Commissioner (--font-sans) — same family
+   the rest of the site uses for body copy (see globals.css and
+   page modules across /our-story, /qa, /travel, /venue). */
+.intro,
 .body {
   margin: 0 0 var(--space-3);
-  font-family: var(--font-serif);
+  font-family: var(--font-sans);
   font-weight: 400;
   font-size: var(--text-base);
-  line-height: 1.55;
+  line-height: 1.5;
   color: var(--color-brown);
 }
 
@@ -63,20 +29,24 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
-  margin-top: var(--space-3);
 }
 
 .fieldGroup {
   display: flex;
   flex-direction: column;
-  gap: 6px; /* tightest pairing — label sits close to its input */
+  gap: var(--space-1);
 }
 
+/* Label vocabulary matches the site's small-caps eyebrow vocabulary
+   (NavBar.menuToggle, qa/page.module.css .eyebrow, registry/page.module.css
+   .eyebrow): Commissioner SemiBold, --text-xs (12), 0.12em tracking,
+   uppercase. Color is brown so labels read as form scaffolding rather
+   than competing eyebrows. */
 .label {
   font-family: var(--font-sans);
   font-weight: 600;
   font-size: var(--text-xs);
-  letter-spacing: 0.08em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--color-brown);
 }
@@ -92,7 +62,7 @@
   background-color: var(--color-bg);
   border: var(--border-hairline) solid var(--color-gold);
   border-radius: var(--radius-sm);
-  padding: 10px 12px;
+  padding: var(--space-1) var(--space-2);
   min-height: var(--height-tap);
   transition:
     border-color var(--motion-fast) ease,
@@ -104,7 +74,6 @@
 .textarea {
   min-height: 96px;
   resize: vertical;
-  font-family: var(--font-serif);
   line-height: 1.5;
 }
 
@@ -112,7 +81,7 @@
 .textarea:focus-visible {
   outline: var(--border-focus) solid var(--color-gold);
   outline-offset: var(--border-focus);
-  border-color: var(--color-teal);
+  border-color: var(--color-palm-leaf);
 }
 
 .input::placeholder,
@@ -132,7 +101,7 @@
 .amountWrap::before {
   content: '$';
   position: absolute;
-  left: 12px;
+  left: var(--space-2);
   top: 50%;
   transform: translateY(-50%);
   font-family: var(--font-sans);
@@ -143,7 +112,7 @@
 }
 
 .amountWrap .input {
-  padding-left: 26px;
+  padding-left: var(--space-3);
 }
 
 .feeRow {
@@ -155,16 +124,14 @@
   color: var(--color-brown);
   cursor: pointer;
   user-select: none;
-  /* Tap-target padding so the click area extends slightly beyond the
-     visual checkbox + label run. */
-  padding-block: 6px;
+  padding-block: var(--space-half);
 }
 
 .feeCheckbox {
   width: 18px;
   height: 18px;
   margin: 0;
-  accent-color: var(--color-teal);
+  accent-color: var(--color-palm-leaf);
   cursor: pointer;
 }
 
@@ -173,13 +140,23 @@
   outline-offset: var(--border-focus);
 }
 
-.feeReadout {
+/* Fee summary block — appears below the cover-fee checkbox. Shows the
+   processing fee always; a second line appears when the checkbox is
+   checked, surfacing the adjusted total. */
+.feeSummary {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-half);
   margin: 0;
-  padding-left: 26px; /* aligns with checkbox text run */
+  padding-left: calc(18px + var(--space-1)); /* aligns with checkbox label run */
   font-family: var(--font-sans);
   font-size: var(--text-sm);
   color: var(--color-gold-dark);
   line-height: 1.4;
+}
+
+.feeAdjusted {
+  color: var(--color-brown);
 }
 
 /* Radio card — large click target with a check glyph so selection is
@@ -192,7 +169,6 @@
   border: 0;
   padding: 0;
   margin: 0;
-  margin-bottom: var(--space-2);
 }
 
 @media (min-width: 480px) {
@@ -202,8 +178,6 @@
 }
 
 .radioGroup legend {
-  /* Visually hidden but available to screen readers. The dialog heading
-     answers the visual "what am I choosing" question. */
   position: absolute;
   width: 1px;
   height: 1px;
@@ -219,7 +193,7 @@
   position: relative;
   display: flex;
   align-items: flex-start;
-  gap: 10px;
+  gap: var(--space-1);
   padding: var(--space-2);
   background-color: var(--color-bg);
   border: var(--border-hairline) solid var(--color-gold);
@@ -233,7 +207,7 @@
 
 @media (hover: hover) and (pointer: fine) {
   .radioCard:hover {
-    border-color: var(--color-teal);
+    border-color: var(--color-palm-leaf);
   }
 }
 
@@ -245,7 +219,7 @@
   margin-top: 3px; /* optical alignment with the first text line */
   width: 16px;
   height: 16px;
-  accent-color: var(--color-teal);
+  accent-color: var(--color-palm-leaf);
   cursor: pointer;
   flex: 0 0 auto;
 }
@@ -256,8 +230,8 @@
 }
 
 .radioCard[data-selected='true'] {
-  border-color: var(--color-teal);
-  background-color: color-mix(in oklab, var(--color-teal) 6%, var(--color-bg));
+  border-color: var(--color-palm-leaf);
+  background-color: color-mix(in oklab, var(--color-palm-leaf) 6%, var(--color-bg));
 }
 
 .radioCardLabel {
@@ -268,17 +242,17 @@
   line-height: 1.3;
 }
 
-.helperTeal {
+.helperPalm {
   margin: var(--space-1) 0 0;
-  font-family: var(--font-serif);
+  font-family: var(--font-sans);
   font-size: var(--text-sm);
   line-height: 1.5;
-  color: var(--color-teal);
+  color: var(--color-palm-leaf);
 }
 
 .helperMuted {
   margin: var(--space-1) 0 0;
-  font-family: var(--font-serif);
+  font-family: var(--font-sans);
   font-size: var(--text-sm);
   line-height: 1.5;
   color: var(--color-gold-dark);
@@ -287,8 +261,8 @@
 .helperLink {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  margin-top: 4px;
+  gap: var(--space-half);
+  margin-top: var(--space-half);
   font-family: var(--font-sans);
   font-size: var(--text-sm);
   color: var(--color-terracotta);
@@ -313,7 +287,7 @@
 .error {
   display: flex;
   align-items: flex-start;
-  gap: 6px;
+  gap: var(--space-half);
   margin-top: var(--space-1);
   font-family: var(--font-sans);
   font-size: var(--text-sm);
@@ -328,9 +302,11 @@
   height: 14px;
 }
 
-/* Primary submit button — teal field, sand text, full width. Mirrors
-   RegistryButton's state vocabulary (hover darken, gold focus, active
-   press, disabled mute) but with the teal palette the modals demand. */
+/* Primary submit — palm-leaf fill, cream label. Mirrors RSVPButton
+   exactly: palm-leaf-deep on hover with scale(1.02); palm-leaf-deep
+   active with scale(0.97); terracotta focus ring offset by --border-focus.
+   The state vocabulary lives in src/components/ui/RSVPButton.module.css —
+   any change there should be mirrored here. */
 .submit {
   display: inline-flex;
   align-items: center;
@@ -338,13 +314,13 @@
   gap: var(--space-1);
   width: 100%;
   margin-top: var(--space-2);
-  padding-block: 12px;
+  padding-block: var(--space-1);
   padding-inline: var(--space-4);
   min-height: var(--height-tap);
   border: 0;
   border-radius: var(--radius-md);
-  background-color: var(--color-teal);
-  color: var(--color-sand-linen);
+  background-color: var(--color-palm-leaf);
+  color: var(--color-bg);
   font-family: var(--font-sans);
   font-weight: 500;
   font-size: var(--text-base);
@@ -352,31 +328,36 @@
   letter-spacing: 0;
   cursor: pointer;
   transition:
-    background-color var(--motion-fast) ease,
-    transform 160ms ease-out,
+    background-color var(--motion-fast) ease-out,
+    transform 150ms cubic-bezier(0.16, 1, 0.3, 1),
     opacity var(--motion-fast) ease;
+  transform-origin: center;
   will-change: transform;
 }
 
 @media (hover: hover) and (pointer: fine) {
   .submit:hover:not(:disabled):not([aria-busy='true']) {
-    background-color: color-mix(in oklab, var(--color-teal) 88%, black);
+    background-color: var(--color-palm-leaf-deep);
+    transform: scale(1.02);
   }
 }
 
 .submit:focus-visible {
-  outline: var(--border-focus) solid var(--color-gold);
+  outline: var(--border-focus) solid var(--color-terracotta);
   outline-offset: var(--border-focus);
 }
 
 .submit:active:not(:disabled):not([aria-busy='true']) {
+  background-color: var(--color-palm-leaf-deep);
   transform: scale(0.97);
+  transition-duration: 100ms;
 }
 
 .submit:disabled,
 .submit[aria-busy='true'] {
-  opacity: 0.6;
+  opacity: 0.4;
   cursor: not-allowed;
+  pointer-events: none;
   transform: none;
 }
 
@@ -387,8 +368,8 @@
   width: 14px;
   height: 14px;
   border-radius: 50%;
-  border: 2px solid color-mix(in oklab, var(--color-sand-linen) 40%, transparent);
-  border-top-color: var(--color-sand-linen);
+  border: var(--border-focus) solid color-mix(in oklab, var(--color-bg) 40%, transparent);
+  border-top-color: var(--color-bg);
   animation: forms-spin 700ms linear infinite;
 }
 
@@ -398,9 +379,10 @@
   }
 }
 
-/* Thank-you state for the HDMG self-report path. Same Cormorant heading
-   weight as the modal heading, but pulled to display register so it
-   reads as a moment, not a form completion. */
+/* Thank-you state for the HDMG self-report path. Sits inside the modal
+   body after a successful submit; the palm-leaf header band stays
+   anchored to "Howlin Dog Music Group" so the dialog identity is
+   preserved through the state change. */
 .thanksHeading {
   margin: 0 0 var(--space-1);
   font-family: var(--font-serif);
@@ -413,10 +395,10 @@
 
 .thanksBody {
   margin: 0 0 var(--space-3);
-  font-family: var(--font-serif);
+  font-family: var(--font-sans);
   font-weight: 400;
   font-size: var(--text-base);
-  line-height: 1.55;
+  line-height: 1.5;
   color: var(--color-brown);
 }
 
@@ -425,13 +407,13 @@
   align-items: center;
   justify-content: center;
   width: 100%;
-  padding-block: 12px;
+  padding-block: var(--space-1);
   padding-inline: var(--space-4);
   min-height: var(--height-tap);
-  border: var(--border-hairline) solid var(--color-teal);
+  border: var(--border-hairline) solid var(--color-palm-leaf);
   border-radius: var(--radius-md);
   background-color: transparent;
-  color: var(--color-teal);
+  color: var(--color-palm-leaf);
   font-family: var(--font-sans);
   font-weight: 500;
   font-size: var(--text-base);
@@ -439,22 +421,24 @@
   cursor: pointer;
   transition:
     background-color var(--motion-fast) ease,
-    transform 160ms ease-out;
+    transform 150ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @media (hover: hover) and (pointer: fine) {
   .thanksClose:hover {
-    background-color: color-mix(in oklab, var(--color-teal) 8%, transparent);
+    background-color: color-mix(in oklab, var(--color-palm-leaf) 8%, transparent);
+    transform: scale(1.02);
   }
 }
 
 .thanksClose:focus-visible {
-  outline: var(--border-focus) solid var(--color-gold);
+  outline: var(--border-focus) solid var(--color-terracotta);
   outline-offset: var(--border-focus);
 }
 
 .thanksClose:active {
   transform: scale(0.97);
+  transition-duration: 100ms;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -467,7 +451,9 @@
     transition: none;
   }
   .radioCard:active,
+  .submit:hover,
   .submit:active,
+  .thanksClose:hover,
   .thanksClose:active {
     transform: none;
   }

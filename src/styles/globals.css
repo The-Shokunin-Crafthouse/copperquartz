@@ -53,6 +53,16 @@ body.lightbox-open [data-page-backdrop] {
   display: none !important;
 }
 
+/* Registry modals toggle `body.modal-open` while a dialog is mounted.
+   The class is currently used as a hook for body-level state if any
+   future overlay needs to react to it — page blur itself is delivered
+   via `backdrop-filter` on the modal's backdrop element, which works
+   uniformly because the dialog portals to body and sits in its own
+   stacking context above .shell. (Earlier attempts to drive blur via
+   `filter: blur()` on .shell broke `position: fixed` for FooterBar
+   and PageBackdrop, since `filter` on an ancestor reparents fixed
+   children to that ancestor's containing block.) */
+
 a {
   color: inherit;
 }

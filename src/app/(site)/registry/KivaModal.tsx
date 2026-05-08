@@ -3,6 +3,12 @@
 import { useId, useMemo, useState, type FormEvent } from 'react';
 import { createCheckoutSession } from '@/src/app/actions/createCheckoutSession';
 import Modal from './Modal';
+import {
+  chargedCentsCoveringFee,
+  formatCents,
+  parseDollarsToCents,
+  stripeFeeOn,
+} from './cents';
 import styles from './forms.module.css';
 
 type Props = {
@@ -12,25 +18,6 @@ type Props = {
 };
 
 type BorrowerChoice = 'mine' | 'couple';
-
-const STRIPE_PERCENT_FEE = 0.029;
-const STRIPE_FIXED_FEE_CENTS = 30;
-const USD = new Intl.NumberFormat('en-US', {
-  style: 'currency',
-  currency: 'USD',
-});
-
-function parseDollarsToCents(input: string): number | null {
-  const trimmed = input.trim().replace(/[$,]/g, '');
-  if (!trimmed) return null;
-  if (!/^\d+(\.\d{1,2})?$/.test(trimmed)) return null;
-  const cents = Math.round(parseFloat(trimmed) * 100);
-  return cents > 0 ? cents : null;
-}
-
-function chargedCents(amountCents: number): number {
-  return Math.round((amountCents + STRIPE_FIXED_FEE_CENTS) / (1 - STRIPE_PERCENT_FEE));
-}
 
 function isHttpUrl(value: string): boolean {
   try {
@@ -61,7 +48,18 @@ export default function KivaModal({ open, onClose, returnFocusTo }: Props) {
   const [error, setError] = useState<string | null>(null);
 
   const amountCents = useMemo(() => parseDollarsToCents(amount), [amount]);
-  const previewCharged = amountCents != null ? chargedCents(amountCents) : null;
+  const finalChargedCents =
+    amountCents != null
+      ? coverFee
+        ? chargedCentsCoveringFee(amountCents)
+        : amountCents
+      : null;
+  const feeCents =
+    amountCents != null && finalChargedCents != null
+      ? coverFee
+        ? finalChargedCents - amountCents
+        : stripeFeeOn(finalChargedCents)
+      : null;
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -113,11 +111,14 @@ export default function KivaModal({ open, onClose, returnFocusTo }: Props) {
   }
 
   return (
-    <Modal open={open} onClose={onClose} titleId={titleId} returnFocusTo={returnFocusTo}>
-      <p className={styles.eyebrow}>Levi&rsquo;s pick</p>
-      <h2 id={titleId} className={styles.heading}>
-        Kiva
-      </h2>
+    <Modal
+      open={open}
+      onClose={onClose}
+      titleId={titleId}
+      title="Kiva"
+      eyebrow="Levi’s pick"
+      returnFocusTo={returnFocusTo}
+    >
       <p className={styles.body}>
         Kiva connects lenders with entrepreneurs around the world who need small
         loans to build something. You can pick a specific person, or let us
@@ -153,7 +154,7 @@ export default function KivaModal({ open, onClose, returnFocusTo }: Props) {
 
         {borrower === 'mine' ? (
           <>
-            <p className={styles.helperTeal}>
+            <p className={styles.helperPalm}>
               Browse Kiva to find a borrower, copy their page URL, and paste it
               below.
             </p>
@@ -245,12 +246,17 @@ export default function KivaModal({ open, onClose, returnFocusTo }: Props) {
           />
           <span>Cover the processing fee</span>
         </label>
-        {coverFee && previewCharged != null && amountCents != null ? (
-          <p className={styles.feeReadout}>
-            Your card will be charged {USD.format(previewCharged / 100)} so we
-            receive {USD.format(amountCents / 100)}.
-          </p>
-        ) : null}
+        <div className={styles.feeSummary}>
+          <span>
+            Processing fee: {feeCents != null ? formatCents(feeCents) : '—'}
+          </span>
+          {coverFee && finalChargedCents != null && amountCents != null ? (
+            <span className={styles.feeAdjusted}>
+              Your card will be charged {formatCents(finalChargedCents)} — we
+              receive {formatCents(amountCents)}
+            </span>
+          ) : null}
+        </div>
 
         <div className={styles.fieldGroup}>
           <label className={styles.label} htmlFor={messageId}>
@@ -294,7 +300,10 @@ export default function KivaModal({ open, onClose, returnFocusTo }: Props) {
               <span>Sending…</span>
             </>
           ) : (
-            <span>Continue to Payment</span>
+            <span>
+              Continue to Payment
+              {finalChargedCents != null ? ` — ${formatCents(finalChargedCents)}` : ''}
+            </span>
           )}
         </button>
       </form>

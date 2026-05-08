@@ -6,27 +6,36 @@ import {
   useState,
   type ReactNode,
 } from 'react';
+import { createPortal } from 'react-dom';
+import { X } from '@phosphor-icons/react';
 import styles from './Modal.module.css';
 
 type Props = {
   open: boolean;
   onClose: () => void;
-  /* Heading id used for aria-labelledby. The caller renders the heading
-     itself inside `children`; the id is set here so the dialog reference
-     and the heading stay in lockstep. */
+  /* Heading id used for aria-labelledby. The caller owns the heading
+     text passed in via `title`; the id is set here so the dialog
+     reference and the heading stay in lockstep. */
   titleId: string;
+  /* Heading + optional eyebrow rendered inside the palm-leaf header
+     band. The body (description, form, submit) is the children prop. */
+  title: ReactNode;
+  eyebrow?: ReactNode;
   /* Element to return focus to on close — the originating CTA button.
      Captured at click time on the page, threaded down so focus restore
      stays correct if the dialog's parent re-renders. */
   returnFocusTo?: HTMLElement | null;
-  /* Optional accessible name for the close button — defaults to "Close".
-     Helpful if a localized phrase is desired. */
+  /* Optional accessible name for the close button — defaults to
+     "Close" to match the site's dialog convention (VideoFrame's
+     fullscreen close also uses a single-word label). */
   closeLabel?: string;
   children: ReactNode;
 };
 
 const FOCUSABLE_SELECTOR =
   'button:not([disabled]):not([aria-hidden="true"]),[href],input:not([disabled]),textarea:not([disabled]),select:not([disabled]),[tabindex]:not([tabindex="-1"])';
+
+const BODY_OPEN_CLASS = 'modal-open';
 
 function prefersReducedMotion(): boolean {
   if (typeof window === 'undefined') return false;
@@ -39,28 +48,52 @@ function prefersReducedMotion(): boolean {
  *     element leaves the DOM
  *   - focus trap (Tab / Shift+Tab cycle inside)
  *   - focus restore to the originating trigger on close
- *   - body scroll lock while open
+ *   - body scroll lock + `body.modal-open` class while open. The class
+ *     drives the global page blur in globals.css — the rest of the
+ *     site (.shell) gets `filter: blur(...)` applied uniformly while
+ *     this dialog is up. The dialog itself is portaled to `body` so it
+ *     sits outside the blurred subtree.
  *   - Escape-to-close
  *   - role=dialog + aria-modal + aria-labelledby
+ *   - z-index: 1000 — matches the site's existing dialog convention
+ *     (VideoFrame.module.css, PhotoGallery.module.css). Sits above
+ *     NavBar (z:5 / drawer z:100 / RSVP z:110) and FooterBar (z:20).
  *
  * Animation lives in Modal.module.css. Entry uses @starting-style; exit
  * is driven by `data-state="closing"`. Both run on `--motion-fast` and
- * `--ease-out-soft` (token-map.md) so the modal speaks the site's motion
- * vocabulary. Modals stay center-anchored — they're not tied to a
- * specific trigger, so transform-origin: center is correct (Emil's
- * popover-origin rule explicitly exempts modals).
+ * `--ease-out-soft` (token-map.md). Modals stay center-anchored — the
+ * popover origin-aware rule explicitly exempts modals (Emil).
  */
 export default function Modal({
   open,
   onClose,
   titleId,
+  title,
+  eyebrow,
   returnFocusTo,
   closeLabel = 'Close',
   children,
 }: Props) {
   const [mounted, setMounted] = useState(open);
   const [exiting, setExiting] = useState(false);
+  const [hasDocument, setHasDocument] = useState(false);
   const dialogRef = useRef<HTMLDivElement>(null);
+  /* Keep onClose in a ref so the focus-trap effect doesn't re-run when
+     a parent re-renders and passes a fresh function reference. The
+     focus-trap effect schedules an rAF that focuses the dialog's first
+     focusable; if that effect re-fires after the open→close effect has
+     already moved focus back to returnFocusTo, the rAF clobbers focus
+     and lands the user back on the close button. */
+  const onCloseRef = useRef(onClose);
+  useEffect(() => {
+    onCloseRef.current = onClose;
+  });
+
+  /* Portal target is document.body — but only after hydration. Gate
+     createPortal on this flag to avoid SSR mismatches. */
+  useEffect(() => {
+    setHasDocument(true);
+  }, []);
 
   /* Mount/unmount lifecycle. Open flips on → mount immediately. Open
      flips off → start exit, return focus to the trigger now (so the
@@ -85,15 +118,18 @@ export default function Modal({
     return () => window.clearTimeout(t);
   }, [open, mounted, returnFocusTo]);
 
-  /* Body scroll lock while the dialog has any presence (entering or
-     exiting). Restored verbatim on unmount so a stylesheet override of
-     overflow isn't clobbered. */
+  /* Body scroll lock + the modal-open class that drives the global
+     page blur. Both apply while the dialog has any presence (entering
+     or exiting). The class is removed after exit so the blur fades
+     out in lockstep with the dialog. */
   useEffect(() => {
     if (!mounted) return;
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
+    document.body.classList.add(BODY_OPEN_CLASS);
     return () => {
       document.body.style.overflow = previousOverflow;
+      document.body.classList.remove(BODY_OPEN_CLASS);
     };
   }, [mounted]);
 
@@ -111,9 +147,6 @@ export default function Modal({
         (el) => el.offsetParent !== null || el === document.activeElement,
       );
 
-    /* Defer the initial focus to the next frame so transitions don't
-       interrupt — Safari occasionally drops focus when applied during
-       the same tick a transition starts. */
     const raf = window.requestAnimationFrame(() => {
       const nodes = queryFocusable();
       nodes[0]?.focus();
@@ -122,7 +155,7 @@ export default function Modal({
     function onKey(e: KeyboardEvent) {
       if (e.key === 'Escape') {
         e.preventDefault();
-        onClose();
+        onCloseRef.current();
         return;
       }
       if (e.key !== 'Tab') return;
@@ -147,16 +180,17 @@ export default function Modal({
       window.cancelAnimationFrame(raf);
       document.removeEventListener('keydown', onKey);
     };
-  }, [mounted, exiting, onClose]);
+  }, [mounted, exiting]);
 
-  if (!mounted) return null;
+  if (!mounted || !hasDocument) return null;
 
   const dataState = exiting ? 'closing' : 'open';
 
-  return (
+  const modalTree = (
     <div
       className={styles.root}
       data-state={dataState}
+      data-modal-portal
       onClick={onClose}
       aria-hidden={exiting ? 'true' : undefined}
     >
@@ -169,29 +203,24 @@ export default function Modal({
         aria-labelledby={titleId}
         onClick={(e) => e.stopPropagation()}
       >
+        <header className={styles.dialogHeader}>
+          {eyebrow ? <p className={styles.dialogEyebrow}>{eyebrow}</p> : null}
+          <h2 id={titleId} className={styles.dialogTitle}>
+            {title}
+          </h2>
+        </header>
         <button
           type="button"
           className={styles.close}
           onClick={onClose}
           aria-label={closeLabel}
         >
-          <svg
-            viewBox="0 0 16 16"
-            width="16"
-            height="16"
-            aria-hidden="true"
-            focusable="false"
-          >
-            <path
-              d="M3 3 L13 13 M13 3 L3 13"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-            />
-          </svg>
+          <X size={24} weight="bold" aria-hidden />
         </button>
-        {children}
+        <div className={styles.dialogBody}>{children}</div>
       </div>
     </div>
   );
+
+  return createPortal(modalTree, document.body);
 }
