@@ -7,26 +7,30 @@
  *   `data-open="true"`; first scroll closes it. JS lives in the
  *   component but only the `data-open` state is read here.
  *
+ * Crop is Figma-exact, not object-fit cover. Mobile and desktop frames
+ * scale the image differently (mobile zooms further into the photo
+ * than cover would naturally). Each tile receives explicit
+ * width/left/top values per breakpoint via inline CSS vars; the image
+ * keeps `height: auto` so its native aspect drives the rendered height.
+ *
  * Animation choices (Emil — emil-design-eng):
- *   - Enter: 350ms `--ease-out-soft` — strong cubic-bezier(0.16, 1, 0.3, 1).
- *     Slowed from the v1 220ms in eval round 1; the deliberate pacing
- *     reads more elegant against the editorial register.
- *   - Exit:  250ms `--ease-out-soft` — slightly snappier on close.
- *   - Subtle 6px translateY, never `scale(0)` (real things don't pop in).
+ *   - Enter: 500ms `--ease-out-soft` — strong cubic-bezier(0.16, 1, 0.3, 1).
+ *     Bumped from 350ms in eval round 2 — the deliberate pacing reads
+ *     more elegant against the editorial register, still under Emil's
+ *     500ms modal/drawer cap.
+ *   - Exit:  320ms `--ease-out-soft` — slightly snappier on close.
+ *   - Subtle 6px translateY, never `scale(0)`.
  *   - CSS transitions, not keyframes — interruptible if user re-hovers
- *     mid-exit, no jank.
- *   - `will-change: opacity, transform` reserved on the overlay only,
- *     not the image, to avoid kicking the photo onto its own layer.
+ *     mid-exit.
  */
 
 .tile {
   position: relative;
   display: block;
   width: 100%;
-  /* Aspect ratio is provided per-tile via --tile-aspect-desktop. The
-     mobile breakpoint below overrides it with --tile-aspect-mobile so
-     the overlay's text and CTA have room to breathe in narrow columns. */
-  aspect-ratio: var(--tile-aspect-mobile, var(--tile-aspect-desktop));
+  /* Default = mobile values; @media (min-width: 769px) below promotes
+     desktop. Inline-style sets all eight custom props per tile. */
+  aspect-ratio: var(--tile-aspect-mobile);
   border-radius: var(--radius-lg);
   overflow: hidden;
   isolation: isolate;
@@ -40,11 +44,15 @@
 
 .image {
   position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: inherit;
+  width: var(--image-w-mobile);
+  left: var(--image-left-mobile);
+  top: var(--image-top-mobile);
+  height: auto;
+  /* Native aspect drives height via height:auto; do not set
+     object-fit — image is sized, not fitted. */
+  border-radius: 0;
+  pointer-events: none;
+  user-select: none;
 }
 
 /* The 5% cream wash that color-balances the photo lazily — present at
@@ -58,17 +66,15 @@
   border-radius: inherit;
 }
 
-/* Optional logo/wordmark overlay (Honeymoon wordmark). Sized at 78% of
-   tile width — Figma's group spans ~68% but the studio wanted a
-   slightly bigger presence. Vertically centered via translate so the
-   wordmark anchors on tile center regardless of aspect ratio. The SVG
-   itself carries a baked-in drop-shadow filter (gaussian blur) so no
-   CSS shadow is layered here. */
+/* Optional logo/wordmark overlay (Honeymoon wordmark). Width is
+   per-breakpoint; vertically centered via translate so the wordmark
+   anchors on tile center regardless of aspect ratio. The SVG carries
+   a baked-in drop-shadow filter so no CSS shadow is layered here. */
 .logo {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 78%;
+  width: var(--logo-w-mobile);
   height: auto;
   transform: translate(-50%, -50%);
   pointer-events: none;
@@ -112,8 +118,8 @@
   transform: translateY(6px);
   pointer-events: none;
   transition:
-    opacity 250ms var(--ease-out-soft),
-    transform 250ms var(--ease-out-soft);
+    opacity 320ms var(--ease-out-soft),
+    transform 320ms var(--ease-out-soft);
 }
 
 .overlayText {
@@ -133,8 +139,8 @@
     transform: translateY(0);
     pointer-events: auto;
     transition:
-      opacity 350ms var(--ease-out-soft),
-      transform 350ms var(--ease-out-soft);
+      opacity 500ms var(--ease-out-soft),
+      transform 500ms var(--ease-out-soft);
   }
 }
 
@@ -143,8 +149,8 @@
   transform: translateY(0);
   pointer-events: auto;
   transition:
-    opacity 350ms var(--ease-out-soft),
-    transform 350ms var(--ease-out-soft);
+    opacity 500ms var(--ease-out-soft),
+    transform 500ms var(--ease-out-soft);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -160,15 +166,22 @@
   }
 }
 
-/* ---------- Mobile (≤768) ---------- */
-@media (max-width: 768px) {
+/* ---------- Mobile (≤768) → Desktop (≥769) ---------- */
+@media (min-width: 769px) {
   .tile {
-    /* Square mobile aspect gives the dark overlay panel enough vertical
-       room for 3–4 lines of body copy + the CTA without crowding. The
-       Figma desktop aspects (810/320 honeymoon, 810/280 charities) read
-       as letterboxes once the column shrinks below ~360px. */
-    --tile-aspect-mobile: 1 / 1;
+    aspect-ratio: var(--tile-aspect-desktop);
   }
+  .image {
+    width: var(--image-w-desktop);
+    left: var(--image-left-desktop);
+    top: var(--image-top-desktop);
+  }
+  .logo {
+    width: var(--logo-w-desktop);
+  }
+}
+
+@media (max-width: 768px) {
   .overlay {
     inset: var(--space-2);
     padding: var(--space-3) var(--space-2);

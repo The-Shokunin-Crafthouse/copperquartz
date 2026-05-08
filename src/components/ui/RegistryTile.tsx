@@ -5,6 +5,19 @@ import { withBase } from '@/src/lib/paths';
 import RegistryButton from './RegistryButton';
 import styles from './RegistryTile.module.css';
 
+/* Crop spec is the Figma mask resolved into CSS:
+ *   - aspect: visible-window aspect ratio (CSS aspect-ratio value)
+ *   - imageW / imageLeft / imageTop: how the image is sized and shifted
+ *     INSIDE the tile. All percentages — width and left are relative
+ *     to tile width, top is relative to tile height. height: auto on
+ *     the image lets its native aspect drive the rendered height. */
+export type TileCrop = {
+  aspect: string;
+  imageW: string;
+  imageLeft: string;
+  imageTop: string;
+};
+
 type Props = {
   imageSrc: string;             /* path under /public, eg "/images/honeymoon.jpg" */
   imageAlt: string;
@@ -12,7 +25,14 @@ type Props = {
      White, with subtle drop-shadow already in the SVG. */
   logoSrc?: string;
   logoAlt?: string;             /* "" = decorative; non-empty = announce it */
-  aspectRatio: string;          /* CSS aspect-ratio value, eg "810 / 320" */
+  /* Per-breakpoint Figma-exact crop. The CSS module reads both via
+     custom props and switches at min-width: 769px. */
+  desktopCrop: TileCrop;
+  mobileCrop: TileCrop;
+  /* Wordmark width as % of tile width per breakpoint. Falls through to
+     a sane default if a tile has no logo. */
+  desktopLogoWidth?: string;
+  mobileLogoWidth?: string;
   overlayCopy: string;
   ctaLabel: string;
   ctaIcon?: 'heart';
@@ -34,7 +54,10 @@ export default function RegistryTile({
   imageAlt,
   logoSrc,
   logoAlt,
-  aspectRatio,
+  desktopCrop,
+  mobileCrop,
+  desktopLogoWidth = '68%',
+  mobileLogoWidth = '87%',
   overlayCopy,
   ctaLabel,
   ctaIcon,
@@ -54,15 +77,29 @@ export default function RegistryTile({
     return () => window.removeEventListener('scroll', onScroll);
   }, [open]);
 
+  /* Per-tile CSS variables. Inline styles win over the CSS module's
+     defaults; the @media (min-width: 769px) inside the module promotes
+     the desktop set. Each set is a complete crop so the tile snaps
+     between breakpoints without inheriting half a config. */
+  const styleVars = {
+    '--tile-aspect-mobile': mobileCrop.aspect,
+    '--image-w-mobile': mobileCrop.imageW,
+    '--image-left-mobile': mobileCrop.imageLeft,
+    '--image-top-mobile': mobileCrop.imageTop,
+    '--logo-w-mobile': mobileLogoWidth,
+    '--tile-aspect-desktop': desktopCrop.aspect,
+    '--image-w-desktop': desktopCrop.imageW,
+    '--image-left-desktop': desktopCrop.imageLeft,
+    '--image-top-desktop': desktopCrop.imageTop,
+    '--logo-w-desktop': desktopLogoWidth,
+  } as React.CSSProperties;
+
   return (
     <div
       ref={tileRef}
       className={styles.tile}
       data-open={open ? 'true' : 'false'}
-      /* CSS uses var(--tile-aspect-mobile, var(--tile-aspect-desktop)).
-         Setting the desktop value via custom prop lets the mobile media
-         query override it without losing inline-style precedence. */
-      style={{ ['--tile-aspect-desktop' as string]: aspectRatio }}
+      style={styleVars}
     >
       <img
         className={styles.image}
@@ -89,11 +126,6 @@ export default function RegistryTile({
         className={styles.trigger}
         aria-expanded={open}
         aria-controls={overlayId}
-        /* Stable label — `aria-expanded` carries the open/closed state.
-           Screen readers announce it as "Show <CTA> details, expanded
-           / collapsed", and the label staying constant lets external
-           tooling (Playwright preview, automated audits) match it
-           regardless of state. */
         aria-label={`Show ${ctaLabel} details`}
         onClick={() => setOpen((v) => !v)}
       />
