@@ -30,7 +30,10 @@ export default function HoneymoonWordmark({ className }: Props) {
          tile CSS; viewBox keeps aspect. */
       width="100%"
       height="100%"
-      viewBox="66 66 522 78"
+      /* Height 100 (not 78) so the lowercase 'y' descender at y≈161
+         renders inside the box. The .logo wrapper's CSS aspect-ratio
+         must match this viewBox aspect (522 / 100). */
+      viewBox="66 66 522 100"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       aria-hidden="true"

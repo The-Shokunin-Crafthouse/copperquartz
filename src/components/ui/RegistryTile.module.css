@@ -83,7 +83,10 @@
   top: 50%;
   left: 50%;
   width: var(--logo-w-mobile);
-  aspect-ratio: 522 / 78;
+  /* Match HoneymoonWordmark viewBox aspect — 522 / 100 — so the
+     y descender clears the wrapper. If the SVG ever changes, both
+     numbers move together. */
+  aspect-ratio: 522 / 100;
   transform: translate(-50%, -50%);
   pointer-events: none;
   user-select: none;
