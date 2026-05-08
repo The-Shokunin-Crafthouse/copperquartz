@@ -1,0 +1,88 @@
+/*
+ * Registry CTA — palm-leaf field, sand-text, square corners. Five states:
+ *   - default: palm-leaf bg
+ *   - hover (hover-capable pointers only): palm-leaf-deep bg, lift 1px
+ *   - focus: gold ring (keyboard-only via :focus-visible)
+ *   - active: scale(0.97) press feedback
+ *   - disabled: opacity 0.5, cursor blocked, transitions disabled
+ *
+ * Square corners deliberate (Figma + RSVP pill family). 220ms transitions
+ * on transform / background only (Emil: never `transition: all`). Press
+ * scale uses 160ms ease-out for tactile snap.
+ */
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  border: 0;
+  border-radius: 0;
+  padding-block: 12px;
+  padding-inline: var(--space-5);
+  min-height: var(--height-tap);
+  background-color: var(--color-palm-leaf);
+  color: var(--color-bg);
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: var(--text-base);
+  line-height: 1;
+  letter-spacing: 0;
+  cursor: pointer;
+  text-decoration: none;
+  transition:
+    background-color var(--motion-fast) ease,
+    transform 160ms ease-out;
+  /* Keep press feedback off the GPU's slow path. */
+  will-change: transform;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .button:hover {
+    background-color: var(--color-palm-leaf-deep);
+  }
+}
+
+.button:focus-visible {
+  outline: var(--border-focus) solid var(--color-gold);
+  outline-offset: var(--border-focus);
+}
+
+.button:active {
+  transform: scale(0.97);
+}
+
+.button[aria-disabled='true'],
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+  transform: none;
+}
+
+.icon {
+  display: inline-block;
+  width: 17px;
+  height: 17px;
+  /* Recolor via mask + currentColor so the icon matches button text in
+     every state (default, hover, disabled). The mask url is supplied
+     by the component as --icon-mask-image so the file path resolves
+     through withBase() (root + preview-subpath safe). */
+  background-color: currentColor;
+  -webkit-mask-image: var(--icon-mask-image);
+  mask-image: var(--icon-mask-image);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button {
+    transition: background-color var(--motion-fast) linear;
+  }
+  .button:active {
+    transform: none;
+  }
+}

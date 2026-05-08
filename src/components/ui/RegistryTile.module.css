@@ -1,0 +1,189 @@
+/*
+ * Registry tile — image with reveal-overlay panel.
+ *
+ * Hover (hover-capable pointers): overlay enters on `:hover` /
+ *   `:focus-within`. Pure CSS, no JS, no extra paint.
+ * Touch (pointer:coarse): overlay starts hidden; tap toggles
+ *   `data-open="true"`; first scroll closes it. JS lives in the
+ *   component but only the `data-open` state is read here.
+ *
+ * Crop is Figma-exact, not object-fit cover. Mobile and desktop frames
+ * scale the image differently (mobile zooms further into the photo
+ * than cover would naturally). Each tile receives explicit
+ * width/left/top values per breakpoint via inline CSS vars; the image
+ * keeps `height: auto` so its native aspect drives the rendered height.
+ *
+ * Animation choices (Emil — emil-design-eng):
+ *   - Enter: 500ms `--ease-out-soft` — strong cubic-bezier(0.16, 1, 0.3, 1).
+ *     Bumped from 350ms in eval round 2 — the deliberate pacing reads
+ *     more elegant against the editorial register, still under Emil's
+ *     500ms modal/drawer cap.
+ *   - Exit:  320ms `--ease-out-soft` — slightly snappier on close.
+ *   - Subtle 6px translateY, never `scale(0)`.
+ *   - CSS transitions, not keyframes — interruptible if user re-hovers
+ *     mid-exit.
+ */
+
+.tile {
+  position: relative;
+  display: block;
+  width: 100%;
+  /* Default = mobile values; @media (min-width: 769px) below promotes
+     desktop. Inline-style sets all eight custom props per tile. */
+  aspect-ratio: var(--tile-aspect-mobile);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  isolation: isolate;
+  background-color: var(--color-sand-linen);
+}
+
+.tile:has(.trigger:focus-visible) {
+  outline: var(--border-focus) solid var(--color-gold);
+  outline-offset: var(--border-focus);
+}
+
+/* `<picture>` is the positioned element; the inner `<img>` fills it
+   100% wide with native aspect driving the rendered height. We tried
+   `display: contents` on picture so the img could be positioned
+   directly — Chrome ignored the `<source media="…">` selection and
+   left `currentSrc` empty (the picture stops behaving as a picture
+   when removed from the layout tree). Keeping picture in flow with
+   `display: block` resolves both source matching and lazy loading.
+   Do NOT set object-fit — the image is sized, not fitted. */
+.image {
+  position: absolute;
+  display: block;
+  width: var(--image-w-mobile);
+  left: var(--image-left-mobile);
+  top: var(--image-top-mobile);
+  height: auto;
+  border-radius: 0;
+  pointer-events: none;
+  user-select: none;
+}
+
+.image img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* The 5% cream wash that color-balances the photo lazily — present at
+   every breakpoint per studio direction. pointer-events: none so it
+   never blocks tap/hover. */
+.tint {
+  position: absolute;
+  inset: 0;
+  background-color: rgb(251 243 233 / 0.05);
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+.trigger {
+  position: absolute;
+  inset: 0;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+  z-index: 1;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .trigger {
+    cursor: default;
+  }
+}
+
+.overlay {
+  position: absolute;
+  inset: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-3);
+  background-color: var(--color-ink-deep);
+  border-radius: var(--radius-md);
+  text-align: center;
+  z-index: 2;
+
+  opacity: 0;
+  transform: translateY(6px);
+  pointer-events: none;
+  transition:
+    opacity 320ms var(--ease-out-soft),
+    transform 320ms var(--ease-out-soft);
+}
+
+.overlayText {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: 300;
+  font-size: var(--text-lg);
+  line-height: 31px;
+  color: var(--color-sand-linen);
+  max-width: 461px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .tile:hover .overlay,
+  .tile:focus-within .overlay {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+    transition:
+      opacity 500ms var(--ease-out-soft),
+      transform 500ms var(--ease-out-soft);
+  }
+}
+
+.tile[data-open='true'] .overlay {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+  transition:
+    opacity 500ms var(--ease-out-soft),
+    transform 500ms var(--ease-out-soft);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .overlay {
+    transform: none;
+    transition: opacity 100ms linear;
+  }
+  .tile:hover .overlay,
+  .tile:focus-within .overlay,
+  .tile[data-open='true'] .overlay {
+    transform: none;
+    transition: opacity 100ms linear;
+  }
+}
+
+/* ---------- Mobile (≤768) → Desktop (≥769) ---------- */
+@media (min-width: 769px) {
+  .tile {
+    aspect-ratio: var(--tile-aspect-desktop);
+  }
+  .image {
+    width: var(--image-w-desktop);
+    left: var(--image-left-desktop);
+    top: var(--image-top-desktop);
+  }
+}
+
+@media (max-width: 768px) {
+  .overlay {
+    inset: var(--space-2);
+    padding: var(--space-3) var(--space-2);
+    gap: var(--space-2);
+  }
+  .overlayText {
+    font-size: var(--text-base);
+    line-height: 1.5;
+  }
+}
