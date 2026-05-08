@@ -46,19 +46,18 @@
 .backdrop {
   position: absolute;
   inset: 0;
-  /* color-mix is the cross-browser-stable way to apply opacity to a
-     CSS custom property. The relative-color `rgb(from var(...) r g b / α)`
-     form failed to parse reliably here when the var resolves at the
-     same level as the rule. */
-  background-color: color-mix(in srgb, var(--color-teal) 92%, transparent);
+  /* Figma — Background blur, Uniform 12, fill #0E2122 @ 94%. The hex
+     resolves to --color-ink-deep (token-map.md). color-mix is the
+     cross-browser-stable way to apply opacity to a CSS custom property. */
+  background-color: color-mix(in srgb, var(--color-ink-deep) 94%, transparent);
   /* Page blur — applied here rather than on .shell so it composites
      uniformly across every element behind the modal. The modal portals
      to body, so this backdrop sits above every stacking context inside
      .shell (NavBar's view-transition layer, FooterBar's fixed layer,
      RegistryTile's `isolation: isolate`, etc.) and the blur penetrates
      all of them as one merged composite. */
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   opacity: 1;
   transition: opacity var(--motion-fast) var(--ease-out-soft);
 }
