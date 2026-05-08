@@ -23,8 +23,7 @@ export default function RegistryPage() {
 
       <p className={styles.intro}>
         While your presence is most important to us, if you wish to give
-        further, consider our options below. We already have everything
-        one could imagine, we don&rsquo;t need any more &ldquo;stuff&rdquo;.
+        further, consider our options below.
       </p>
 
       <div className={styles.sections}>
@@ -36,7 +35,7 @@ export default function RegistryPage() {
             <RegistryTile
               imageSrc="/images/honeymoon.jpg"
               imageAlt="Tropical resort with palm trees and a thatched-roof bar at dusk"
-              logoSrc="/images/svg/honeymoon.svg"
+              logoSrc="/images/honeymoon.svg"
               logoAlt=""
               aspectRatio="810 / 320"
               overlayCopy="Help us enjoy our Honeymoon even more by contributing to our extra adventures fund."
@@ -53,8 +52,8 @@ export default function RegistryPage() {
           </h3>
           <div className={styles.tiles}>
             <RegistryTile
-              imageSrc="/images/howlindog.jpg"
-              imageAlt="Recording studio at sunset with palm trees in the foreground"
+              imageSrc="/images/hdmg.jpg"
+              imageAlt="Howlin’ Dog Music Group — vinyl record over a desert horizon at dusk"
               aspectRatio="810 / 280"
               overlayCopy="Help artists fund the recording of their next album."
               ctaLabel="Donate"
@@ -62,7 +61,7 @@ export default function RegistryPage() {
             />
             <RegistryTile
               imageSrc="/images/kiva.jpg"
-              imageAlt="Open countryside landscape under bright sky"
+              imageAlt="Kiva — terraced rice paddies with palms and a rainbow at the horizon"
               aspectRatio="810 / 280"
               overlayCopy="Donate a loan to help small business all over the world."
               ctaLabel="Donate"

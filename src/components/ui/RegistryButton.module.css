@@ -60,10 +60,22 @@
 }
 
 .icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  /* Phosphor renders SVG; size baked-in via prop. Margin handled by gap. */
+  display: inline-block;
+  width: 17px;
+  height: 17px;
+  /* Recolor via mask + currentColor so the icon matches button text in
+     every state (default, hover, disabled). The mask url is supplied
+     by the component as --icon-mask-image so the file path resolves
+     through withBase() (root + preview-subpath safe). */
+  background-color: currentColor;
+  -webkit-mask-image: var(--icon-mask-image);
+  mask-image: var(--icon-mask-image);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
 }
 
 @media (prefers-reduced-motion: reduce) {

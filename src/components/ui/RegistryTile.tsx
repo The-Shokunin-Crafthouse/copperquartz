@@ -59,7 +59,10 @@ export default function RegistryTile({
       ref={tileRef}
       className={styles.tile}
       data-open={open ? 'true' : 'false'}
-      style={{ aspectRatio }}
+      /* CSS uses var(--tile-aspect-mobile, var(--tile-aspect-desktop)).
+         Setting the desktop value via custom prop lets the mobile media
+         query override it without losing inline-style precedence. */
+      style={{ ['--tile-aspect-desktop' as string]: aspectRatio }}
     >
       <img
         className={styles.image}

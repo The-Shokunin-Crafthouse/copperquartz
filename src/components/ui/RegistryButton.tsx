@@ -1,5 +1,5 @@
 import type { ButtonHTMLAttributes, ReactNode } from 'react';
-import { Heart } from '@phosphor-icons/react/dist/ssr/Heart';
+import { withBase } from '@/src/lib/paths';
 import styles from './RegistryButton.module.css';
 
 type IconKind = 'heart' | undefined;
@@ -14,9 +14,12 @@ type Props = Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children'> & {
  * vocabulary (default / hover / focus / active / disabled) ready for an
  * `onClick` handler to be added without restyle.
  *
- * `aria-disabled` honored alongside native `disabled` so the page can
- * disable a CTA without removing it from the focus order if it ever
- * needs to (per studio-memory accumulated learning, 2026-04-26).
+ * The heart icon is rendered as a CSS mask of the local
+ * `public/images/svg/heart.svg` glyph rather than a Phosphor component
+ * so the wedding-site keeps a single, explicit icon source. Mask + a
+ * `currentColor` background means the icon recolors with the surrounding
+ * text on hover / disabled / etc. without a separate SVG asset per
+ * theme.
  */
 export default function RegistryButton({
   children,
@@ -28,9 +31,15 @@ export default function RegistryButton({
     <button {...rest} type={type} className={styles.button}>
       <span>{children}</span>
       {icon === 'heart' ? (
-        <span className={styles.icon} aria-hidden>
-          <Heart size={17} weight="regular" />
-        </span>
+        <span
+          className={styles.icon}
+          style={
+            {
+              '--icon-mask-image': `url(${withBase('/images/svg/heart.svg')})`,
+            } as React.CSSProperties
+          }
+          aria-hidden
+        />
       ) : null}
     </button>
   );

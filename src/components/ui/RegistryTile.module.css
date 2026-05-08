@@ -8,9 +8,11 @@
  *   component but only the `data-open` state is read here.
  *
  * Animation choices (Emil — emil-design-eng):
- *   - Enter: 220ms `--ease-out-soft` — strong cubic-bezier(0.16, 1, 0.3, 1)
- *   - Exit:  180ms `--ease-out-soft` — slightly snappier on close
- *   - Subtle 6px translateY, never `scale(0)` (real things don't pop in)
+ *   - Enter: 350ms `--ease-out-soft` — strong cubic-bezier(0.16, 1, 0.3, 1).
+ *     Slowed from the v1 220ms in eval round 1; the deliberate pacing
+ *     reads more elegant against the editorial register.
+ *   - Exit:  250ms `--ease-out-soft` — slightly snappier on close.
+ *   - Subtle 6px translateY, never `scale(0)` (real things don't pop in).
  *   - CSS transitions, not keyframes — interruptible if user re-hovers
  *     mid-exit, no jank.
  *   - `will-change: opacity, transform` reserved on the overlay only,
@@ -21,21 +23,24 @@
   position: relative;
   display: block;
   width: 100%;
+  /* Aspect ratio is provided per-tile via --tile-aspect-desktop. The
+     mobile breakpoint below overrides it with --tile-aspect-mobile so
+     the overlay's text and CTA have room to breathe in narrow columns. */
+  aspect-ratio: var(--tile-aspect-mobile, var(--tile-aspect-desktop));
   border-radius: var(--radius-lg);
   overflow: hidden;
-  isolation: isolate;       /* keeps tint/overlay z-index local */
-  background-color: var(--color-sand-linen);  /* before image decodes */
-  /* No outline by default — focus styling lives on .focusRing below. */
+  isolation: isolate;
+  background-color: var(--color-sand-linen);
 }
 
-/* Keyboard-focus ring on the trigger button drives the tile ring. */
 .tile:has(.trigger:focus-visible) {
   outline: var(--border-focus) solid var(--color-gold);
   outline-offset: var(--border-focus);
 }
 
 .image {
-  display: block;
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -53,26 +58,23 @@
   border-radius: inherit;
 }
 
-/* Optional logo/wordmark overlay (Honeymoon wordmark, Howlin' Dog logo).
-   White SVG, scaled to ~62% column width, anchored upper-center. Subtle
-   drop-shadow already baked into the SVG's filter. */
+/* Optional logo/wordmark overlay (Honeymoon wordmark). Sized at 78% of
+   tile width — Figma's group spans ~68% but the studio wanted a
+   slightly bigger presence. Vertically centered via translate so the
+   wordmark anchors on tile center regardless of aspect ratio. The SVG
+   itself carries a baked-in drop-shadow filter (gaussian blur) so no
+   CSS shadow is layered here. */
 .logo {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 62%;
+  width: 78%;
   height: auto;
   transform: translate(-50%, -50%);
   pointer-events: none;
   user-select: none;
-  /* Keep the wordmark visible at every breakpoint; it's the lazy
-     image-overlay treatment, not a desktop-only flourish. */
 }
 
-/* Invisible tap/hover target — full-tile button so keyboard users land
-   on a single focusable element per tile. The CTA inside the panel is
-   a separate button; click on it stops propagation so the trigger does
-   not toggle. */
 .trigger {
   position: absolute;
   inset: 0;
@@ -88,7 +90,7 @@
 
 @media (hover: hover) and (pointer: fine) {
   .trigger {
-    cursor: default;       /* hover handles reveal — no need for pointer */
+    cursor: default;
   }
 }
 
@@ -110,22 +112,20 @@
   transform: translateY(6px);
   pointer-events: none;
   transition:
-    opacity 180ms var(--ease-out-soft),
-    transform 180ms var(--ease-out-soft);
+    opacity 250ms var(--ease-out-soft),
+    transform 250ms var(--ease-out-soft);
 }
 
 .overlayText {
   margin: 0;
   font-family: var(--font-sans);
-  font-weight: 300;            /* Commissioner Light per Figma */
+  font-weight: 300;
   font-size: var(--text-lg);
-  line-height: 31px;           /* Figma — match QA/Travel rhythm */
+  line-height: 31px;
   color: var(--color-sand-linen);
   max-width: 461px;
 }
 
-/* Reveal: hover (mouse), focus-within (keyboard tab into trigger or CTA),
-   or data-open on touch. Slightly slower enter than exit (Emil). */
 @media (hover: hover) and (pointer: fine) {
   .tile:hover .overlay,
   .tile:focus-within .overlay {
@@ -133,8 +133,8 @@
     transform: translateY(0);
     pointer-events: auto;
     transition:
-      opacity var(--motion-fast) var(--ease-out-soft),
-      transform var(--motion-fast) var(--ease-out-soft);
+      opacity 350ms var(--ease-out-soft),
+      transform 350ms var(--ease-out-soft);
   }
 }
 
@@ -143,11 +143,10 @@
   transform: translateY(0);
   pointer-events: auto;
   transition:
-    opacity var(--motion-fast) var(--ease-out-soft),
-    transform var(--motion-fast) var(--ease-out-soft);
+    opacity 350ms var(--ease-out-soft),
+    transform 350ms var(--ease-out-soft);
 }
 
-/* Reduced motion: snap, no movement. Fade-only at half-duration. */
 @media (prefers-reduced-motion: reduce) {
   .overlay {
     transform: none;
@@ -163,6 +162,13 @@
 
 /* ---------- Mobile (≤768) ---------- */
 @media (max-width: 768px) {
+  .tile {
+    /* Square mobile aspect gives the dark overlay panel enough vertical
+       room for 3–4 lines of body copy + the CTA without crowding. The
+       Figma desktop aspects (810/320 honeymoon, 810/280 charities) read
+       as letterboxes once the column shrinks below ~360px. */
+    --tile-aspect-mobile: 1 / 1;
+  }
   .overlay {
     inset: var(--space-2);
     padding: var(--space-3) var(--space-2);
