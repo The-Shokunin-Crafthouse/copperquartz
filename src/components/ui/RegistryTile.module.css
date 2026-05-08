@@ -66,24 +66,24 @@
   border-radius: inherit;
 }
 
-/* Optional logo/wordmark overlay (Honeymoon wordmark). Width is
-   per-breakpoint; vertically centered via translate so the wordmark
-   anchors on tile center regardless of aspect ratio.
+/* Optional logo/wordmark overlay (Honeymoon wordmark). Rendered as
+   inline SVG (HoneymoonWordmark) — not an <img> with SVG src —
+   because CSS `filter: drop-shadow()` on an SVG <img> forces the
+   browser to rasterize at logical-pixel resolution, then up-scale to
+   device pixels, which produces a visibly blurry wordmark on Retina
+   mobile (DPR 2/3). Inline SVG stays vector all the way through to
+   the rasterizer at native DPR; the drop-shadow filter then runs on
+   a high-resolution surface and the letters read sharp at every
+   breakpoint.
 
-   The shadow is rendered at runtime via CSS `filter: drop-shadow`
-   rather than baked into the SVG. The Figma source SVG used
-   `filterUnits="userSpaceOnUse"` with a fixed 654×228 filter region —
-   when the browser scales that SVG to a different size, the
-   pre-rasterized blur output also scales, picking up bilinear-
-   interpolation softness at small mobile sizes. CSS drop-shadow runs
-   in browser native units at full DPR, so the wordmark reads sharp
-   at every breakpoint. */
+   Aspect-ratio matches the HoneymoonWordmark viewBox so the rendered
+   SVG height computes correctly from its CSS width. */
 .logo {
   position: absolute;
   top: 50%;
   left: 50%;
   width: var(--logo-w-mobile);
-  height: auto;
+  aspect-ratio: 522 / 78;
   transform: translate(-50%, -50%);
   pointer-events: none;
   user-select: none;

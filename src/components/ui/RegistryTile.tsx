@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useId, useRef, useState } from 'react';
+import { useEffect, useId, useRef, useState, type ReactNode } from 'react';
 import { withBase } from '@/src/lib/paths';
 import RegistryButton from './RegistryButton';
 import styles from './RegistryTile.module.css';
@@ -21,10 +21,11 @@ export type TileCrop = {
 type Props = {
   imageSrc: string;             /* path under /public, eg "/images/honeymoon.jpg" */
   imageAlt: string;
-  /* Optional decorative SVG (wordmark / logo) layered over the image.
-     White, with subtle drop-shadow already in the SVG. */
-  logoSrc?: string;
-  logoAlt?: string;             /* "" = decorative; non-empty = announce it */
+  /* Optional decorative wordmark/logo node. Caller passes an inline
+     `<svg>` element (eg <HoneymoonWordmark className={...} />) — not
+     an <img>, since a CSS drop-shadow on an SVG <img> rasterizes at
+     logical-pixel resolution and reads blurry on Retina mobile. */
+  logo?: ReactNode;
   /* Per-breakpoint Figma-exact crop. The CSS module reads both via
      custom props and switches at min-width: 769px. */
   desktopCrop: TileCrop;
@@ -52,8 +53,7 @@ type Props = {
 export default function RegistryTile({
   imageSrc,
   imageAlt,
-  logoSrc,
-  logoAlt,
+  logo,
   desktopCrop,
   mobileCrop,
   desktopLogoWidth = '68%',
@@ -109,14 +109,7 @@ export default function RegistryTile({
         decoding="async"
       />
       <div className={styles.tint} aria-hidden="true" />
-      {logoSrc ? (
-        <img
-          className={styles.logo}
-          src={withBase(logoSrc)}
-          alt={logoAlt ?? ''}
-          aria-hidden={!logoAlt || logoAlt.length === 0}
-        />
-      ) : null}
+      {logo ? <div className={styles.logo}>{logo}</div> : null}
 
       {/* Full-tile trigger. On hover-capable pointers it's a no-op (CSS
           hover handles reveal) so we mark it cursor:default in CSS. On

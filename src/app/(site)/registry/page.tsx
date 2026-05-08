@@ -1,3 +1,4 @@
+import HoneymoonWordmark from '@/src/components/ui/HoneymoonWordmark';
 import RegistryTile, { type TileCrop } from '@/src/components/ui/RegistryTile';
 import styles from './page.module.css';
 
@@ -88,8 +89,7 @@ export default function RegistryPage() {
             <RegistryTile
               imageSrc="/images/honeymoon.jpg"
               imageAlt="Tropical resort with palm trees and a thatched-roof bar at dusk"
-              logoSrc="/images/honeymoon.svg"
-              logoAlt=""
+              logo={<HoneymoonWordmark />}
               desktopCrop={HONEYMOON_DESKTOP}
               mobileCrop={HONEYMOON_MOBILE}
               desktopLogoWidth="95%"
