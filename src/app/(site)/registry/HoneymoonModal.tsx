@@ -16,9 +16,17 @@ type Props = {
   open: boolean;
   onClose: () => void;
   returnFocusTo?: HTMLElement | null;
+  /* Mounts the modal directly in its post-Stripe thank-you state. Set
+     by RegistryActions when /registry?success=true&fund=honeymoon. */
+  initialThanked?: boolean;
 };
 
-export default function HoneymoonModal({ open, onClose, returnFocusTo }: Props) {
+export default function HoneymoonModal({
+  open,
+  onClose,
+  returnFocusTo,
+  initialThanked = false,
+}: Props) {
   const titleId = useId();
   const nameId = useId();
   const emailId = useId();
@@ -35,6 +43,7 @@ export default function HoneymoonModal({ open, onClose, returnFocusTo }: Props) 
   const [message, setMessage] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [thanked, setThanked] = useState(initialThanked);
 
   const amountCents = useMemo(() => parseDollarsToCents(amount), [amount]);
   const finalChargedCents =
@@ -47,6 +56,25 @@ export default function HoneymoonModal({ open, onClose, returnFocusTo }: Props) 
     amountCents != null && finalChargedCents != null && coverFee
       ? finalChargedCents - amountCents
       : null;
+
+  /* Reset state when the modal closes so a re-open doesn't show a stale
+     thank-you. The parent toggles `open`; reset on the close transition. */
+  function handleClose() {
+    onClose();
+    /* Defer the reset until after the modal's exit transition so the
+       form doesn't visibly snap mid-fade. */
+    window.setTimeout(() => {
+      setName('');
+      setEmail('');
+      setEmailError(null);
+      setAmount('');
+      setCoverFee(true);
+      setMessage('');
+      setError(null);
+      setSubmitting(false);
+      setThanked(false);
+    }, 240);
+  }
 
   function validateEmailOnBlur() {
     const trimmed = email.trim();
@@ -104,12 +132,28 @@ export default function HoneymoonModal({ open, onClose, returnFocusTo }: Props) 
   return (
     <Modal
       open={open}
-      onClose={onClose}
+      onClose={handleClose}
       titleId={titleId}
       title="Honeymoon"
       eyebrow="Levi & Meghan"
       returnFocusTo={returnFocusTo}
     >
+      {thanked ? (
+        <>
+          <h3 className={styles.thanksHeading}>Thank you.</h3>
+          <p className={styles.thanksBody}>
+            We mean that. It means a lot to both of us.
+          </p>
+          <button
+            type="button"
+            className={styles.thanksClose}
+            onClick={handleClose}
+          >
+            Close
+          </button>
+        </>
+      ) : (
+        <>
       <p className={styles.body}>
         Wherever the road takes us after September 29th — your generosity will
         be put towards extra upgrades to make our time together extra special.
@@ -244,6 +288,8 @@ export default function HoneymoonModal({ open, onClose, returnFocusTo }: Props) 
           )}
         </button>
       </form>
+        </>
+      )}
     </Modal>
   );
 }

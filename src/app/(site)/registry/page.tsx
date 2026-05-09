@@ -22,13 +22,20 @@ export const metadata = {
     'If you wish to give beyond your presence — honeymoon contributions, Howlin’ Dog Music Group, and Kiva micro-loans.',
 };
 
+type ThankedFund = 'honeymoon' | 'kiva';
+
 type PageProps = {
-  searchParams?: Promise<{ success?: string }>;
+  searchParams?: Promise<{ success?: string; fund?: string }>;
 };
+
+function parseThankedFund(value: string | undefined): ThankedFund | null {
+  return value === 'honeymoon' || value === 'kiva' ? value : null;
+}
 
 export default async function RegistryPage({ searchParams }: PageProps) {
   const params = await searchParams;
   const initialSuccess = params?.success === 'true';
+  const initialFund = initialSuccess ? parseThankedFund(params?.fund) : null;
 
   return (
     <article className={styles.registry}>
@@ -39,7 +46,10 @@ export default async function RegistryPage({ searchParams }: PageProps) {
         further, consider our options below.
       </p>
 
-      <RegistryActions initialSuccess={initialSuccess} />
+      <RegistryActions
+        initialSuccess={initialSuccess}
+        initialFund={initialFund}
+      />
     </article>
   );
 }
