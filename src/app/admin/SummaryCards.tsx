@@ -4,7 +4,8 @@ import styles from './SummaryCards.module.css';
 
 type Summary = {
   label: string;
-  headline: string;
+  amount: string;
+  detail: string;
 };
 
 function pluralize(n: number, singular: string, plural: string): string {
@@ -24,15 +25,18 @@ function summarize(rows: Contribution[]): Summary[] {
   return [
     {
       label: 'Honeymoon Fund',
-      headline: `${formatUsdWhole(honeymoonTotal)} · ${honeymoon.length} ${pluralize(honeymoon.length, 'contribution', 'contributions')}`,
+      amount: formatUsdWhole(honeymoonTotal),
+      detail: `${honeymoon.length} ${pluralize(honeymoon.length, 'contribution', 'contributions')}`,
     },
     {
       label: 'Kiva',
-      headline: `${formatUsdWhole(kivaTotal)} · ${kiva.length} ${pluralize(kiva.length, 'contribution', 'contributions')} (${kivaBorrower} chose a borrower)`,
+      amount: formatUsdWhole(kivaTotal),
+      detail: `${kiva.length} ${pluralize(kiva.length, 'contribution', 'contributions')} (${kivaBorrower} chose a borrower)`,
     },
     {
       label: 'Howlin Dog Music Group',
-      headline: `${formatUsdWhole(hdmgTotal)} · ${hdmg.length} self-reported`,
+      amount: formatUsdWhole(hdmgTotal),
+      detail: `${hdmg.length} self-reported`,
     },
   ];
 }
@@ -45,7 +49,8 @@ export default function SummaryCards({ rows }: { rows: Contribution[] }) {
       {cards.map((card) => (
         <article key={card.label} className={styles.card}>
           <p className={styles.label}>{card.label}</p>
-          <p className={styles.headline}>{card.headline}</p>
+          <p className={styles.amount}>{card.amount}</p>
+          <p className={styles.detail}>{card.detail}</p>
         </article>
       ))}
     </div>
