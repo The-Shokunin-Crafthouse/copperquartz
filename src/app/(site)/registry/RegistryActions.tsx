@@ -7,10 +7,8 @@ import HoneymoonModal from './HoneymoonModal';
 import KivaModal from './KivaModal';
 import HdmgModal from './HdmgModal';
 import pageStyles from './page.module.css';
-import styles from './RegistryActions.module.css';
 
 const HDMG_DONATE_URL = 'https://www.howlindogmusicgroup.org/support-hdmg';
-const SUCCESS_DISMISS_MS = 5000;
 
 /* Crop specs match the existing server page — preserved verbatim so the
    tile composition is identical to ship. The only difference between
@@ -57,44 +55,33 @@ const KIVA_MOBILE: TileCrop = {
 };
 
 type ModalKey = 'honeymoon' | 'kiva' | 'hdmg' | null;
+type ThankedFund = 'honeymoon' | 'kiva';
 
 type Props = {
-  /* Server-resolved value of the ?success query param. When true, the
-     banner mounts and a router.replace strips the param so a refresh
-     doesn't replay the toast. */
+  /* Server-resolved value of the ?success query param. */
   initialSuccess: boolean;
+  /* Server-resolved value of the ?fund query param when ?success=true.
+     Drives which modal opens in thanked state on hydration. */
+  initialFund: ThankedFund | null;
 };
 
-export default function RegistryActions({ initialSuccess }: Props) {
+export default function RegistryActions({ initialSuccess, initialFund }: Props) {
   const router = useRouter();
 
-  const [activeModal, setActiveModal] = useState<ModalKey>(null);
+  const [activeModal, setActiveModal] = useState<ModalKey>(
+    initialSuccess && initialFund ? initialFund : null,
+  );
+  const [thankedFund, setThankedFund] = useState<ThankedFund | null>(
+    initialSuccess && initialFund ? initialFund : null,
+  );
   const [originButton, setOriginButton] = useState<HTMLButtonElement | null>(null);
-  const [showBanner, setShowBanner] = useState(initialSuccess);
-  const [bannerExiting, setBannerExiting] = useState(false);
 
-  /* Strip ?success=true on hydration so a refresh doesn't replay the
-     toast. router.replace keeps the user's scroll position. */
+  /* Strip ?success=true&fund=... on hydration so a refresh doesn't replay
+     the thank-you. router.replace keeps the user's scroll position. */
   useEffect(() => {
     if (!initialSuccess) return;
     router.replace('/registry', { scroll: false });
   }, [initialSuccess, router]);
-
-  /* Auto-dismiss the banner after the configured window. The exit
-     animation runs first; the banner unmounts after a short tail. */
-  useEffect(() => {
-    if (!showBanner) return;
-    const t = window.setTimeout(() => {
-      setBannerExiting(true);
-      window.setTimeout(() => setShowBanner(false), 220);
-    }, SUCCESS_DISMISS_MS);
-    return () => window.clearTimeout(t);
-  }, [showBanner]);
-
-  function dismissBanner() {
-    setBannerExiting(true);
-    window.setTimeout(() => setShowBanner(false), 220);
-  }
 
   function openModal(key: Exclude<ModalKey, null>, button: HTMLButtonElement) {
     setOriginButton(button);
@@ -103,38 +90,16 @@ export default function RegistryActions({ initialSuccess }: Props) {
 
   function closeModal() {
     setActiveModal(null);
+    /* Drop the thanked flag on close — re-opening the same tile from the
+       grid should land on the form, not the thank-you state. The modal
+       runs its own delayed reset for the form fields. */
+    setThankedFund(null);
     /* Don't clear originButton — Modal still needs it during its exit
        transition to restore focus. The next openModal overwrites. */
   }
 
   return (
     <>
-      {showBanner ? (
-        <div
-          className={styles.banner}
-          data-state={bannerExiting ? 'closing' : 'open'}
-          role="status"
-          aria-live="polite"
-        >
-          <span>We received your gift. Thank you.</span>
-          <button
-            type="button"
-            className={styles.bannerDismiss}
-            onClick={dismissBanner}
-            aria-label="Dismiss confirmation"
-          >
-            <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true">
-              <path
-                d="M3 3 L13 13 M13 3 L3 13"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-              />
-            </svg>
-          </button>
-        </div>
-      ) : null}
-
       <div className={pageStyles.sections}>
         <section className={pageStyles.section} aria-labelledby="registry-personal">
           <h3 id="registry-personal" className={pageStyles.eyebrow}>
@@ -198,11 +163,13 @@ export default function RegistryActions({ initialSuccess }: Props) {
         open={activeModal === 'honeymoon'}
         onClose={closeModal}
         returnFocusTo={originButton}
+        initialThanked={thankedFund === 'honeymoon'}
       />
       <KivaModal
         open={activeModal === 'kiva'}
         onClose={closeModal}
         returnFocusTo={originButton}
+        initialThanked={thankedFund === 'kiva'}
       />
       <HdmgModal
         open={activeModal === 'hdmg'}

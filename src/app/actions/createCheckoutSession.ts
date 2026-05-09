@@ -89,7 +89,7 @@ export async function createCheckoutSession(
         lendersChoice: String(params.lendersChoice ?? false),
         message: params.message ?? '',
       },
-      success_url: `${siteUrl}/registry?success=true`,
+      success_url: `${siteUrl}/registry?success=true&fund=${params.fund}`,
       cancel_url: `${siteUrl}/registry`,
     });
 
