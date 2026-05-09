@@ -1,0 +1,24 @@
+.shell {
+  min-height: 100vh;
+  background-color: var(--color-bg);
+  color: var(--color-brown);
+  font-family: var(--font-sans);
+}
+
+.main {
+  max-width: var(--page-max-width);
+  margin: 0 auto;
+  padding: var(--space-4) var(--space-2);
+}
+
+@media (min-width: 768px) {
+  .main {
+    padding: var(--space-6) var(--space-3);
+  }
+}
+
+@media (min-width: 1024px) {
+  .main {
+    padding: var(--space-8) var(--space-4);
+  }
+}
