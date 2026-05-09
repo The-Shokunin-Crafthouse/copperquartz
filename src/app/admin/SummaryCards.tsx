@@ -17,9 +17,13 @@ function summarize(rows: Contribution[]): Summary[] {
   const kiva = rows.filter((r) => !r.self_reported && r.fund === 'kiva');
   const hdmg = rows.filter((r) => r.self_reported && r.fund === 'howlin-dog');
 
-  const honeymoonTotal = honeymoon.reduce((s, r) => s + r.amount_cents, 0);
-  const kivaTotal = kiva.reduce((s, r) => s + r.amount_cents, 0);
-  const hdmgTotal = hdmg.reduce((s, r) => s + r.amount_cents, 0);
+  /* Sum the gift the couple actually receives, not the charged total —
+     when donors covered the Stripe fee, amount_cents is inflated. Fall
+     back for legacy rows written before migration 003. */
+  const giftCents = (r: Contribution) => r.gift_cents ?? r.amount_cents;
+  const honeymoonTotal = honeymoon.reduce((s, r) => s + giftCents(r), 0);
+  const kivaTotal = kiva.reduce((s, r) => s + giftCents(r), 0);
+  const hdmgTotal = hdmg.reduce((s, r) => s + giftCents(r), 0);
   const kivaBorrower = kiva.filter((r) => !r.lenders_choice).length;
 
   return [

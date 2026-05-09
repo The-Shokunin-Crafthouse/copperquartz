@@ -202,6 +202,7 @@ export default function HoneymoonModal({ open, onClose, returnFocusTo }: Props) 
             id={messageId}
             className={styles.textarea}
             rows={3}
+            maxLength={450}
             value={message}
             onChange={(e) => setMessage(e.target.value)}
           />

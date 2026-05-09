@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { exportContributionsCSV } from '@/src/app/actions/exportContributionsCSV';
 import type { Contribution } from './types';
 import { fundLabel, formatUsd, formatTimestamp, truncate } from './format';
@@ -17,9 +17,21 @@ function downloadFilename(): string {
   return `contributions-${y}-${m}-${day}.csv`;
 }
 
+function giftCents(r: Contribution): number {
+  return r.gift_cents ?? r.amount_cents;
+}
+
+function chargedDiffers(r: Contribution): boolean {
+  return r.gift_cents != null && r.amount_cents !== r.gift_cents;
+}
+
 export default function ContributionsTable({ rows }: { rows: Contribution[] }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  /* Show the Total Charged column only when at least one row's charged
+     amount differs from the gift (i.e. someone covered the Stripe fee). */
+  const showCharged = useMemo(() => rows.some(chargedDiffers), [rows]);
 
   async function onExport() {
     setBusy(true);
@@ -46,6 +58,8 @@ export default function ContributionsTable({ rows }: { rows: Contribution[] }) {
     }
   }
 
+  const colCount = showCharged ? 9 : 8;
+
   return (
     <>
       <div className={styles.toolbar}>
@@ -68,7 +82,8 @@ export default function ContributionsTable({ rows }: { rows: Contribution[] }) {
               <th>Name</th>
               <th>Email</th>
               <th>Fund</th>
-              <th>Amount</th>
+              <th>Gift Amount</th>
+              {showCharged ? <th>Total Charged</th> : null}
               <th>Message</th>
               <th>Borrower URL</th>
               <th>Source</th>
@@ -78,7 +93,7 @@ export default function ContributionsTable({ rows }: { rows: Contribution[] }) {
           <tbody>
             {rows.length === 0 ? (
               <tr>
-                <td colSpan={8} className={styles.empty}>
+                <td colSpan={colCount} className={styles.empty}>
                   No contributions yet.
                 </td>
               </tr>
@@ -88,7 +103,16 @@ export default function ContributionsTable({ rows }: { rows: Contribution[] }) {
                   <td>{row.name}</td>
                   <td>{row.email}</td>
                   <td>{fundLabel(row.fund)}</td>
-                  <td className={styles.amountCol}>{formatUsd(row.amount_cents)}</td>
+                  <td className={styles.amountCol}>{formatUsd(giftCents(row))}</td>
+                  {showCharged ? (
+                    <td className={styles.amountCol}>
+                      {chargedDiffers(row) ? (
+                        formatUsd(row.amount_cents)
+                      ) : (
+                        <span className={styles.dash}>—</span>
+                      )}
+                    </td>
+                  ) : null}
                   <td>
                     {row.message ? (
                       <span title={row.message}>

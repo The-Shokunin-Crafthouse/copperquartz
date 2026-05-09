@@ -136,6 +136,15 @@ export default function HdmgModal({ open, onClose, returnFocusTo }: Props) {
             properly.
           </p>
 
+          <a
+            className={styles.donateLink}
+            href="https://www.howlindogmusicgroup.org/support-hdmg"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Donate at Howlin Dog &rarr;
+          </a>
+
           <form className={styles.form} onSubmit={handleSubmit} noValidate>
             <div className={styles.fieldGroup}>
               <label className={styles.label} htmlFor={nameId}>
@@ -204,6 +213,7 @@ export default function HdmgModal({ open, onClose, returnFocusTo }: Props) {
                 id={messageId}
                 className={styles.textarea}
                 rows={3}
+                maxLength={450}
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
               />

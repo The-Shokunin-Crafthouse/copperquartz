@@ -46,10 +46,7 @@
 .backdrop {
   position: absolute;
   inset: 0;
-  /* Per-overlay shade #092729 @ 70% — slightly cooler / deeper than
-     --color-ink-deep (#0E2122), used only here on the modal backdrop.
-     If this hue ends up reused, promote it to tokens.css. */
-  background-color: color-mix(in srgb, #092729 70%, transparent);
+  background-color: color-mix(in srgb, var(--color-teal-deep) 70%, transparent);
   /* Page blur — applied here rather than on .shell so it composites
      uniformly across every element behind the modal. The modal portals
      to body, so this backdrop sits above every stacking context inside

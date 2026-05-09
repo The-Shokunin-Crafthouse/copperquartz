@@ -8,7 +8,8 @@ const HEADERS = [
   'Name',
   'Email',
   'Fund',
-  'Amount (USD)',
+  'Gift Amount (USD)',
+  'Total Charged (USD)',
   'Message',
   'Borrower URL',
   'Lenders Choice',
@@ -24,12 +25,18 @@ function escapeCsv(value: string): string {
   return value;
 }
 
+function dollars(cents: number): string {
+  return (cents / 100).toFixed(2);
+}
+
 function rowToCsv(r: Contribution): string {
+  const gift = r.gift_cents ?? r.amount_cents;
   const cells = [
     r.name ?? '',
     r.email ?? '',
     fundLabel(r.fund),
-    (r.amount_cents / 100).toFixed(2),
+    dollars(gift),
+    dollars(r.amount_cents),
     r.message ?? '',
     r.reference_url ?? '',
     r.lenders_choice ? 'Yes' : 'No',
@@ -48,7 +55,7 @@ export async function exportContributionsCSV(): Promise<
     const { data, error } = await supabase
       .from('contributions')
       .select(
-        'id, name, email, fund, amount_cents, message, reference_url, lenders_choice, self_reported, stripe_session_id, created_at',
+        'id, name, email, fund, amount_cents, gift_cents, message, reference_url, lenders_choice, self_reported, stripe_session_id, created_at',
       )
       .order('created_at', { ascending: false });
 

@@ -22,7 +22,7 @@ async function fetchContributions(): Promise<FetchResult> {
     const { data, error } = await supabase
       .from('contributions')
       .select(
-        'id, name, email, fund, amount_cents, message, reference_url, lenders_choice, self_reported, stripe_session_id, created_at',
+        'id, name, email, fund, amount_cents, gift_cents, message, reference_url, lenders_choice, self_reported, stripe_session_id, created_at',
       )
       .order('created_at', { ascending: false });
 

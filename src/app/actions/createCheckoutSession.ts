@@ -1,6 +1,7 @@
 'use server';
 
 import Stripe from 'stripe';
+import { chargedCentsCoveringFee } from '@/src/lib/stripe/fees';
 
 export type CheckoutFund = 'honeymoon' | 'kiva';
 
@@ -20,17 +21,39 @@ const FUND_DISPLAY_NAME: Record<CheckoutFund, string> = {
   kiva: 'Kiva Microloan',
 };
 
-const STRIPE_PERCENT_FEE = 0.029;
-const STRIPE_FIXED_FEE_CENTS = 30;
+const ALLOWED_FUNDS: readonly CheckoutFund[] = ['honeymoon', 'kiva'];
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const STRIPE_MIN_CENTS = 50;
+const MESSAGE_MAX = 450;
 
-function calculateFinalAmountCents(amountCents: number, coverFee: boolean): number {
-  if (!coverFee) return amountCents;
-  return Math.round((amountCents + STRIPE_FIXED_FEE_CENTS) / (1 - STRIPE_PERCENT_FEE));
+function validate(params: CheckoutParams): string | null {
+  if (typeof params.name !== 'string' || params.name.trim().length === 0) {
+    return 'Please enter your name.';
+  }
+  if (typeof params.email !== 'string' || !EMAIL_PATTERN.test(params.email.trim())) {
+    return 'Please enter a valid email address.';
+  }
+  if (
+    !Number.isInteger(params.amountCents) ||
+    params.amountCents < STRIPE_MIN_CENTS
+  ) {
+    return 'Minimum contribution is $0.50.';
+  }
+  if (!ALLOWED_FUNDS.includes(params.fund)) {
+    return 'Invalid fund.';
+  }
+  if (typeof params.message === 'string' && params.message.length > MESSAGE_MAX) {
+    return `Note must be ${MESSAGE_MAX} characters or fewer.`;
+  }
+  return null;
 }
 
 export async function createCheckoutSession(
   params: CheckoutParams,
 ): Promise<{ url: string } | { error: string }> {
+  const validationError = validate(params);
+  if (validationError) return { error: validationError };
+
   try {
     const secret = process.env.STRIPE_SECRET_KEY;
     if (!secret) throw new Error('STRIPE_SECRET_KEY is not set');
@@ -40,7 +63,10 @@ export async function createCheckoutSession(
 
     const stripe = new Stripe(secret);
 
-    const finalAmountCents = calculateFinalAmountCents(params.amountCents, params.coverFee);
+    const giftAmountCents = params.amountCents;
+    const finalAmountCents = params.coverFee
+      ? chargedCentsCoveringFee(giftAmountCents)
+      : giftAmountCents;
 
     const session = await stripe.checkout.sessions.create({
       mode: 'payment',
@@ -58,6 +84,7 @@ export async function createCheckoutSession(
       metadata: {
         name: params.name,
         fund: params.fund,
+        giftAmountCents: String(giftAmountCents),
         referenceUrl: params.referenceUrl ?? '',
         lendersChoice: String(params.lendersChoice ?? false),
         message: params.message ?? '',
