@@ -111,8 +111,8 @@ export default function HoneymoonModal({ open, onClose, returnFocusTo }: Props) 
       returnFocusTo={returnFocusTo}
     >
       <p className={styles.body}>
-        Wherever the road takes us after September 29th — your generosity makes
-        it possible. No trip is too small, no destination too far.
+        Wherever the road takes us after September 29th — your generosity will
+        be put towards extra upgrades to make our time together extra special.
       </p>
 
       <form className={styles.form} onSubmit={handleSubmit} noValidate>
