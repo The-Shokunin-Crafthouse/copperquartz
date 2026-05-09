@@ -36,6 +36,13 @@ export function createServiceClient(): SupabaseClient {
   if (!url) throw new Error('SUPABASE_URL is not set');
   if (!serviceRoleKey) throw new Error('SUPABASE_SERVICE_ROLE_KEY is not set');
 
+  /* Diagnostic: print only the leading 20 chars so we can confirm at
+     runtime which key Vercel is actually injecting. Never log the full
+     value — it grants full DB access. */
+  console.log(
+    `[supabase] SERVICE_ROLE_KEY prefix: ${serviceRoleKey.slice(0, 20)}…`,
+  );
+
   assertServiceRoleKey(serviceRoleKey);
 
   return createClient(url, serviceRoleKey, {
