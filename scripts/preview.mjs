@@ -65,6 +65,14 @@ const SECTIONS = {
        pushed down. Targeted by accessible name (the question text). */
     preOpen: { role: 'button', name: 'Where do I park?' },
   },
+  'admin-contributions': {
+    route: '/admin',
+    fullPage: true,
+    description: 'Admin — Contributions section (summary cards + table)',
+    /* Preview snapshots run without Supabase env vars; the page falls
+       back to the empty state. Middleware also skips Basic Auth in
+       preview because NEXT_PUBLIC_BASE_PATH is set by next dev here. */
+  },
   registry: {
     route: '/registry',
     fullPage: true,
@@ -111,7 +119,7 @@ const dev = spawn(
   ['next', 'dev', '--port', String(PORT), '--hostname', HOST],
   {
     stdio: ['ignore', 'pipe', 'pipe'],
-    env: { ...process.env, NEXT_PUBLIC_BASE_PATH: '' },
+    env: { ...process.env, NEXT_PUBLIC_BASE_PATH: '', SKIP_ADMIN_AUTH: '1' },
     detached: true,                    /* own process group so we can kill the subtree */
   },
 );

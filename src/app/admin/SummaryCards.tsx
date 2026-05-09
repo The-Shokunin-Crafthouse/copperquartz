@@ -1,0 +1,62 @@
+import type { Contribution } from './types';
+import { formatUsdWhole } from './format';
+import styles from './SummaryCards.module.css';
+
+type Summary = {
+  label: string;
+  amount: string;
+  detail: string;
+};
+
+function pluralize(n: number, singular: string, plural: string): string {
+  return n === 1 ? singular : plural;
+}
+
+function summarize(rows: Contribution[]): Summary[] {
+  const honeymoon = rows.filter((r) => !r.self_reported && r.fund === 'honeymoon');
+  const kiva = rows.filter((r) => !r.self_reported && r.fund === 'kiva');
+  const hdmg = rows.filter((r) => r.self_reported && r.fund === 'howlin-dog');
+
+  /* Sum the gift the couple actually receives, not the charged total —
+     when donors covered the Stripe fee, amount_cents is inflated. Fall
+     back for legacy rows written before migration 003. */
+  const giftCents = (r: Contribution) => r.gift_cents ?? r.amount_cents;
+  const honeymoonTotal = honeymoon.reduce((s, r) => s + giftCents(r), 0);
+  const kivaTotal = kiva.reduce((s, r) => s + giftCents(r), 0);
+  const hdmgTotal = hdmg.reduce((s, r) => s + giftCents(r), 0);
+  const kivaBorrower = kiva.filter((r) => !r.lenders_choice).length;
+
+  return [
+    {
+      label: 'Honeymoon Fund',
+      amount: formatUsdWhole(honeymoonTotal),
+      detail: `${honeymoon.length} ${pluralize(honeymoon.length, 'contribution', 'contributions')}`,
+    },
+    {
+      label: 'Kiva',
+      amount: formatUsdWhole(kivaTotal),
+      detail: `${kiva.length} ${pluralize(kiva.length, 'contribution', 'contributions')} (${kivaBorrower} chose a borrower)`,
+    },
+    {
+      label: 'Howlin Dog Music Group',
+      amount: formatUsdWhole(hdmgTotal),
+      detail: `${hdmg.length} self-reported`,
+    },
+  ];
+}
+
+export default function SummaryCards({ rows }: { rows: Contribution[] }) {
+  const cards = summarize(rows);
+
+  return (
+    <div className={styles.cards}>
+      {cards.map((card) => (
+        <article key={card.label} className={styles.card}>
+          <p className={styles.label}>{card.label}</p>
+          <p className={styles.amount}>{card.amount}</p>
+          <p className={styles.detail}>{card.detail}</p>
+        </article>
+      ))}
+    </div>
+  );
+}

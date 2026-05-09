@@ -8,7 +8,7 @@ export type SelfReportParams = {
   name: string;
   email: string;
   fund: SelfReportFund;
-  amountCents: number;
+  amountCents?: number | null;
   message?: string;
 };
 
@@ -26,8 +26,12 @@ export async function selfReportContribution(
   if (params.fund !== 'howlin-dog') {
     return { error: 'Invalid fund' };
   }
-  if (!Number.isInteger(params.amountCents) || params.amountCents <= 0) {
-    return { error: 'Amount must be a positive whole number of cents' };
+  let amountCents = 0;
+  if (params.amountCents != null) {
+    if (!Number.isInteger(params.amountCents) || params.amountCents < 0) {
+      return { error: 'Amount must be a non-negative whole number of cents' };
+    }
+    amountCents = params.amountCents;
   }
 
   const trimmedMessage = params.message?.trim();
@@ -38,7 +42,7 @@ export async function selfReportContribution(
       name: params.name.trim(),
       email: params.email.trim(),
       fund: 'howlin-dog',
-      amount_cents: params.amountCents,
+      amount_cents: amountCents,
       reference_url: null,
       lenders_choice: false,
       self_reported: true,
