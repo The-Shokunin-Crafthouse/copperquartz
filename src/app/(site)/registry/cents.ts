@@ -1,7 +1,13 @@
-/* Stripe fee math + currency formatting shared by the registry modals.
-   Mirror constants of createCheckoutSession.ts so client-side preview
-   and server-side charge agree on the dollar amounts shown to the
-   donor. */
+/* Client-side checkout helpers shared across the registry modals —
+   Stripe fee math, currency formatting, and the email-format check
+   (mirrors selfReportContribution.ts so client-side validation and
+   server-side validation use the same pattern). */
+
+export const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+export function isValidEmail(value: string): boolean {
+  return EMAIL_PATTERN.test(value.trim());
+}
 
 export const STRIPE_PERCENT_FEE = 0.029;
 export const STRIPE_FIXED_FEE_CENTS = 30;
@@ -12,6 +18,13 @@ const USD = new Intl.NumberFormat('en-US', {
 });
 
 export function formatCents(cents: number): string {
+  return USD.format(cents / 100);
+}
+
+/* Whole-dollar values render without `.00` ($100), partial values keep
+   two decimals ($103.30). Matches the spec copy example. */
+export function formatCentsCompact(cents: number): string {
+  if (cents % 100 === 0) return `$${cents / 100}`;
   return USD.format(cents / 100);
 }
 

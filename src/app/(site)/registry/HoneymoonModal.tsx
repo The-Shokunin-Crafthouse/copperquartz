@@ -6,8 +6,9 @@ import Modal from './Modal';
 import {
   chargedCentsCoveringFee,
   formatCents,
+  formatCentsCompact,
+  isValidEmail,
   parseDollarsToCents,
-  stripeFeeOn,
 } from './cents';
 import styles from './forms.module.css';
 
@@ -24,9 +25,11 @@ export default function HoneymoonModal({ open, onClose, returnFocusTo }: Props) 
   const amountId = useId();
   const messageId = useId();
   const errorId = useId();
+  const emailErrorId = useId();
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [emailError, setEmailError] = useState<string | null>(null);
   const [amount, setAmount] = useState('');
   const [coverFee, setCoverFee] = useState(true);
   const [message, setMessage] = useState('');
@@ -41,11 +44,18 @@ export default function HoneymoonModal({ open, onClose, returnFocusTo }: Props) 
         : amountCents
       : null;
   const feeCents =
-    amountCents != null && finalChargedCents != null
-      ? coverFee
-        ? finalChargedCents - amountCents
-        : stripeFeeOn(finalChargedCents)
+    amountCents != null && finalChargedCents != null && coverFee
+      ? finalChargedCents - amountCents
       : null;
+
+  function validateEmailOnBlur() {
+    const trimmed = email.trim();
+    if (!trimmed) {
+      setEmailError(null); // empty is handled by submit-time required check
+      return;
+    }
+    setEmailError(isValidEmail(trimmed) ? null : 'Please enter a valid email address.');
+  }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -61,15 +71,20 @@ export default function HoneymoonModal({ open, onClose, returnFocusTo }: Props) 
       setError('Please enter your name.');
       return;
     }
-    if (!email.trim()) {
+    const trimmedEmail = email.trim();
+    if (!trimmedEmail) {
       setError('Please enter your email.');
+      return;
+    }
+    if (!isValidEmail(trimmedEmail)) {
+      setEmailError('Please enter a valid email address.');
       return;
     }
 
     setSubmitting(true);
     const result = await createCheckoutSession({
       name: name.trim(),
-      email: email.trim(),
+      email: trimmedEmail,
       amountCents: cents,
       coverFee,
       fund: 'honeymoon',
@@ -128,8 +143,19 @@ export default function HoneymoonModal({ open, onClose, returnFocusTo }: Props) 
             inputMode="email"
             required
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => {
+              setEmail(e.target.value);
+              if (emailError) setEmailError(null);
+            }}
+            onBlur={validateEmailOnBlur}
+            aria-invalid={emailError ? 'true' : undefined}
+            aria-describedby={emailError ? emailErrorId : undefined}
           />
+          {emailError ? (
+            <p className={styles.fieldError} id={emailErrorId} role="alert">
+              {emailError}
+            </p>
+          ) : null}
         </div>
 
         <div className={styles.fieldGroup}>
@@ -157,19 +183,16 @@ export default function HoneymoonModal({ open, onClose, returnFocusTo }: Props) 
             checked={coverFee}
             onChange={(e) => setCoverFee(e.target.checked)}
           />
-          <span>Cover the processing fee</span>
-        </label>
-        <div className={styles.feeSummary}>
-          <span>
-            Processing fee: {feeCents != null ? formatCents(feeCents) : '—'}
-          </span>
-          {coverFee && finalChargedCents != null && amountCents != null ? (
-            <span className={styles.feeAdjusted}>
-              Your card will be charged {formatCents(finalChargedCents)} — we
-              receive {formatCents(amountCents)}
+          {coverFee && amountCents != null && finalChargedCents != null && feeCents != null ? (
+            <span>
+              Cover the processing fee of {formatCentsCompact(feeCents)}. Your card
+              will be charged {formatCentsCompact(finalChargedCents)} – the bride
+              and groom receive {formatCentsCompact(amountCents)}.
             </span>
-          ) : null}
-        </div>
+          ) : (
+            <span>Cover the processing fee</span>
+          )}
+        </label>
 
         <div className={styles.fieldGroup}>
           <label className={styles.label} htmlFor={messageId}>
@@ -214,7 +237,7 @@ export default function HoneymoonModal({ open, onClose, returnFocusTo }: Props) 
             </>
           ) : (
             <span>
-              Continue to Payment
+              Checkout
               {finalChargedCents != null ? ` — ${formatCents(finalChargedCents)}` : ''}
             </span>
           )}

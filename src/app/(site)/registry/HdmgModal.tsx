@@ -3,7 +3,7 @@
 import { useId, useState, type FormEvent } from 'react';
 import { selfReportContribution } from '@/src/app/actions/selfReportContribution';
 import Modal from './Modal';
-import { parseDollarsToCents } from './cents';
+import { isValidEmail, parseDollarsToCents } from './cents';
 import styles from './forms.module.css';
 
 type Props = {
@@ -19,14 +19,25 @@ export default function HdmgModal({ open, onClose, returnFocusTo }: Props) {
   const amountId = useId();
   const messageId = useId();
   const errorId = useId();
+  const emailErrorId = useId();
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [emailError, setEmailError] = useState<string | null>(null);
   const [amount, setAmount] = useState('');
   const [message, setMessage] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [thanked, setThanked] = useState(false);
+
+  function validateEmailOnBlur() {
+    const trimmed = email.trim();
+    if (!trimmed) {
+      setEmailError(null);
+      return;
+    }
+    setEmailError(isValidEmail(trimmed) ? null : 'Please enter a valid email address.');
+  }
 
   /* Reset state when the modal closes so a re-open doesn't show a stale
      thank-you. The parent toggles `open`; reset on the close transition. */
@@ -37,6 +48,7 @@ export default function HdmgModal({ open, onClose, returnFocusTo }: Props) {
     window.setTimeout(() => {
       setName('');
       setEmail('');
+      setEmailError(null);
       setAmount('');
       setMessage('');
       setError(null);
@@ -59,15 +71,20 @@ export default function HdmgModal({ open, onClose, returnFocusTo }: Props) {
       setError('Please enter your name.');
       return;
     }
-    if (!email.trim()) {
+    const trimmedEmail = email.trim();
+    if (!trimmedEmail) {
       setError('Please enter your email.');
+      return;
+    }
+    if (!isValidEmail(trimmedEmail)) {
+      setEmailError('Please enter a valid email address.');
       return;
     }
 
     setSubmitting(true);
     const result = await selfReportContribution({
       name: name.trim(),
-      email: email.trim(),
+      email: trimmedEmail,
       amountCents: cents,
       fund: 'howlin-dog',
       message: message.trim() || undefined,
@@ -142,8 +159,19 @@ export default function HdmgModal({ open, onClose, returnFocusTo }: Props) {
                 inputMode="email"
                 required
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  if (emailError) setEmailError(null);
+                }}
+                onBlur={validateEmailOnBlur}
+                aria-invalid={emailError ? 'true' : undefined}
+                aria-describedby={emailError ? emailErrorId : undefined}
               />
+              {emailError ? (
+                <p className={styles.fieldError} id={emailErrorId} role="alert">
+                  {emailError}
+                </p>
+              ) : null}
             </div>
 
             <div className={styles.fieldGroup}>

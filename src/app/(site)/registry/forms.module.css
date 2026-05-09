@@ -115,9 +115,14 @@
   padding-left: var(--space-3);
 }
 
+/* Checkbox + descriptive label. The label wraps to multiple lines once
+   the donor enters an amount and we surface the full fee breakdown,
+   so the checkbox aligns to the top of the run rather than the
+   center. Single-line collapse is fine — flex-start centers a single
+   line visually because the line-height is tight. */
 .feeRow {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: var(--space-1);
   font-family: var(--font-sans);
   font-size: var(--text-sm);
@@ -125,14 +130,21 @@
   cursor: pointer;
   user-select: none;
   padding-block: var(--space-half);
+  line-height: 1.45;
 }
 
 .feeCheckbox {
   width: 18px;
   height: 18px;
   margin: 0;
+  /* Optical-align the checkbox with the first cap line of the label
+     instead of the geometric vertical center — the label can grow to
+     several lines, and a top-aligned checkbox beside the first line
+     reads cleaner than a center-aligned one drifting downward. */
+  margin-top: 2px;
   accent-color: var(--color-palm-leaf);
   cursor: pointer;
+  flex: 0 0 auto;
 }
 
 .feeCheckbox:focus-visible {
@@ -140,23 +152,15 @@
   outline-offset: var(--border-focus);
 }
 
-/* Fee summary block — appears below the cover-fee checkbox. Shows the
-   processing fee always; a second line appears when the checkbox is
-   checked, surfacing the adjusted total. */
-.feeSummary {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-half);
-  margin: 0;
-  padding-left: calc(18px + var(--space-1)); /* aligns with checkbox label run */
+/* Per-field validation error — sits directly under its input, small,
+   coral-rose. role="alert" on the element so the screen reader hears
+   it the moment it appears. */
+.fieldError {
+  margin: var(--space-half) 0 0;
   font-family: var(--font-sans);
   font-size: var(--text-sm);
-  color: var(--color-gold-dark);
   line-height: 1.4;
-}
-
-.feeAdjusted {
-  color: var(--color-brown);
+  color: var(--color-coral-rose);
 }
 
 /* Radio card — large click target with a check glyph so selection is
