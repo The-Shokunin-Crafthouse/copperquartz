@@ -1,0 +1,468 @@
+/*
+ * Shared form vocabulary for Registry modals — body copy, labels, inputs,
+ * textareas, radio cards, checkboxes, the primary submit button, and
+ * inline error / helper text. All three modals import this module so
+ * the form rhythm stays identical across them.
+ *
+ * Token-bound. No raw hex; the only computed values are color-mix() shifts
+ * from existing palette tokens (faint surface on the selected radio
+ * card). Submit button matches RSVPButton.module.css exactly — palm-leaf
+ * fill, cream label, palm-leaf-deep hover with scale(1.02), scale(0.97)
+ * on active, terracotta focus ring. Same five states as the RSVP pill.
+ */
+
+/* Description paragraphs that sit at the top of the modal body, beneath
+   the palm-leaf header band. Commissioner (--font-sans) — same family
+   the rest of the site uses for body copy (see globals.css and
+   page modules across /our-story, /qa, /travel, /venue). */
+.intro,
+.body {
+  margin: 0 0 var(--space-3);
+  font-family: var(--font-sans);
+  font-weight: 400;
+  font-size: var(--text-base);
+  line-height: 1.5;
+  color: var(--color-brown);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+/* Label vocabulary matches the site's small-caps eyebrow vocabulary
+   (NavBar.menuToggle, qa/page.module.css .eyebrow, registry/page.module.css
+   .eyebrow): Commissioner SemiBold, --text-xs (12), 0.12em tracking,
+   uppercase. Color is brown so labels read as form scaffolding rather
+   than competing eyebrows. */
+.label {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: var(--text-xs);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-brown);
+}
+
+.input,
+.textarea {
+  width: 100%;
+  font-family: var(--font-sans);
+  font-weight: 400;
+  font-size: var(--text-base);
+  line-height: 1.4;
+  color: var(--color-brown);
+  background-color: var(--color-bg);
+  border: var(--border-hairline) solid var(--color-gold);
+  border-radius: var(--radius-sm);
+  padding: var(--space-1) var(--space-2);
+  min-height: var(--height-tap);
+  transition:
+    border-color var(--motion-fast) ease,
+    background-color var(--motion-fast) ease;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.textarea {
+  min-height: 96px;
+  resize: vertical;
+  line-height: 1.5;
+}
+
+.input:focus-visible,
+.textarea:focus-visible {
+  outline: var(--border-focus) solid var(--color-gold);
+  outline-offset: var(--border-focus);
+  border-color: var(--color-palm-leaf);
+}
+
+.input::placeholder,
+.textarea::placeholder {
+  color: var(--color-gold-dark);
+  opacity: 1;
+}
+
+/* Amount input — $ prefix glyph layered as an ::before on the wrapper
+   so the input keeps a single tab stop and a clean form value. */
+.amountWrap {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+}
+
+.amountWrap::before {
+  content: '$';
+  position: absolute;
+  left: var(--space-2);
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: var(--text-base);
+  color: var(--color-brown);
+  pointer-events: none;
+}
+
+.amountWrap .input {
+  padding-left: var(--space-3);
+}
+
+/* Checkbox + descriptive label. The label wraps to multiple lines once
+   the donor enters an amount and we surface the full fee breakdown,
+   so the checkbox aligns to the top of the run rather than the
+   center. Single-line collapse is fine — flex-start centers a single
+   line visually because the line-height is tight. */
+.feeRow {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-1);
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  color: var(--color-brown);
+  cursor: pointer;
+  user-select: none;
+  padding-block: var(--space-half);
+  line-height: 1.45;
+}
+
+.feeCheckbox {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  /* Optical-align the checkbox with the first cap line of the label
+     instead of the geometric vertical center — the label can grow to
+     several lines, and a top-aligned checkbox beside the first line
+     reads cleaner than a center-aligned one drifting downward. */
+  margin-top: 2px;
+  accent-color: var(--color-palm-leaf);
+  cursor: pointer;
+  flex: 0 0 auto;
+}
+
+.feeCheckbox:focus-visible {
+  outline: var(--border-focus) solid var(--color-gold);
+  outline-offset: var(--border-focus);
+}
+
+/* Per-field validation error — sits directly under its input, small,
+   coral-rose. role="alert" on the element so the screen reader hears
+   it the moment it appears. */
+.fieldError {
+  margin: var(--space-half) 0 0;
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  line-height: 1.4;
+  color: var(--color-coral-rose);
+}
+
+/* Radio card — large click target with a check glyph so selection is
+   readable without relying on color alone. Two stacked at mobile, two
+   columns from 480px on. */
+.radioGroup {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-1);
+  border: 0;
+  padding: 0;
+  margin: 0;
+}
+
+@media (min-width: 480px) {
+  .radioGroup {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.radioGroup legend {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.radioCard {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-1);
+  padding: var(--space-2);
+  background-color: var(--color-bg);
+  border: var(--border-hairline) solid var(--color-gold);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition:
+    border-color var(--motion-fast) ease,
+    background-color var(--motion-fast) ease,
+    transform 160ms ease-out;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .radioCard:hover {
+    border-color: var(--color-palm-leaf);
+  }
+}
+
+.radioCard:active {
+  transform: scale(0.99);
+}
+
+.radioCard input[type='radio'] {
+  margin-top: 3px; /* optical alignment with the first text line */
+  width: 16px;
+  height: 16px;
+  accent-color: var(--color-palm-leaf);
+  cursor: pointer;
+  flex: 0 0 auto;
+}
+
+.radioCard input[type='radio']:focus-visible {
+  outline: var(--border-focus) solid var(--color-gold);
+  outline-offset: var(--border-focus);
+}
+
+.radioCard[data-selected='true'] {
+  border-color: var(--color-palm-leaf);
+  background-color: color-mix(in oklab, var(--color-palm-leaf) 6%, var(--color-bg));
+}
+
+.radioCardLabel {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: var(--text-base);
+  color: var(--color-brown);
+  line-height: 1.3;
+}
+
+.helperPalm {
+  margin: var(--space-1) 0 0;
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  line-height: 1.5;
+  color: var(--color-palm-leaf);
+}
+
+.helperMuted {
+  margin: var(--space-1) 0 0;
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  line-height: 1.5;
+  color: var(--color-gold-dark);
+}
+
+.helperLink {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-half);
+  margin-top: var(--space-half);
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  color: var(--color-terracotta);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color var(--motion-fast) ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .helperLink:hover {
+    color: var(--color-coral-rose);
+  }
+}
+
+.helperLink:focus-visible {
+  outline: var(--border-focus) solid var(--color-gold);
+  outline-offset: var(--border-focus);
+  border-radius: var(--radius-sm);
+}
+
+/* Inline error — icon + text, never color alone. */
+.error {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-half);
+  margin-top: var(--space-1);
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  color: var(--color-coral-rose);
+  line-height: 1.4;
+}
+
+.errorIcon {
+  flex: 0 0 auto;
+  margin-top: 2px;
+  width: 14px;
+  height: 14px;
+}
+
+/* Primary submit — palm-leaf fill, cream label. Mirrors RSVPButton
+   exactly: palm-leaf-deep on hover with scale(1.02); palm-leaf-deep
+   active with scale(0.97); terracotta focus ring offset by --border-focus.
+   The state vocabulary lives in src/components/ui/RSVPButton.module.css —
+   any change there should be mirrored here. */
+.submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  width: 100%;
+  margin-top: var(--space-2);
+  padding-block: var(--space-1);
+  padding-inline: var(--space-4);
+  min-height: var(--height-tap);
+  border: 0;
+  border-radius: var(--radius-md);
+  background-color: var(--color-palm-leaf);
+  color: var(--color-bg);
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: var(--text-base);
+  line-height: 1;
+  letter-spacing: 0;
+  cursor: pointer;
+  transition:
+    background-color var(--motion-fast) ease-out,
+    transform 150ms cubic-bezier(0.16, 1, 0.3, 1),
+    opacity var(--motion-fast) ease;
+  transform-origin: center;
+  will-change: transform;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .submit:hover:not(:disabled):not([aria-busy='true']) {
+    background-color: var(--color-palm-leaf-deep);
+    transform: scale(1.02);
+  }
+}
+
+.submit:focus-visible {
+  outline: var(--border-focus) solid var(--color-terracotta);
+  outline-offset: var(--border-focus);
+}
+
+.submit:active:not(:disabled):not([aria-busy='true']) {
+  background-color: var(--color-palm-leaf-deep);
+  transform: scale(0.97);
+  transition-duration: 100ms;
+}
+
+.submit:disabled,
+.submit[aria-busy='true'] {
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none;
+  transform: none;
+}
+
+/* Loading spinner — paired with the button label so the button never
+   collapses width while sending. CSS animation only; reduced-motion
+   freezes the spinner. */
+.submitSpinner {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: var(--border-focus) solid color-mix(in oklab, var(--color-bg) 40%, transparent);
+  border-top-color: var(--color-bg);
+  animation: forms-spin 700ms linear infinite;
+}
+
+@keyframes forms-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Thank-you state for the HDMG self-report path. Sits inside the modal
+   body after a successful submit; the palm-leaf header band stays
+   anchored to "Howlin Dog Music Group" so the dialog identity is
+   preserved through the state change. */
+.thanksHeading {
+  margin: 0 0 var(--space-1);
+  font-family: var(--font-serif);
+  font-weight: 500;
+  font-size: var(--text-3xl);
+  line-height: 1.1;
+  color: var(--color-brown);
+  letter-spacing: -0.01em;
+}
+
+.thanksBody {
+  margin: 0 0 var(--space-3);
+  font-family: var(--font-sans);
+  font-weight: 400;
+  font-size: var(--text-base);
+  line-height: 1.5;
+  color: var(--color-brown);
+}
+
+.thanksClose {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding-block: var(--space-1);
+  padding-inline: var(--space-4);
+  min-height: var(--height-tap);
+  border: var(--border-hairline) solid var(--color-palm-leaf);
+  border-radius: var(--radius-md);
+  background-color: transparent;
+  color: var(--color-palm-leaf);
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: var(--text-base);
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    background-color var(--motion-fast) ease,
+    transform 150ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .thanksClose:hover {
+    background-color: color-mix(in oklab, var(--color-palm-leaf) 8%, transparent);
+    transform: scale(1.02);
+  }
+}
+
+.thanksClose:focus-visible {
+  outline: var(--border-focus) solid var(--color-terracotta);
+  outline-offset: var(--border-focus);
+}
+
+.thanksClose:active {
+  transform: scale(0.97);
+  transition-duration: 100ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .input,
+  .textarea,
+  .radioCard,
+  .helperLink,
+  .submit,
+  .thanksClose {
+    transition: none;
+  }
+  .radioCard:active,
+  .submit:hover,
+  .submit:active,
+  .thanksClose:hover,
+  .thanksClose:active {
+    transform: none;
+  }
+  .submitSpinner {
+    animation: none;
+    border-top-color: transparent;
+  }
+}
