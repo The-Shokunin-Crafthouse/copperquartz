@@ -62,10 +62,15 @@ export default function HdmgModal({ open, onClose, returnFocusTo }: Props) {
     if (submitting) return;
     setError(null);
 
-    const cents = parseDollarsToCents(amount);
-    if (cents == null) {
-      setError('Please enter the amount you donated.');
-      return;
+    const trimmedAmount = amount.trim();
+    let cents = 0;
+    if (trimmedAmount) {
+      const parsed = parseDollarsToCents(trimmedAmount);
+      if (parsed == null) {
+        setError('Please enter a valid amount or leave it blank.');
+        return;
+      }
+      cents = parsed;
     }
     if (!name.trim()) {
       setError('Please enter your name.');
@@ -176,7 +181,7 @@ export default function HdmgModal({ open, onClose, returnFocusTo }: Props) {
 
             <div className={styles.fieldGroup}>
               <label className={styles.label} htmlFor={amountId}>
-                Amount you donated
+                Amount you donated (optional)
               </label>
               <div className={styles.amountWrap}>
                 <input
@@ -185,7 +190,6 @@ export default function HdmgModal({ open, onClose, returnFocusTo }: Props) {
                   type="text"
                   inputMode="decimal"
                   autoComplete="off"
-                  required
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
                 />
