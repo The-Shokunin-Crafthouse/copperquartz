@@ -90,6 +90,16 @@ const SECTIONS = {
     fullPage: true,
     description: 'RSVP — name-lookup landing for the multi-step form',
   },
+  navigation: {
+    route: '/our-story',
+    fullPage: false,
+    description: 'Global nav — interior baseline now mirrored on home',
+    /* Snapshot the interior route since the fix makes the homepage nav
+       match this canonical position. Story page has a video frame and a
+       long photo gallery; fullPage:false captures only the top viewport
+       so the snapshot is small and the nav strip is the focus. */
+    abortMedia: true,
+  },
 };
 
 const BREAKPOINTS = [360, 768, 1024, 1440];
