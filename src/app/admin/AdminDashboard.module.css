@@ -212,6 +212,11 @@
 
 .tableHead {
   padding-block: var(--space-1);
+  /* Match the data-row horizontal padding (--space-1 = 8px) so header
+     and cell columns sit on the same X — without this, the rounded
+     row backgrounds indent their text 8px while the headers stay flush
+     to the panel edge, which reads as a column-by-column misalignment. */
+  padding-inline: var(--space-1);
   font-family: var(--font-sans);
   font-weight: 600;
   font-size: var(--text-xs);               /* 12 mobile */
