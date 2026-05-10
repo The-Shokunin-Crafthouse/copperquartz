@@ -1,29 +1,39 @@
-.heading {
-  font-family: var(--font-serif);
-  font-size: var(--text-3xl);
-  line-height: 1.1;
-  color: var(--color-brown);
-  margin: 0 0 var(--space-1) 0;
+/*
+ * Admin page shell — eyebrow + H1 above the dashboard. The dashboard
+ * itself owns its internal cascade (see AdminDashboard.module.css);
+ * the eyebrow and H1 share the same fade+slide entrance pattern as
+ * /registry so the whole page reads as one composition.
+ */
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);                  /* 48 — Figma mobile heading→Totals gap */
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);                  /* 24 between eyebrow + H1 */
 }
 
 .eyebrow {
+  margin: 0;
   font-family: var(--font-sans);
-  font-size: var(--text-xs);
-  letter-spacing: 0.16em;
+  font-weight: 500;
+  font-size: var(--text-xs);            /* 12 mobile */
+  letter-spacing: var(--tracking-eyebrow);
   text-transform: uppercase;
-  color: var(--color-terracotta);
-  margin: 0 0 var(--space-4) 0;
+  color: var(--color-sand-linen);
 }
 
-.section {
-  margin-top: var(--space-5);
-}
-
-.sectionHeading {
-  font-family: var(--font-serif);
-  font-size: var(--text-2xl);
-  color: var(--color-brown);
-  margin: 0 0 var(--space-3) 0;
+.heading {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: var(--text-2xl);           /* 32 mobile */
+  line-height: 1;
+  color: var(--color-sand-linen);
 }
 
 .fetchError {
@@ -33,5 +43,35 @@
   color: var(--color-coral-rose);
   background-color: var(--color-sand-linen);
   font-family: var(--font-sans);
-  font-size: var(--text-base);
+  font-size: var(--text-sm);
+}
+
+/* ---------------- Tablet (≥768) ---------------- */
+@media (min-width: 768px) {
+  .page {
+    gap: var(--space-8);                /* 64 — Figma desktop */
+  }
+
+  .eyebrow {
+    font-size: var(--text-base);        /* 16 desktop */
+  }
+
+  .heading {
+    font-size: var(--text-display-stat); /* 48 desktop */
+  }
+}
+
+/* ---------------- Entrance cascade (matches /registry) ---------------- */
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes admin-page-in {
+    from { opacity: 0; transform: translateY(var(--space-2)); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .eyebrow,
+  .heading {
+    animation: admin-page-in var(--motion-std) var(--ease-out-soft) both;
+    will-change: transform, opacity;
+  }
+  .eyebrow { animation-delay: 80ms; }
+  .heading { animation-delay: 200ms; }
 }

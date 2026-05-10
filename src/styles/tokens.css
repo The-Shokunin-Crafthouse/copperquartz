@@ -15,6 +15,13 @@
   --color-card-surface: #D5C0A5;   /* RSVP wizard card body */
   --color-neutral-warm: #ADA295;   /* "no" / unpressed / decline state */
 
+  /* Color — semantic aliases (per-route palette overrides).
+     admin-bg / admin-dark resolve to the same ink-deep ink, but are named
+     for the surface they paint so the admin redesign reads from a
+     scope-named token rather than the generic ink. */
+  --color-admin-bg: #0E2122;
+  --color-admin-dark: #0E2122;
+
   /* Typography — families */
   --font-display: 'Ngetic Modern', serif;
   --font-accent: 'Hesland Regular', cursive;
@@ -22,6 +29,7 @@
   --font-sans: 'Commissioner', sans-serif;
 
   /* Typography — scale */
+  --text-2xs: 10px;            /* admin mobile eyebrow */
   --text-xs: 12px;
   --text-sm: 14px;
   --text-base: 16px;
@@ -29,13 +37,21 @@
   --text-xl: 24px;
   --text-2xl: 32px;
   --text-3xl: 40px;
+  --text-display-stat: 48px;   /* admin desktop card number */
   --text-4xl: 56px;
   --text-5xl: 112px;
   --text-display: 200px;
 
+  /* Typography — letter spacing
+     Eyebrow tracking is a tighter open-letter setting than the legacy
+     0.16em used elsewhere; the admin redesign Figma uses 0.03em on every
+     uppercase eyebrow (3% of font size). */
+  --tracking-eyebrow: 0.03em;
+
   /* Spacing — 8px grid */
   --space-half: 4px;        /* dense-surface micro-tweak (button padding) */
   --space-1: 8px;
+  --space-1-5: 12px;        /* admin pill / Export button vertical padding */
   --space-2: 16px;
   --space-3: 24px;
   --space-4: 32px;
@@ -50,6 +66,7 @@
   --radius-sm: 4px;
   --radius-md: 8px;
   --radius-lg: 16px;
+  --radius-pill: 80px;          /* admin segmented pill — Figma 80px */
   --radius-full: 9999px;
 
   /* Layout */
@@ -58,6 +75,16 @@
   --underline-offset-sm: 3px;
   --content-max-width-card: 720px;
   --content-max-width-card-body: 540px;
+
+  /* Admin table column min-widths — drive when the table panel begins to
+     scroll horizontally on narrow viewports. Four buckets cover every
+     admin column: counts (narrow), default cells (sm), message/notes
+     (md), and long-form columns (lg). */
+  --col-min-narrow: 60px;
+  --col-min-sm: 120px;
+  --col-min-md: 160px;
+  --col-min-lg: 200px;
+  --card-min-drink: 120px;        /* drink category card mobile min-width */
 
   /* Breakpoints */
   --bp-sm: 640px;
@@ -77,6 +104,7 @@
      token-map.md §Motion. */
   --motion-fast: 220ms;       /* hover/state change */
   --motion-std: 800ms;        /* entrance fade/drop */
+  --motion-counter: 1200ms;   /* admin numeric count-up */
   --motion-orchestrated: 1800ms;  /* hero zoom-in scale */
   --ease-out-soft: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-out-quint: cubic-bezier(0.4, 0, 1, 1);
