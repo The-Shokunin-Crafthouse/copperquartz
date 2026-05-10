@@ -8,6 +8,9 @@ import ContributionsTable from './ContributionsTable';
 import RsvpSummaryCards from './RsvpSummaryCards';
 import DeclinedGuestsTable from './DeclinedGuestsTable';
 import RsvpExportButton from './RsvpExportButton';
+import AdminStatRow from './AdminStatRow';
+import BeverageBreakdownTable from './BeverageBreakdownTable';
+import SpecialRequestsTable from './SpecialRequestsTable';
 import type { Contribution } from './types';
 import styles from './page.module.css';
 
@@ -48,7 +51,11 @@ async function fetchContributions(): Promise<FetchResult> {
 const EMPTY_RSVP_SUMMARY: AdminRsvpSummary = {
   total_invited: 0,
   attending_count: 0,
+  monday_count: 0,
+  transport_count: 0,
   declining_guests: [],
+  beverage_breakdown: [],
+  special_requests: [],
 };
 
 export default async function AdminPage() {
@@ -95,6 +102,13 @@ export default async function AdminPage() {
         <RsvpExportButton />
         <DeclinedGuestsTable guests={rsvpSummary.declining_guests} />
       </section>
+
+      <AdminStatRow
+        mondayCount={rsvpSummary.monday_count}
+        transportCount={rsvpSummary.transport_count}
+      />
+      <BeverageBreakdownTable breakdown={rsvpSummary.beverage_breakdown} />
+      <SpecialRequestsTable requests={rsvpSummary.special_requests} />
     </article>
   );
 }
