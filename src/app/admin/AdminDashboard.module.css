@@ -135,6 +135,9 @@
   color: var(--color-sand-linen);
 }
 
+/* Mirrors the canonical button state vocabulary used by RegistryButton:
+   hover-capable darken, gold focus ring, scale(0.97) press, disabled
+   half-opacity. Reduced-motion drops the press scale. */
 .exportBtn {
   align-self: flex-start;
   display: inline-flex;
@@ -151,11 +154,30 @@
   font-size: var(--text-sm);
   line-height: 1;
   cursor: pointer;
-  transition: opacity var(--motion-fast) ease;
+  text-decoration: none;
+  transition:
+    background-color var(--motion-fast) ease,
+    transform 160ms ease-out;
+  will-change: transform;
 }
+@media (hover: hover) and (pointer: fine) {
+  .exportBtn:hover {
+    background-color: var(--color-gold-dark);
+  }
+}
+.exportBtn:focus-visible {
+  outline: var(--border-focus) solid var(--color-gold);
+  outline-offset: var(--border-focus);
+}
+.exportBtn:active {
+  transform: scale(0.97);
+}
+.exportBtn[aria-disabled='true'],
 .exportBtn:disabled {
-  opacity: 0.6;
-  cursor: progress;
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+  transform: none;
 }
 
 .exportError {
@@ -268,7 +290,6 @@
     minmax(var(--col-min-sm), 0.9fr)
     minmax(var(--col-min-sm), 0.8fr)
     minmax(var(--col-min-md), 1.6fr)
-    minmax(var(--col-min-sm), 1fr)
     minmax(var(--col-min-sm), 1fr);
 }
 .colsDrinks {
@@ -449,6 +470,16 @@
   .exportBtn {
     align-self: auto;
     white-space: nowrap;
+  }
+}
+
+/* ---------------- Reduced motion ---------------- */
+@media (prefers-reduced-motion: reduce) {
+  .exportBtn {
+    transition: background-color var(--motion-fast) linear;
+  }
+  .exportBtn:active {
+    transform: none;
   }
 }
 

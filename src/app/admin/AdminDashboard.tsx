@@ -8,7 +8,7 @@ import type {
   BeverageBreakdownRow,
 } from '@/src/app/actions/getAdminRsvpSummary';
 import type { Contribution } from './types';
-import { fundLabel, formatUsd, formatTimestamp } from './format';
+import { fundLabel, formatUsd } from './format';
 import styles from './AdminDashboard.module.css';
 
 type Pill = 'special' | 'contributions' | 'drinks' | 'not-coming';
@@ -20,10 +20,19 @@ const PILLS: { id: Pill; label: string }[] = [
   { id: 'not-coming', label: 'Not Coming' },
 ];
 
-/* Cocktails always renders on the Drinks panel — synthesized at count 0
-   when absent so the default-active card has something to land on and
-   the table below shows the empty state. */
-const DEFAULT_DRINK_CATEGORY = 'cocktail';
+/* Drink category cards always render — every canonical category appears
+   even at count 0 so the row stays visually stable across data states.
+   Order here is the seed; the actual card order is sorted by count DESC
+   with this list as the localeCompare tiebreaker. Default-active is the
+   first entry. */
+const CANONICAL_DRINK_CATEGORIES = [
+  'cocktail',
+  'mocktail',
+  'wine',
+  'beer',
+  'non-alcoholic',
+] as const;
+const DEFAULT_DRINK_CATEGORY = CANONICAL_DRINK_CATEGORIES[0];
 
 type DrinkCategorySummary = {
   category: string;
@@ -147,20 +156,18 @@ export default function AdminDashboard({
     };
   }, [contributions]);
 
-  /* Drink category cards — derived from beverage_breakdown so we don't
-     hardcode the universe of categories. Cocktails is synthesized at
-     0 if absent so the default-active card always renders. Sort by
-     count DESC, stable on label. */
+  /* Drink category cards — every canonical category renders, with count
+     synthesized at 0 if missing from the breakdown data, plus any
+     non-canonical categories the DB happens to contain (defensive).
+     Sorted by count DESC with category name as localeCompare tiebreaker. */
   const drinkCategories = useMemo<DrinkCategorySummary[]>(() => {
     const byCategory = new Map<string, number>();
+    for (const cat of CANONICAL_DRINK_CATEGORIES) byCategory.set(cat, 0);
     for (const row of summary.beverage_breakdown) {
       byCategory.set(
         row.category,
         (byCategory.get(row.category) ?? 0) + row.count,
       );
-    }
-    if (!byCategory.has(DEFAULT_DRINK_CATEGORY)) {
-      byCategory.set(DEFAULT_DRINK_CATEGORY, 0);
     }
     const list = Array.from(byCategory.entries()).map(([category, count]) => {
       const { plural, singular } = categoryLabels(category);
@@ -249,16 +256,16 @@ export default function AdminDashboard({
             subtext={`${totals.honeymoonCount} contributions`}
           />
           <StatCard
-            eyebrow="KIVA"
-            prefix="$"
-            target={totals.kivaDollars}
-            subtext={`${totals.kivaCount} contributions`}
-          />
-          <StatCard
             eyebrow="HOWLIN DOG MUSIC GROUP"
             prefix="$"
             target={totals.hdmgDollars}
             subtext={`${totals.hdmgCount} self-reported`}
+          />
+          <StatCard
+            eyebrow="KIVA"
+            prefix="$"
+            target={totals.kivaDollars}
+            subtext={`${totals.kivaCount} contributions`}
           />
         </div>
       </section>
@@ -371,7 +378,6 @@ export default function AdminDashboard({
                 <span className={styles.tableHeadCell}>Gift Amount</span>
                 <span className={styles.tableHeadCell}>Message</span>
                 <span className={styles.tableHeadCell}>Kiva URL</span>
-                <span className={styles.tableHeadCell}>Date</span>
               </div>
               <div className={styles.tableDivider} role="presentation" />
               {contributions.length === 0 ? (
@@ -410,9 +416,6 @@ export default function AdminDashboard({
                         ) : (
                           <span className={styles.dash}>—</span>
                         )}
-                      </span>
-                      <span className={styles.tableCell}>
-                        {formatTimestamp(row.created_at)}
                       </span>
                     </div>
                   ))}
