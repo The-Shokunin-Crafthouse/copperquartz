@@ -84,6 +84,11 @@ const SECTIONS = {
        matches every tile. preview.mjs clicks all matched locators. */
     preOpen: { role: 'button', name: /^Show .+ details$/ },
   },
+  rsvp: {
+    route: '/rsvp',
+    fullPage: true,
+    description: 'RSVP — name-lookup landing for the multi-step form',
+  },
 };
 
 const BREAKPOINTS = [360, 768, 1024, 1440];

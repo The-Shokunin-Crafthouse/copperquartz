@@ -28,12 +28,19 @@
   width: 100%;
   max-width: var(--page-max-width);
   margin-inline: auto;
-  padding-bottom: var(--shell-footer-clearance);
+  /* Footer is fixed and extends by safe-area-inset-bottom on iPhone. Add
+     the same env() to clearance so the last content never lands behind
+     the home indicator. */
+  padding-bottom: calc(
+    var(--shell-footer-clearance) + env(safe-area-inset-bottom, 0px)
+  );
   view-transition-name: site-main;
 }
 
 @media (min-width: 1440px) {
   .main {
-    padding-bottom: var(--shell-footer-clearance-desktop);
+    padding-bottom: calc(
+      var(--shell-footer-clearance-desktop) + env(safe-area-inset-bottom, 0px)
+    );
   }
 }

@@ -43,3 +43,11 @@ export const breakpoints = {
   xl: 1280,
   '2xl': 1512,
 } as const;
+
+export const motion = {
+  fast: 0.22,             /* --motion-fast */
+  std: 0.8,               /* --motion-std */
+  orchestrated: 1.8,      /* --motion-orchestrated */
+  easeOutSoft: [0.16, 1, 0.3, 1] as [number, number, number, number],
+  easeOutQuint: [0.4, 0, 1, 1] as [number, number, number, number],
+} as const;
