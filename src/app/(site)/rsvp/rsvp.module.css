@@ -1,0 +1,854 @@
+/*
+ * RSVP wizard — shared style vocabulary for the seven steps + review.
+ * Token-bound throughout; no raw px / hex / ms values. The page header,
+ * card surface, step indicator, guest cards, pills, banners, buttons,
+ * and confirmation screen all live here.
+ */
+
+/* ---------- Page wrapper + header ---------- */
+
+.page {
+  position: relative;
+  width: 100%;
+  max-width: var(--page-max-width);
+  margin-inline: auto;
+  padding-block: var(--space-10) var(--space-12);
+  padding-inline: var(--space-3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-6);
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+  text-align: center;
+}
+
+.heading {
+  margin: 0;
+  font-family: var(--font-display);
+  font-style: normal;
+  font-weight: 400;
+  font-size: var(--text-3xl);
+  line-height: 1.15;
+  color: var(--color-terracotta);
+  text-align: center;
+}
+
+.subline {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: var(--text-sm);
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--color-teal);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.sublinePillar {
+  width: var(--border-hairline);
+  height: var(--text-base);
+  background-color: var(--color-gold);
+  display: inline-block;
+}
+
+@media (max-width: 768px) {
+  .heading {
+    font-size: var(--text-2xl);
+    line-height: 1.2;
+  }
+  .page {
+    padding-block: var(--space-6) var(--space-10);
+    gap: var(--space-3);
+  }
+}
+
+/* ---------- Card surface ---------- */
+
+.card {
+  position: relative;
+  width: 100%;
+  max-width: var(--content-max-width);
+  background-color: var(--color-card-surface);
+  border: 0;
+  border-radius: 0;
+  outline: 0;
+  /* Layered "double frame" matching the design's two stacked rectangles
+     (8px cream border with a 7px beige border painted on top). The
+     visible feature is a 1px cream stripe inset 7px from the card edge.
+     First (top) shadow paints 7px of card-surface from the edge; second
+     (bottom) paints 8px of cream. The 1px cream stripe at the 7→8px
+     band is what reads as the "white inset stroke." */
+  box-shadow:
+    inset 0 0 0 calc(var(--space-1) - var(--border-hairline)) var(--color-card-surface),
+    inset 0 0 0 var(--space-1) var(--color-bg);
+  padding-block: var(--space-6) var(--space-8);
+  padding-inline: var(--space-12);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+@media (max-width: 768px) {
+  .card {
+    padding-block: var(--space-4) var(--space-5);
+    padding-inline: var(--space-3);
+  }
+}
+
+/* ---------- Step indicator (dots) ---------- */
+
+.indicator {
+  display: flex;
+  justify-content: flex-start;
+  width: 100%;
+  gap: var(--space-1);
+  margin-bottom: var(--space-3);
+}
+
+/* Three-state progress dots: future (cream), active (terracotta), and
+   completed (palm-leaf) — past steps land on the wedding's green to
+   read as "done," the current step pulses terracotta as the focus. */
+.indicatorDot {
+  width: var(--space-1);
+  height: var(--space-1);
+  border-radius: var(--radius-full);
+  background-color: var(--color-bg);
+  opacity: 1;
+  transition: background-color var(--motion-fast) ease;
+}
+
+.indicatorDot[data-complete='true'] {
+  background-color: var(--color-palm-leaf);
+}
+
+.indicatorDot[data-active='true'] {
+  background-color: var(--color-terracotta);
+}
+
+/* ---------- Step heading + body ---------- */
+
+/* Step heading — Cormorant Garamond Bold brown across every step. The h2
+   is no longer programmatically focused on mount, so no focus styles
+   are needed; the aria-live region in RsvpClient handles SR
+   announcement of step transitions. */
+.stepHeading {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-style: normal;
+  font-weight: 700;
+  font-size: var(--text-2xl);
+  line-height: 1.2;
+  color: var(--color-brown);
+}
+
+.stepBody {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: 400;
+  font-size: var(--text-base);
+  line-height: 1.5;
+  color: var(--color-brown);
+}
+
+/* Heading + body subgroup (Frame 35 in the Figma source). Tight 4px
+   gap between heading and body, then the parent .stepShell adds 16px
+   between this group and the next form element. */
+.stepHeadingGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-half);
+  width: 100%;
+}
+
+.eyebrow {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: var(--text-xs);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-terracotta);
+}
+
+/* ---------- Inputs ---------- */
+
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+/* Form-field label — Commissioner SemiBold 16, sentence case, brown.
+   Used for "Your Name", "Category", "Type", "Be special", etc. Distinct
+   from `.eyebrow` (small-caps terracotta) so the eyebrow vocabulary
+   stays reserved for accents. */
+.label {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: var(--text-base);
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--color-brown);
+}
+
+.input,
+.textarea {
+  width: 100%;
+  font-family: var(--font-sans);
+  font-weight: 400;
+  font-size: var(--text-base);
+  line-height: 1.4;
+  color: var(--color-brown);
+  background-color: var(--color-bg);
+  border: var(--border-hairline) solid var(--color-gold);
+  border-radius: var(--radius-sm);
+  padding: var(--space-1) var(--space-2);
+  min-height: var(--height-tap);
+  transition: border-color var(--motion-fast) ease;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.textarea {
+  min-height: calc(var(--height-tap) * 2);
+  resize: vertical;
+  line-height: 1.5;
+}
+
+.input:focus-visible,
+.textarea:focus-visible {
+  outline: var(--border-focus) solid var(--color-gold);
+  outline-offset: var(--border-focus);
+  border-color: var(--color-palm-leaf);
+}
+
+.input::placeholder,
+.textarea::placeholder {
+  color: var(--color-gold-dark);
+  opacity: 1;
+}
+
+.input[aria-busy='true'] {
+  animation: rsvp-pulse 1200ms var(--ease-out-soft) infinite;
+  pointer-events: none;
+}
+
+@keyframes rsvp-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.55; }
+}
+
+.fieldError {
+  margin: var(--space-half) 0 0;
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  line-height: 1.4;
+  color: var(--color-coral-rose);
+}
+
+/* ---------- Guest card ---------- */
+
+.guestCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-2);
+  background-color: var(--color-bg);
+  border: var(--border-hairline) solid var(--color-gold);
+  border-radius: var(--radius-md);
+}
+
+.guestCardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-1);
+  flex-wrap: wrap;
+}
+
+.guestName {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: var(--text-lg);
+  line-height: 1.2;
+  color: var(--color-brown);
+}
+
+.respondedPill {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-half) var(--space-1);
+  border-radius: var(--radius-full);
+  background-color: color-mix(in oklab, var(--color-gold) 25%, var(--color-bg));
+  color: var(--color-brown);
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: var(--text-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.attendanceRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-1);
+}
+
+.attendanceBtn {
+  appearance: none;
+  border: var(--border-hairline) solid var(--color-gold);
+  border-radius: var(--radius-md);
+  background-color: transparent;
+  color: var(--color-brown);
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: var(--text-sm);
+  padding: var(--space-1) var(--space-2);
+  min-height: var(--height-tap);
+  cursor: pointer;
+  transition:
+    background-color var(--motion-fast) ease,
+    color var(--motion-fast) ease,
+    border-color var(--motion-fast) ease;
+}
+
+/* Selected-state variants. Cream/sand-linen text on color-filled pills
+   matches the design — never raw white. */
+.attendanceBtn[data-variant='attending'][aria-checked='true'] {
+  background-color: var(--color-terracotta);
+  border-color: var(--color-terracotta);
+  color: var(--color-sand-linen);
+}
+
+.attendanceBtn[data-variant='decline'][aria-checked='true'] {
+  background-color: var(--color-neutral-warm);
+  border-color: var(--color-neutral-warm);
+  color: var(--color-sand-linen);
+}
+
+.attendanceBtn:focus-visible {
+  outline: var(--border-focus) solid var(--color-gold);
+  outline-offset: var(--border-focus);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .attendanceBtn[data-variant='attending']:hover:not([aria-checked='true']) {
+    border-color: var(--color-terracotta);
+  }
+  .attendanceBtn[data-variant='decline']:hover:not([aria-checked='true']) {
+    border-color: var(--color-neutral-warm);
+  }
+}
+
+/* ---------- Wipe warning banner ---------- */
+
+.wipeBanner {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-1);
+  padding: var(--space-2);
+  background-color: color-mix(in oklab, var(--color-coral-rose) 8%, var(--color-bg));
+  border: var(--border-hairline) solid var(--color-coral-rose);
+  border-radius: var(--radius-md);
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  line-height: 1.45;
+  color: var(--color-brown);
+}
+
+.wipeBannerText {
+  flex: 1 1 auto;
+  margin: 0;
+}
+
+.wipeBannerUndo {
+  flex: 0 0 auto;
+  appearance: none;
+  border: 0;
+  background: transparent;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: var(--text-sm);
+  color: var(--color-coral-rose);
+  text-decoration: underline;
+  text-underline-offset: var(--underline-offset-sm);
+  cursor: pointer;
+  padding: 0;
+}
+
+.wipeBannerUndo:focus-visible {
+  outline: var(--border-focus) solid var(--color-gold);
+  outline-offset: var(--border-focus);
+  border-radius: var(--radius-sm);
+}
+
+/* ---------- Checkbox row (Monday / Transport) ---------- */
+
+.checkRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-2);
+  background-color: var(--color-bg);
+  border: 0;
+  border-radius: var(--radius-md);
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: var(--text-base);
+  color: var(--color-brown);
+  cursor: pointer;
+  user-select: none;
+  min-height: var(--height-tap);
+}
+
+.checkRow input[type='checkbox'] {
+  width: var(--space-2);
+  height: var(--space-2);
+  accent-color: var(--color-terracotta);
+  cursor: pointer;
+  flex: 0 0 auto;
+}
+
+.checkRow input[type='checkbox']:focus-visible {
+  outline: var(--border-focus) solid var(--color-gold);
+  outline-offset: var(--border-focus);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+/* ---------- Beverage pills ---------- */
+
+.pillGroup {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}
+
+.pill {
+  appearance: none;
+  border: 0;
+  border-radius: var(--radius-full);
+  background-color: var(--color-bg);
+  color: var(--color-brown);
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: var(--text-sm);
+  /* 12px vertical padding (--space-1 + --space-half) matches the design
+     pill height while staying on the dense-surface 4pt scale. */
+  padding: calc(var(--space-1) + var(--space-half)) var(--space-3);
+  min-height: var(--height-tap);
+  cursor: pointer;
+  transition:
+    background-color var(--motion-fast) ease,
+    color var(--motion-fast) ease;
+}
+
+.pill[aria-pressed='true'],
+.pill[data-selected='true'] {
+  background-color: var(--color-terracotta);
+  border-color: var(--color-terracotta);
+  color: var(--color-sand-linen);
+}
+
+.pill:focus-visible {
+  outline: var(--border-focus) solid var(--color-gold);
+  outline-offset: var(--border-focus);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .pill:hover:not([aria-pressed='true']):not([data-selected='true']) {
+    background-color: color-mix(in oklab, var(--color-terracotta) 8%, var(--color-bg));
+  }
+}
+
+/* Step 5 height stabilizer — reserve enough vertical space for two rows of
+   selection pills + their label, so swapping categories never reflows the
+   card height. Tallest case is Cocktails / Beer (5 pills, two rows on
+   desktop). When category is Non-Alcoholic, the slot stays empty but
+   keeps the same height. */
+.beverageSelectionSlot {
+  min-height: calc(var(--height-tap) * 2 + var(--space-5));
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+/* ---------- Existing-note frame (Step 6) ---------- */
+
+.existingNote {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-half);
+  padding: var(--space-2);
+  background-color: color-mix(in oklab, var(--color-gold) 12%, var(--color-bg));
+  border: var(--border-hairline) solid var(--color-gold);
+  border-radius: var(--radius-md);
+}
+
+.existingNoteMeta {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  color: var(--color-brown);
+  line-height: 1.4;
+}
+
+.existingNoteHint {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-style: italic;
+  font-size: var(--text-sm);
+  color: var(--color-gold-dark);
+  line-height: 1.4;
+}
+
+/* ---------- Footer (back / continue) ---------- */
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+}
+
+.back {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: var(--text-base);
+  color: var(--color-gold-dark);
+  cursor: pointer;
+  padding: var(--space-1) var(--space-2);
+  min-height: var(--height-tap);
+  text-decoration: underline;
+  text-underline-offset: var(--underline-offset-sm);
+}
+
+.back:focus-visible {
+  outline: var(--border-focus) solid var(--color-gold);
+  outline-offset: var(--border-focus);
+  border-radius: var(--radius-sm);
+}
+
+.primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  padding-block: var(--space-1);
+  padding-inline: var(--space-4);
+  min-height: var(--height-tap);
+  border: 0;
+  border-radius: var(--radius-md);
+  background-color: var(--color-palm-leaf);
+  color: var(--color-bg);
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: var(--text-base);
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    background-color var(--motion-fast) ease-out,
+    transform 150ms var(--ease-out-soft),
+    opacity var(--motion-fast) ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .primary:hover:not(:disabled):not([aria-busy='true']) {
+    background-color: var(--color-palm-leaf-deep);
+    transform: scale(1.02);
+  }
+}
+
+.primary:focus-visible {
+  outline: var(--border-focus) solid var(--color-terracotta);
+  outline-offset: var(--border-focus);
+}
+
+.primary:active:not(:disabled):not([aria-busy='true']) {
+  background-color: var(--color-palm-leaf-deep);
+  transform: scale(0.97);
+}
+
+.primary:disabled,
+.primary[aria-busy='true'] {
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none;
+  transform: none;
+}
+
+.primary[aria-busy='true'] {
+  animation: rsvp-submit-pulse var(--motion-std) var(--ease-out-soft) infinite;
+}
+
+@keyframes rsvp-submit-pulse {
+  0%, 100% { opacity: 0.55; }
+  50% { opacity: 0.9; }
+}
+
+.spinner {
+  width: var(--text-sm);
+  height: var(--text-sm);
+  border-radius: var(--radius-full);
+  border: var(--border-focus) solid color-mix(in oklab, var(--color-bg) 40%, transparent);
+  border-top-color: var(--color-bg);
+  animation: rsvp-spin 700ms linear infinite;
+}
+
+@keyframes rsvp-spin {
+  to { transform: rotate(360deg); }
+}
+
+.submitError {
+  margin: var(--space-1) 0 0;
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  color: var(--color-coral-rose);
+  text-align: center;
+}
+
+/* ---------- Review screen ---------- */
+
+.reviewBlock {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-2);
+  background-color: var(--color-bg);
+  border: 0;
+  border-radius: var(--radius-md);
+}
+
+/* Declined-guest variant — warm-grey field with sand-linen copy.
+   Matches the design's `bg-[#ada295] text-[#f3e6d3]` declining row. */
+.reviewBlock[data-declined='true'] {
+  background-color: var(--color-neutral-warm);
+}
+
+.reviewBlock[data-declined='true'] .guestName,
+.reviewBlock[data-declined='true'] .declinedTag {
+  color: var(--color-sand-linen);
+}
+
+/* "Edit attendance" link absolutely pinned to the card's top-right,
+   vertically aligned with the indicator dot row instead of the H2.
+   Mirrors the Figma layout where the link sits in the indicator gutter
+   above the heading. Offsets match the card's own padding tokens so
+   the link aligns with the inside edge at every breakpoint. */
+.reviewEditFloat {
+  appearance: none;
+  position: absolute;
+  top: var(--space-6);
+  right: var(--space-12);
+  border: 0;
+  background: transparent;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: var(--text-sm);
+  color: var(--color-terracotta);
+  text-decoration: underline;
+  text-underline-offset: var(--underline-offset-sm);
+  cursor: pointer;
+  padding: 0;
+}
+
+.reviewEditFloat:focus-visible {
+  outline: var(--border-focus) solid var(--color-gold);
+  outline-offset: var(--border-focus);
+  border-radius: var(--radius-sm);
+}
+
+@media (max-width: 768px) {
+  .reviewEditFloat {
+    top: var(--space-4);
+    right: var(--space-3);
+  }
+}
+
+.reviewBlockHeader {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-1);
+  flex-wrap: wrap;
+}
+
+.reviewMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  align-items: center;
+}
+
+.reviewLabel {
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  color: var(--color-gold-dark);
+}
+
+.editLink {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: var(--text-sm);
+  color: var(--color-terracotta);
+  text-decoration: underline;
+  text-underline-offset: var(--underline-offset-sm);
+  cursor: pointer;
+  padding: 0;
+}
+
+.editLink:focus-visible {
+  outline: var(--border-focus) solid var(--color-gold);
+  outline-offset: var(--border-focus);
+  border-radius: var(--radius-sm);
+}
+
+/* Two solid states: pressed=true → terracotta; pressed=false → warm-grey.
+   Sand-linen label in both — the toggle always reads as a positive
+   yes/no chip with no transparent default. */
+.reviewToggle {
+  appearance: none;
+  border: 0;
+  border-radius: var(--radius-full);
+  background-color: var(--color-neutral-warm);
+  color: var(--color-sand-linen);
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: var(--text-xs);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: var(--space-half) var(--space-2);
+  min-height: var(--space-4);
+  cursor: pointer;
+  transition: background-color var(--motion-fast) ease, color var(--motion-fast) ease;
+}
+
+.reviewToggle[aria-pressed='true'] {
+  background-color: var(--color-terracotta);
+  color: var(--color-sand-linen);
+}
+
+.reviewToggle:focus-visible {
+  outline: var(--border-focus) solid var(--color-gold);
+  outline-offset: var(--border-focus);
+}
+
+.declinedTag {
+  font-family: var(--font-sans);
+  font-style: italic;
+  font-size: var(--text-sm);
+  color: var(--color-gold-dark);
+}
+
+/* ---------- Confirmation screen ---------- */
+
+.confirmation {
+  position: relative;
+  width: 100%;
+  max-width: var(--content-max-width-card);
+  margin-inline: auto;
+  padding-block: var(--space-12);
+  padding-inline: var(--space-3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+  text-align: center;
+}
+
+.confirmationDivider {
+  width: var(--space-12);
+  height: auto;
+  opacity: 0.85;
+}
+
+.confirmationHeading {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-weight: 600;
+  font-size: var(--text-3xl);
+  line-height: 1.15;
+  color: var(--color-palm-leaf);
+}
+
+.confirmationBody {
+  margin: 0;
+  max-width: var(--content-max-width-card-body);
+  font-family: var(--font-sans);
+  font-weight: 400;
+  font-size: var(--text-lg);
+  line-height: 1.55;
+  color: var(--color-brown);
+}
+
+.confirmationFooter {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-style: italic;
+  font-size: var(--text-base);
+  color: var(--color-gold-dark);
+}
+
+@media (max-width: 768px) {
+  .confirmationHeading { font-size: var(--text-2xl); line-height: 1.2; }
+  .confirmationBody { font-size: var(--text-base); }
+  .confirmation { padding-block: var(--space-8); }
+}
+
+/* ---------- Step transition (framer-motion target) ---------- */
+
+.stepShell {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+/* Visually-hidden live region — token-based clip-path. Avoids raw px. */
+.srOnly {
+  position: absolute;
+  width: var(--border-hairline);
+  height: var(--border-hairline);
+  padding: 0;
+  margin: calc(var(--border-hairline) * -1);
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .input[aria-busy='true'],
+  .primary[aria-busy='true'],
+  .spinner {
+    animation: none;
+  }
+  .primary:hover,
+  .primary:active,
+  .attendanceBtn,
+  .pill,
+  .reviewToggle {
+    transition: none;
+  }
+}

@@ -25,9 +25,15 @@
   position: fixed;
   inset: auto 0 0 0;
   z-index: 20;                 /* above main + nav (which scroll), below open menu drawer (z 100) */
-  height: var(--footer-h);
+  height: calc(var(--footer-h) + env(safe-area-inset-bottom, 0px));
+  padding-bottom: env(safe-area-inset-bottom, 0px);
   background-color: var(--color-bg);
   isolation: isolate;
+  /* Force a compositor layer so iOS Safari keeps the fixed footer
+     locked to the viewport during inertial scroll instead of dragging
+     with content and snapping back. */
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
   /* Same rationale as .navBar — name the footer so route changes do
      not cross-fade it as part of the root snapshot. */
   view-transition-name: site-footer;

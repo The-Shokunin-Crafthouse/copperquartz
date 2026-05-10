@@ -12,6 +12,8 @@
   --color-brown: #5D4931;
   --color-ink-deep: #0E2122;
   --color-teal-deep: #092729;
+  --color-card-surface: #D5C0A5;   /* RSVP wizard card body */
+  --color-neutral-warm: #ADA295;   /* "no" / unpressed / decline state */
 
   /* Typography — families */
   --font-display: 'Ngetic Modern', serif;
@@ -53,6 +55,9 @@
   /* Layout */
   --content-max-width: 650px;
   --page-max-width: 1512px;
+  --underline-offset-sm: 3px;
+  --content-max-width-card: 720px;
+  --content-max-width-card-body: 540px;
 
   /* Breakpoints */
   --bp-sm: 640px;

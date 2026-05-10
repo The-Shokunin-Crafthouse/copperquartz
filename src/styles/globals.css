@@ -63,6 +63,21 @@ body.lightbox-open [data-page-backdrop] {
    and PageBackdrop, since `filter` on an ancestor reparents fixed
    children to that ancestor's containing block.) */
 
+/* RSVP route hides the global FooterBar on phones — the wizard card is
+   dense and the footer's RSVP pill + columns crowd it. The body
+   marker is set/cleared by RsvpRouteEffect on the RSVP page only.
+   `main` is the layout's actual element (its className is hashed by
+   CSS Modules), so we drop its bottom clearance via the tag selector
+   when the footer is hidden. */
+@media (max-width: 768px) {
+  body[data-route='rsvp'] footer {
+    display: none;
+  }
+  body[data-route='rsvp'] main {
+    padding-bottom: 0;
+  }
+}
+
 a {
   color: inherit;
 }
