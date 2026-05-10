@@ -48,6 +48,10 @@ export type BeverageSelections = {
 export const BEVERAGE_SELECTIONS: BeverageSelections = {
   Cocktails: [
     {
+      name: 'Old Fashioned',
+      ingredients: 'Bourbon, sweet, citrus, spice',
+    },
+    {
       name: 'Cabrillo Sunset',
       ingredients: 'Blanco tequila, strawberry, fresh lime, agave',
     },
@@ -66,10 +70,6 @@ export const BEVERAGE_SELECTIONS: BeverageSelections = {
     {
       name: 'Cinnamon Cloud',
       ingredients: 'Rum, horchata, cinnamon, vanilla',
-    },
-    {
-      name: 'Old Fashioned',
-      ingredients: 'Bourbon, sweet, citrus, spice',
     },
   ],
   Mocktails: [
