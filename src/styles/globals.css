@@ -27,6 +27,16 @@
   box-sizing: border-box;
 }
 
+html {
+  /* Reserve the vertical-scrollbar gutter on every route. Without this
+     the home page (which fits one viewport) has no scrollbar while
+     interior pages do — the viewport center shifts by ~7.5px between
+     routes and the centered nav links (position: absolute; left: 50%)
+     visibly "grow from the middle" through the site-nav view
+     transition. Stable gutter keeps `left: 50%` pinned. */
+  scrollbar-gutter: stable;
+}
+
 html,
 body {
   margin: 0;
