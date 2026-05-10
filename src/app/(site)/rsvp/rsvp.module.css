@@ -477,11 +477,11 @@
 }
 
 /* Step 5 height stabilizer — reserve enough vertical space for the tallest
-   case (cocktail/mocktail card grid: 6 cards, 2-col × 3 rows on desktop,
-   single-col on mobile) so swapping to a shorter category (Wine, Beer,
+   case (cocktail card grid: 7 cards, 2-col × 4 rows on desktop, single-col
+   on mobile) so swapping to a shorter category (Mocktails, Wine, Beer,
    Non-Alcoholic) never reflows the card height. */
 .beverageSelectionSlot {
-  min-height: calc(var(--space-16) * 2 + var(--space-8));
+  min-height: calc(var(--space-16) * 3 + var(--space-10));
   display: flex;
   flex-direction: column;
   gap: var(--space-1);
@@ -489,7 +489,7 @@
 
 @media (max-width: 480px) {
   .beverageSelectionSlot {
-    min-height: calc(var(--space-16) * 4 + var(--space-12));
+    min-height: calc(var(--space-16) * 5 + var(--space-12));
   }
 }
 

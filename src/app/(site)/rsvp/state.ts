@@ -71,6 +71,10 @@ export const BEVERAGE_SELECTIONS: BeverageSelections = {
       name: 'Cinnamon Cloud',
       ingredients: 'Rum, horchata, cinnamon, vanilla',
     },
+    {
+      name: 'Old Fashioned',
+      ingredients: 'Bourbon, sweet, citrus, spice',
+    },
   ],
   Mocktails: [
     {
