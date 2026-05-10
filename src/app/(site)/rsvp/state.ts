@@ -35,13 +35,77 @@ export const BEVERAGE_CATEGORIES = [
 
 export type BeverageCategory = (typeof BEVERAGE_CATEGORIES)[number];
 
-export const BEVERAGE_SELECTIONS: Record<BeverageCategory, string[]> = {
-  Cocktails: ['Mojito', 'Old Fashioned', 'Margarita', 'Aperol Spritz', 'Surprise Me'],
-  Mocktails: ['Mojito', 'Shirley Temple', 'Arnold Palmer', 'Surprise Me'],
+export type BeverageOption = { name: string; ingredients: string };
+
+export type BeverageSelections = {
+  Cocktails: BeverageOption[];
+  Mocktails: BeverageOption[];
+  Wine: string[];
+  Beer: string[];
+  'Non-Alcoholic': string[];
+};
+
+export const BEVERAGE_SELECTIONS: BeverageSelections = {
+  Cocktails: [
+    {
+      name: 'Old Fashioned',
+      ingredients: 'Bourbon, sweet, citrus, spice',
+    },
+    {
+      name: 'Cabrillo Sunset',
+      ingredients: 'Blanco tequila, strawberry, fresh lime, agave',
+    },
+    {
+      name: 'Watermelon Glow',
+      ingredients: 'Vodka, watermelon, lemonade, fresh lime',
+    },
+    {
+      name: 'Garden Spritz',
+      ingredients: 'Gin, cucumber, lemon, basil, soda',
+    },
+    {
+      name: 'Coastal Smoke',
+      ingredients: 'Mezcal, fresh lime, Sprite, light agave',
+    },
+    {
+      name: 'Cinnamon Cloud',
+      ingredients: 'Rum, horchata, cinnamon, vanilla',
+    },
+  ],
+  Mocktails: [
+    {
+      name: 'Santa Barbara Spark',
+      ingredients: 'Strawberry, lemon, basil, LaCroix Lemon, light agave',
+    },
+    {
+      name: 'Golden Hour Cooler',
+      ingredients: 'Watermelon, cucumber, lime, LaCroix Watermelon',
+    },
+    {
+      name: 'Citrus Grove Fizz',
+      ingredients: 'Orange, lime, agave, LaCroix Lime, salted rim',
+    },
+    {
+      name: 'Garden Collins',
+      ingredients: 'Cucumber, lemon, basil, LaCroix Lemon',
+    },
+    {
+      name: 'Berry Coast Spritz',
+      ingredients: 'Strawberry, lime, orange, LaCroix Berry',
+    },
+    {
+      name: 'Cinnamon Tide',
+      ingredients: 'Horchata, vanilla, cinnamon, LaCroix Coconut',
+    },
+  ],
   Wine: ['Red', 'White', 'Rosé', 'Surprise Me'],
   Beer: ['IPA', 'Lager', 'Wheat', 'Non-Alcoholic Beer', 'Surprise Me'],
   'Non-Alcoholic': [],
 };
+
+export function beverageSelectionCount(category: BeverageCategory): number {
+  return BEVERAGE_SELECTIONS[category].length;
+}
 
 export function attendingGuestIds(state: WizardState): string[] {
   if (!state.party) return [];

@@ -476,16 +476,97 @@
   }
 }
 
-/* Step 5 height stabilizer — reserve enough vertical space for two rows of
-   selection pills + their label, so swapping categories never reflows the
-   card height. Tallest case is Cocktails / Beer (5 pills, two rows on
-   desktop). When category is Non-Alcoholic, the slot stays empty but
-   keeps the same height. */
+/* Step 5 height stabilizer — reserve enough vertical space for the tallest
+   case (cocktail/mocktail card grid: 6 cards, 2-col × 3 rows on desktop,
+   single-col on mobile) so swapping to a shorter category (Wine, Beer,
+   Non-Alcoholic) never reflows the card height. */
 .beverageSelectionSlot {
-  min-height: calc(var(--height-tap) * 2 + var(--space-5));
+  min-height: calc(var(--space-16) * 2 + var(--space-8));
   display: flex;
   flex-direction: column;
   gap: var(--space-1);
+}
+
+@media (max-width: 480px) {
+  .beverageSelectionSlot {
+    min-height: calc(var(--space-16) * 4 + var(--space-12));
+  }
+}
+
+/* Cocktail / mocktail option cards — each shows the drink name plus a
+   one-line ingredient list. Reuses the same gold hairline + radius-md
+   surface as the guest card, and the same terracotta selected fill as
+   the pills / attendance buttons. */
+.optionCardGroup {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-1);
+}
+
+@media (max-width: 480px) {
+  .optionCardGroup {
+    grid-template-columns: 1fr;
+  }
+}
+
+.optionCard {
+  appearance: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-half);
+  text-align: left;
+  padding: var(--space-2);
+  background-color: var(--color-bg);
+  border: var(--border-hairline) solid var(--color-gold);
+  border-radius: var(--radius-md);
+  color: var(--color-brown);
+  font-family: var(--font-sans);
+  min-height: var(--height-tap);
+  cursor: pointer;
+  transition:
+    background-color var(--motion-fast) ease,
+    color var(--motion-fast) ease,
+    border-color var(--motion-fast) ease;
+}
+
+.optionCard[aria-checked='true'],
+.optionCard[data-selected='true'] {
+  background-color: var(--color-terracotta);
+  border-color: var(--color-terracotta);
+  color: var(--color-sand-linen);
+}
+
+.optionCard:focus-visible {
+  outline: var(--border-focus) solid var(--color-gold);
+  outline-offset: var(--border-focus);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .optionCard:hover:not([aria-checked='true']):not([data-selected='true']) {
+    border-color: var(--color-terracotta);
+  }
+}
+
+.optionCardName {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: var(--text-sm);
+  line-height: 1.2;
+  color: inherit;
+}
+
+.optionCardIngredients {
+  font-family: var(--font-sans);
+  font-weight: 400;
+  font-size: var(--text-xs);
+  line-height: 1.35;
+  color: var(--color-gold-dark);
+}
+
+.optionCard[aria-checked='true'] .optionCardIngredients,
+.optionCard[data-selected='true'] .optionCardIngredients {
+  color: var(--color-sand-linen);
+  opacity: 0.85;
 }
 
 /* ---------- Existing-note frame (Step 6) ---------- */
@@ -848,6 +929,7 @@
   .primary:active,
   .attendanceBtn,
   .pill,
+  .optionCard,
   .reviewToggle {
     transition: none;
   }

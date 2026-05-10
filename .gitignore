@@ -75,6 +75,7 @@ stages/02-design/figma/exports/
 public/images/wedding photos/
 
 # model-local artifacts
+.claude/
 .claude-cache/
 .cursor-cache/
 .ai-cache/
