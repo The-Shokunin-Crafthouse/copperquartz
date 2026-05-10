@@ -7,15 +7,19 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "preview": "node scripts/preview.mjs"
+    "preview": "node scripts/preview.mjs",
+    "test:digest": "tsx scripts/test-digest.ts"
   },
   "dependencies": {
     "@phosphor-icons/react": "^2.1.10",
+    "@react-email/components": "^0.5.7",
+    "@react-email/render": "^1.4.0",
     "@supabase/supabase-js": "^2.78.0",
     "framer-motion": "^12.38.0",
     "next": "^15.1.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "resend": "^6.4.2",
     "stripe": "^22.1.1"
   },
   "devDependencies": {
@@ -27,6 +31,7 @@
     "eslint-config-next": "^15.5.18",
     "playwright": "^1.59.1",
     "sharp": "^0.34.5",
+    "tsx": "^4.21.0",
     "typescript": "^5.7.0"
   }
 }
