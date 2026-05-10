@@ -5,6 +5,15 @@ import {
 } from '@/src/app/actions/getAdminRsvpSummary';
 import AdminDashboard from './AdminDashboard';
 import type { Contribution } from './types';
+/* TODO(admin-redesign): revert the dummyAdminData import + the two
+   missing-Supabase branches below before merging this PR. The fixtures
+   are only there so the Vercel preview renders populated tables for
+   visual review — production has Supabase env vars and never hits this
+   branch. */
+import {
+  DUMMY_CONTRIBUTIONS,
+  DUMMY_RSVP_SUMMARY,
+} from './dummyAdminData';
 import styles from './page.module.css';
 
 export const dynamic = 'force-dynamic';
@@ -15,10 +24,11 @@ type FetchResult =
 
 async function fetchContributions(): Promise<FetchResult> {
   /* Preview deploys and the snapshot harness run without Supabase env
-     vars. Treat the missing-config case as a clean empty state so the
-     dashboard renders for visual review without a noisy error banner. */
+     vars. Returning DUMMY_CONTRIBUTIONS lets the preview Vercel build
+     show populated tables for design review. Revert to `rows: []`
+     before merging — see TODO(admin-redesign) at the top of the file. */
   if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
-    return { ok: true, rows: [] };
+    return { ok: true, rows: DUMMY_CONTRIBUTIONS };
   }
   try {
     const supabase = createServiceClient();
@@ -60,8 +70,19 @@ export default async function AdminPage() {
     getAdminRsvpSummary(),
   ]);
 
+  /* Same review-only override as fetchContributions: when Supabase env
+     vars are missing, swap in DUMMY_RSVP_SUMMARY so the Vercel preview
+     renders populated cards/tables. Production has the env vars and
+     never hits this branch. Revert before merging. */
+  const supabaseConfigured =
+    !!process.env.SUPABASE_URL && !!process.env.SUPABASE_SERVICE_ROLE_KEY;
+
   const contributions = contributionsResult.ok ? contributionsResult.rows : [];
-  const rsvpSummary = rsvpResult.ok ? rsvpResult.data : EMPTY_RSVP_SUMMARY;
+  const rsvpSummary = !supabaseConfigured
+    ? DUMMY_RSVP_SUMMARY
+    : rsvpResult.ok
+      ? rsvpResult.data
+      : EMPTY_RSVP_SUMMARY;
 
   return (
     <div className={styles.page}>
