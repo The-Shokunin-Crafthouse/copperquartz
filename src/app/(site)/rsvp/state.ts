@@ -48,10 +48,6 @@ export type BeverageSelections = {
 export const BEVERAGE_SELECTIONS: BeverageSelections = {
   Cocktails: [
     {
-      name: 'The Limelight',
-      ingredients: 'Blanco tequila, fresh lime, orange liqueur, agave, salted rim',
-    },
-    {
       name: 'Cabrillo Sunset',
       ingredients: 'Blanco tequila, strawberry, fresh lime, agave',
     },
