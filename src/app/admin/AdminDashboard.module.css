@@ -245,7 +245,8 @@
   border-radius: var(--radius-md);         /* 8 */
   padding: var(--space-2) var(--space-1);  /* 16 / 8 */
   font-family: var(--font-sans);
-  font-weight: 600;
+  /* Medium (500) for cell content — headers stay SemiBold (600). */
+  font-weight: 500;
   font-size: var(--text-xs);               /* 12 mobile */
   color: var(--color-teal);
 }
