@@ -1,0 +1,470 @@
+/*
+ * Admin redesign — dashboard surface.
+ *
+ * Mobile-first. All values resolved through tokens.css (token additions
+ * for this redesign: --color-admin-bg, --color-admin-dark, --text-2xs,
+ * --text-display-stat, --radius-pill, --tracking-eyebrow,
+ * --motion-counter). The page-level dark background lives on the admin
+ * layout — this surface paints the cards, pills, and tables only.
+ */
+
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);                    /* 48 — matches Figma mobile gap */
+}
+
+/* ---------------- Totals section ---------------- */
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);                    /* 16 between heading + cards */
+}
+
+.sectionHeading {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: var(--text-xl);              /* 24 mobile */
+  line-height: 1.1;
+  color: var(--color-sand-linen);
+}
+
+/* 2-col × 3-row grid on mobile; 16px gap. */
+.totalsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-2);                    /* 16 */
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);                    /* 8 internal */
+  padding: var(--space-2);                /* 16 mobile */
+  border-radius: var(--radius-md);        /* 8 mobile */
+  background-color: var(--color-sand-linen);
+}
+
+.cardLight {
+  background-color: var(--color-bg);      /* lighter sand — Attending only */
+}
+
+.cardEyebrow {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: var(--text-2xs);             /* 10 mobile */
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--color-terracotta);
+}
+
+.cardNumber {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: var(--text-xl);              /* 24 mobile */
+  line-height: 1;
+  color: var(--color-teal);
+  font-variant-numeric: tabular-nums;
+}
+
+.cardSubtext {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: var(--text-xs);              /* 12 mobile */
+  color: var(--color-gold);
+}
+
+/* ---------------- Switcher section ---------------- */
+
+.switcher {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);                    /* 16 between pill row + Export + panel */
+}
+
+/* Mobile: pills horizontal scroll, Export drops to row below. */
+.pillRow {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.pillScroll {
+  display: flex;
+  gap: var(--space-2);                    /* 16 between pills */
+  overflow-x: auto;
+  scrollbar-width: none;                  /* Firefox */
+  -ms-overflow-style: none;               /* IE/old Edge */
+  /* extend gutter to the page edge so a flush-left scroll feels intentional */
+  margin-inline: calc(-1 * var(--space-2));
+  padding-inline: var(--space-2);
+}
+.pillScroll::-webkit-scrollbar {
+  display: none;
+}
+
+.pill {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--height-tap);                    /* 44px touch target */
+  padding: var(--space-1-5) var(--space-3);         /* 12 / 24 — Figma */
+  border: 0;
+  border-radius: var(--radius-pill);
+  background-color: var(--color-bg);
+  color: var(--color-brown);
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: var(--text-sm);              /* 14 */
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    background-color var(--motion-fast) ease,
+    color var(--motion-fast) ease;
+  white-space: nowrap;
+}
+
+.pillActive {
+  background-color: var(--color-terracotta);
+  color: var(--color-sand-linen);
+}
+
+.exportBtn {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--height-tap);
+  padding: var(--space-1-5) var(--space-3);         /* 12 / 24 — Figma */
+  border: 0;
+  border-radius: 0;
+  background-color: var(--color-gold);
+  color: var(--color-admin-dark);
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: var(--text-sm);
+  line-height: 1;
+  cursor: pointer;
+  transition: opacity var(--motion-fast) ease;
+}
+.exportBtn:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+
+.exportError {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  color: var(--color-coral-rose);
+}
+
+/* ---------------- Shared panel + table ---------------- */
+
+.panel {
+  background-color: var(--color-sand-linen);
+  border-radius: var(--radius-lg);         /* 16 */
+  padding: var(--space-3);                 /* 24 */
+}
+
+/* Wrap the grid in an overflow container so narrow viewports scroll the
+   table sideways rather than collapsing or wrapping cells. */
+.tableScroll {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.tableHead,
+.tableRow {
+  display: grid;
+  align-items: center;
+  gap: var(--space-3);                     /* 24 column gutter */
+}
+
+.tableHead {
+  padding-block: var(--space-1);
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: var(--text-xs);               /* 12 mobile */
+  text-transform: uppercase;
+  color: var(--color-brown);
+}
+
+.tableHeadCell {
+  text-align: left;
+}
+
+.tableDivider {
+  height: var(--border-hairline);
+  background-color: var(--color-gold);
+  margin-block: var(--space-1);
+}
+
+.tableBody {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);                     /* 8 between rows */
+}
+
+.tableRow {
+  background-color: var(--color-bg);
+  border-radius: var(--radius-md);         /* 8 */
+  padding: var(--space-2) var(--space-1);  /* 16 / 8 */
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: var(--text-xs);               /* 12 mobile */
+  color: var(--color-teal);
+}
+
+.tableCell {
+  min-width: 0;
+}
+
+.tableCellWrap {
+  white-space: normal;
+  word-break: break-word;
+}
+
+.empty {
+  padding: var(--space-2);
+  text-align: center;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: var(--text-xs);
+  color: var(--color-brown);
+  background-color: var(--color-bg);
+  border-radius: var(--radius-md);
+}
+
+.dash {
+  color: var(--color-gold-dark);
+}
+
+.link {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: var(--underline-offset-sm);
+}
+
+/* Column templates — each panel sets its own min-widths so narrow viewports
+   trigger horizontal scroll instead of wrapping cells. Header + row share
+   the same template so columns align pixel-for-pixel. */
+.colsSpecial {
+  grid-template-columns:
+    minmax(var(--col-min-sm), 1fr)
+    minmax(var(--col-min-sm), 1fr)
+    minmax(var(--col-min-lg), 2fr);
+}
+.colsContributions {
+  grid-template-columns:
+    minmax(var(--col-min-sm), 1.2fr)
+    minmax(var(--col-min-sm), 0.9fr)
+    minmax(var(--col-min-sm), 0.8fr)
+    minmax(var(--col-min-md), 1.6fr)
+    minmax(var(--col-min-sm), 1fr)
+    minmax(var(--col-min-sm), 1fr);
+}
+.colsDrinks {
+  grid-template-columns:
+    minmax(var(--col-min-narrow), 0.4fr)
+    minmax(var(--col-min-lg), 1fr);
+}
+.colsNotComing {
+  grid-template-columns:
+    minmax(var(--col-min-md), 1fr)
+    minmax(var(--col-min-md), 1fr);
+}
+
+/* ---------------- Drink category cards ---------------- */
+
+.drinkCardScroll {
+  display: flex;
+  gap: var(--space-1);                     /* 8 mobile */
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  margin-inline: calc(-1 * var(--space-2));
+  padding-inline: var(--space-2);
+}
+.drinkCardScroll::-webkit-scrollbar {
+  display: none;
+}
+
+.drinkCard {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: var(--card-min-drink);        /* 120px Figma — mobile */
+  padding: var(--space-2);                 /* 16 mobile */
+  border-radius: var(--radius-lg);
+  background-color: var(--color-sand-linen);
+  cursor: pointer;
+  border: 0;
+  text-align: left;
+  transition:
+    background-color var(--motion-fast) ease,
+    color var(--motion-fast) ease;
+}
+
+.drinkCardActive {
+  background-color: var(--color-terracotta);
+}
+
+.drinkCardEyebrow {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: var(--text-xs);               /* 12 mobile */
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--color-terracotta);
+}
+.drinkCardActive .drinkCardEyebrow {
+  color: var(--color-sand-linen);
+}
+
+.drinkCardNumber {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: var(--text-2xl);              /* 32 mobile */
+  line-height: 1;
+  color: var(--color-teal);
+  font-variant-numeric: tabular-nums;
+}
+.drinkCardActive .drinkCardNumber {
+  color: var(--color-sand-linen);
+}
+
+.drinkSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);                     /* 24 between cards + table */
+}
+
+/* ---------------- Tablet (≥768) ---------------- */
+@media (min-width: 768px) {
+  .dashboard {
+    gap: var(--space-8);                   /* 64 between Totals + Switcher */
+  }
+
+  .section {
+    gap: var(--space-2);
+  }
+
+  .sectionHeading {
+    font-size: var(--text-2xl);            /* 32 desktop */
+  }
+
+  .totalsGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-3);                   /* 24 desktop */
+  }
+
+  .card {
+    padding: var(--space-3);               /* 24 desktop */
+    border-radius: var(--radius-lg);       /* 16 desktop */
+    gap: var(--space-2);                   /* 16 internal */
+  }
+
+  .cardEyebrow {
+    font-size: var(--text-base);           /* 16 desktop */
+  }
+
+  .cardNumber {
+    font-size: var(--text-display-stat);   /* 48 desktop */
+  }
+
+  .cardSubtext {
+    font-size: var(--text-base);           /* 16 desktop */
+  }
+
+  /* Tables scale type + paddings up. */
+  .panel {
+    padding: var(--space-3);
+  }
+
+  .tableHead,
+  .tableRow {
+    font-size: var(--text-base);           /* 16 desktop */
+  }
+
+  .empty {
+    font-size: var(--text-base);
+  }
+
+  /* Drink category cards: equal-width flex row, 24px gap. */
+  .drinkCardScroll {
+    overflow-x: visible;
+    gap: var(--space-3);                   /* 24 desktop */
+    margin-inline: 0;
+    padding-inline: 0;
+  }
+
+  .drinkCard {
+    flex: 1 1 0;
+    min-width: 0;
+    padding: var(--space-3);               /* 24 desktop */
+    gap: var(--space-2);
+  }
+
+  .drinkCardEyebrow {
+    font-size: var(--text-base);           /* 16 desktop */
+  }
+
+  .drinkCardNumber {
+    font-size: var(--text-display-stat);   /* 48 desktop */
+  }
+}
+
+/* ---------------- Desktop (≥1024) ----------------
+   The switcher (pills + Export CSV) needs ~900–1000px of breathing room
+   before it fits in a single row without wrapping. At 768 there isn't
+   enough — the four pills alone are ~680 px — so we keep the mobile
+   stacked pattern (pills horizontally scroll, Export CSV drops to its
+   own row) up through tablet and only switch to the side-by-side
+   desktop layout at 1024+. */
+@media (min-width: 1024px) {
+  .pillRow {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+  }
+
+  .pillScroll {
+    overflow-x: visible;
+    margin-inline: 0;
+    padding-inline: 0;
+  }
+
+  .exportBtn {
+    align-self: auto;
+    white-space: nowrap;
+  }
+}
+
+/* ---------------- Entrance cascade ---------------- */
+/* Match /registry: fade in + slide down + staggered delay per section.
+   Reduced-motion users render at final state with no animation. */
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes admin-in {
+    from { opacity: 0; transform: translateY(var(--space-2)); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .section,
+  .switcher {
+    animation: admin-in var(--motion-std) var(--ease-out-soft) both;
+    will-change: transform, opacity;
+  }
+  .section   { animation-delay: 80ms; }
+  .switcher  { animation-delay: 200ms; }
+}

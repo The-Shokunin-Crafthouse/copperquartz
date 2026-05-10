@@ -1,7 +1,10 @@
+/* Admin-only background — dark deep-ink surface. Overrides the global
+   --color-bg cream for /admin without touching the token itself, so the
+   rest of the site is unaffected. */
 .shell {
   min-height: 100vh;
-  background-color: var(--color-bg);
-  color: var(--color-brown);
+  background-color: var(--color-admin-bg);
+  color: var(--color-sand-linen);
   font-family: var(--font-sans);
 }
 

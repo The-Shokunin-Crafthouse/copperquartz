@@ -3,14 +3,7 @@ import {
   getAdminRsvpSummary,
   type AdminRsvpSummary,
 } from '@/src/app/actions/getAdminRsvpSummary';
-import SummaryCards from './SummaryCards';
-import ContributionsTable from './ContributionsTable';
-import RsvpSummaryCards from './RsvpSummaryCards';
-import DeclinedGuestsTable from './DeclinedGuestsTable';
-import RsvpExportButton from './RsvpExportButton';
-import AdminStatRow from './AdminStatRow';
-import BeverageBreakdownTable from './BeverageBreakdownTable';
-import SpecialRequestsTable from './SpecialRequestsTable';
+import AdminDashboard from './AdminDashboard';
 import type { Contribution } from './types';
 import styles from './page.module.css';
 
@@ -51,8 +44,11 @@ async function fetchContributions(): Promise<FetchResult> {
 const EMPTY_RSVP_SUMMARY: AdminRsvpSummary = {
   total_invited: 0,
   attending_count: 0,
+  declining_count: 0,
+  awaiting_count: 0,
   monday_count: 0,
   transport_count: 0,
+  transport_party_count: 0,
   declining_guests: [],
   beverage_breakdown: [],
   special_requests: [],
@@ -64,51 +60,28 @@ export default async function AdminPage() {
     getAdminRsvpSummary(),
   ]);
 
-  const rows = contributionsResult.ok ? contributionsResult.rows : [];
+  const contributions = contributionsResult.ok ? contributionsResult.rows : [];
   const rsvpSummary = rsvpResult.ok ? rsvpResult.data : EMPTY_RSVP_SUMMARY;
 
   return (
-    <article>
-      <p className={styles.eyebrow}>Copper & Quartz</p>
-      <h1 className={styles.heading}>Admin</h1>
+    <div className={styles.page}>
+      <header className={styles.header}>
+        <p className={styles.eyebrow}>Copper &amp; Quartz</p>
+        <h1 className={styles.heading}>Admin</h1>
+      </header>
 
-      <section className={styles.section} aria-labelledby="contributions-heading">
-        <h2 id="contributions-heading" className={styles.sectionHeading}>
-          Contributions
-        </h2>
+      {contributionsResult.ok ? null : (
+        <p className={styles.fetchError}>
+          Could not load contributions: {contributionsResult.error}
+        </p>
+      )}
+      {rsvpResult.ok ? null : (
+        <p className={styles.fetchError}>
+          Could not load RSVP summary: {rsvpResult.error}
+        </p>
+      )}
 
-        {contributionsResult.ok ? null : (
-          <p className={styles.fetchError}>
-            Could not load contributions: {contributionsResult.error}
-          </p>
-        )}
-
-        <SummaryCards rows={rows} />
-        <ContributionsTable rows={rows} />
-      </section>
-
-      <section className={styles.section} aria-labelledby="rsvp-heading">
-        <h2 id="rsvp-heading" className={styles.sectionHeading}>
-          RSVPs
-        </h2>
-
-        {rsvpResult.ok ? null : (
-          <p className={styles.fetchError}>
-            Could not load RSVP summary: {rsvpResult.error}
-          </p>
-        )}
-
-        <RsvpSummaryCards summary={rsvpSummary} />
-        <RsvpExportButton />
-        <DeclinedGuestsTable guests={rsvpSummary.declining_guests} />
-      </section>
-
-      <AdminStatRow
-        mondayCount={rsvpSummary.monday_count}
-        transportCount={rsvpSummary.transport_count}
-      />
-      <BeverageBreakdownTable breakdown={rsvpSummary.beverage_breakdown} />
-      <SpecialRequestsTable requests={rsvpSummary.special_requests} />
-    </article>
+      <AdminDashboard contributions={contributions} summary={rsvpSummary} />
+    </div>
   );
 }

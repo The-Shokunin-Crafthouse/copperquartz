@@ -65,13 +65,14 @@ const SECTIONS = {
        pushed down. Targeted by accessible name (the question text). */
     preOpen: { role: 'button', name: 'Where do I park?' },
   },
-  'admin-contributions': {
+  'admin-redesign': {
     route: '/admin',
     fullPage: true,
-    description: 'Admin — Contributions section (summary cards + table)',
+    description: 'Admin — Totals + pill switcher (Sprint admin-redesign)',
     /* Preview snapshots run without Supabase env vars; the page falls
-       back to the empty state. Middleware also skips Basic Auth in
-       preview because NEXT_PUBLIC_BASE_PATH is set by next dev here. */
+       back to the empty state — Totals cards render at 0, all four
+       panels show their empty-state copy. Middleware also skips Basic
+       Auth in preview because NEXT_PUBLIC_BASE_PATH is set by next dev. */
   },
   registry: {
     route: '/registry',

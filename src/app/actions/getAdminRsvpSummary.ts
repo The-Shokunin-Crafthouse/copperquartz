@@ -27,8 +27,17 @@ export type SpecialRequest = {
 export type AdminRsvpSummary = {
   total_invited: number;
   attending_count: number;
+  declining_count: number;
+  awaiting_count: number;
   monday_count: number;
+  /* Individuals who marked needs_transport — kept for the digest email
+     digest so the per-person headcount is preserved alongside the new
+     party-level count below. */
   transport_count: number;
+  /* Distinct parties with at least one attending member needing transport.
+     Drives the Transportation card on the admin dashboard so the number
+     reads as "rides to arrange" rather than "seats". */
+  transport_party_count: number;
   declining_guests: DecliningGuest[];
   beverage_breakdown: BeverageBreakdownRow[];
   special_requests: SpecialRequest[];
@@ -41,8 +50,11 @@ export type AdminRsvpSummaryResult =
 const EMPTY: AdminRsvpSummary = {
   total_invited: 0,
   attending_count: 0,
+  declining_count: 0,
+  awaiting_count: 0,
   monday_count: 0,
   transport_count: 0,
+  transport_party_count: 0,
   declining_guests: [],
   beverage_breakdown: [],
   special_requests: [],
@@ -127,12 +139,31 @@ export async function getAdminRsvpSummary(): Promise<AdminRsvpSummaryResult> {
     const total_invited = guests.length;
     const attendingResponses = responses.filter((r) => r.attending);
     const attending_count = attendingResponses.length;
+    const declining_count = responses.filter((r) => r.attending === false).length;
+    /* Awaiting = invited minus everyone who has answered either way.
+       Floored at 0 so a guest list shrunk after responses were collected
+       can never produce a negative card value. */
+    const awaiting_count = Math.max(
+      total_invited - attending_count - declining_count,
+      0,
+    );
     const monday_count = attendingResponses.filter(
       (r) => r.monday_meetup === true,
     ).length;
     const transport_count = attendingResponses.filter(
       (r) => r.needs_transport === true,
     ).length;
+    /* Parties needing a ride. Same filter as transport_count but
+       deduped by party_id — one card-readable "X parties need a ride"
+       instead of an individual-seat count. */
+    const transportPartyIds = new Set<string>();
+    for (const r of attendingResponses) {
+      if (r.needs_transport !== true) continue;
+      const guest = guestById.get(r.guest_id);
+      if (!guest) continue;
+      transportPartyIds.add(guest.party_id);
+    }
+    const transport_party_count = transportPartyIds.size;
 
     const declining_guests: DecliningGuest[] = responses
       .filter((r) => !r.attending)
@@ -196,8 +227,11 @@ export async function getAdminRsvpSummary(): Promise<AdminRsvpSummaryResult> {
       data: {
         total_invited,
         attending_count,
+        declining_count,
+        awaiting_count,
         monday_count,
         transport_count,
+        transport_party_count,
         declining_guests,
         beverage_breakdown,
         special_requests,
