@@ -156,10 +156,11 @@ export default function AdminDashboard({
     };
   }, [contributions]);
 
-  /* Drink category cards — every canonical category renders, with count
-     synthesized at 0 if missing from the breakdown data, plus any
-     non-canonical categories the DB happens to contain (defensive).
-     Sorted by count DESC with category name as localeCompare tiebreaker. */
+  /* Drink category cards — fixed canonical order so the row reads
+     left-to-right the same way every time, regardless of count. Counts
+     are synthesized at 0 if missing from the breakdown data; any
+     non-canonical categories the DB happens to contain are appended
+     at the end (defensive). */
   const drinkCategories = useMemo<DrinkCategorySummary[]>(() => {
     const byCategory = new Map<string, number>();
     for (const cat of CANONICAL_DRINK_CATEGORIES) byCategory.set(cat, 0);
@@ -169,7 +170,9 @@ export default function AdminDashboard({
         (byCategory.get(row.category) ?? 0) + row.count,
       );
     }
-    const list = Array.from(byCategory.entries()).map(([category, count]) => {
+    /* Map preserves insertion order — canonical categories first, then
+       any extras the loop above appended. No further sort. */
+    return Array.from(byCategory.entries()).map(([category, count]) => {
       const { plural, singular } = categoryLabels(category);
       return {
         category,
@@ -178,11 +181,6 @@ export default function AdminDashboard({
         count,
       };
     });
-    list.sort((a, b) => {
-      if (b.count !== a.count) return b.count - a.count;
-      return a.category.localeCompare(b.category);
-    });
-    return list;
   }, [summary.beverage_breakdown]);
 
   const [activeCategory, setActiveCategory] = useState<string>(
