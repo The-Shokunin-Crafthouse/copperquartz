@@ -186,74 +186,20 @@ export default function TravelPage() {
         <p className={styles.body}>
           <span className={styles.label}>Note:</span>{' '}
           We are still working on a cheaper hotel room block and will add
-          that here if that becomes available. There are a ton of places
-          to stay however if you want to be closer to the courthouse and
-          plan to walk State street while you are here.
+          that here if that becomes available. If you want to be close to
+          the action — a short walk to the Courthouse and State Street —
+          these are our picks.
         </p>
       </section>
 
-      {/* ---------- Section 3: Things to do ---------- */}
-      <section className={styles.section} aria-labelledby="travel-things-to-do">
-        <h2 id="travel-things-to-do" className={styles.heading}>
-          Things to do
+      {/* ---------- Section 3: Local Recommendations ---------- */}
+      <section className={styles.section} aria-labelledby="travel-recs">
+        <h2 id="travel-recs" className={styles.heading}>
+          Local Recommendations
         </h2>
         <p className={styles.body}>
-          Besides using ChatGPT to find your own adventure, we recommend the{' '}
-          <a
-            className={styles.coral}
-            href="https://www.grassinifamilyvineyards.com/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Grassini Family Vineyards
-          </a>
-          , the{' '}
-          <a
-            className={styles.coral}
-            href="https://www.santabarbara.com/activities/beaches/santa-barbara/thousand-steps-beach/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Thousand Steps Beach
-          </a>
-          , a meal at{' '}
-          <a
-            className={styles.coral}
-            href="https://boathousesb.com/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Boathouse at Hendry&rsquo;s Beach
-          </a>{' '}
-          and stroll along the beach (say hi to my Dad for me, he would
-          of loved to meet everyone),{' '}
-          <a
-            className={styles.coral}
-            href="https://stearnswharf.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Stearns Wharf
-          </a>{' '}
-          at Pier, a boat tour on the{' '}
-          <a
-            className={styles.coral}
-            href="https://liltootsb.com/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Lil&rsquo; Toot
-          </a>
-          , or catch a show at the{' '}
-          <a
-            className={styles.coral}
-            href="https://sbbowl.com/photos/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Santa Barbara Bowl
-          </a>
-          , plus a million more things on their{' '}
+          Besides using ChatGPT to find your own adventure, here are our
+          picks — and a million more wait on the{' '}
           <a
             className={styles.coral}
             href="https://santabarbaraca.com/"
@@ -264,6 +210,220 @@ export default function TravelPage() {
           </a>
           .
         </p>
+
+        <div className={styles.category}>
+          <span className={styles.eyebrow}>Restaurants</span>
+          <p className={styles.body}>
+            <a
+              className={styles.coral}
+              href="https://los-agaves.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Los Agaves
+            </a>{' '}
+            — Authentic Mexican, a local institution
+          </p>
+          <p className={styles.body}>
+            <a
+              className={styles.coral}
+              href="https://www.domstaverna.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Dom&rsquo;s Taverna
+            </a>{' '}
+            — Basque-inspired small plates, great for sharing
+          </p>
+          <p className={styles.body}>
+            <a
+              className={styles.coral}
+              href="https://shorelinebeachcafe.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Shoreline Caf&eacute;
+            </a>{' '}
+            — Breakfast and lunch with tables right on the sand
+          </p>
+          <p className={styles.body}>
+            <a
+              className={styles.coral}
+              href="https://boathousesb.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Boathouse at Hendry&rsquo;s Beach
+            </a>{' '}
+            — Beachfront seafood, then stroll the sand (say hi to my Dad for
+            me — he would&rsquo;ve loved to meet everyone)
+          </p>
+        </div>
+
+        <div className={styles.category}>
+          <span className={styles.eyebrow}>Activities</span>
+          <p className={styles.body}>
+            <a
+              className={styles.coral}
+              href="https://www.santabarbara.com/attractions/santa-barbara-harbor/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Walk the Breakwater
+            </a>{' '}
+            — Stroll out past the Harbor to Sandspit for the classic SB view
+            of mountains meeting sea
+          </p>
+          <p className={styles.body}>
+            <a
+              className={styles.coral}
+              href="https://www.santabarbara.com/attractions/old-mission-santa-barbara/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Picnic at the Mission Lawn
+            </a>{' '}
+            — Grounds of the Old Mission, open and free
+          </p>
+          <p className={styles.body}>
+            <a
+              className={styles.coral}
+              href="https://www.condorexpress.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Sunset Cruise
+            </a>{' '}
+            — Book a cruise from the harbor with the Condor Express
+          </p>
+          <p className={styles.body}>
+            <a
+              className={styles.coral}
+              href="https://www.funkzone.net/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Wine Tasting in the Funk Zone
+            </a>{' '}
+            — Walkable district packed with tasting rooms, a few blocks from
+            downtown
+          </p>
+          <p className={styles.body}>
+            <a
+              className={styles.coral}
+              href="https://solvangusa.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Day Trip to Solvang
+            </a>{' '}
+            — Danish village in the Santa Ynez Valley, 35 miles away
+          </p>
+          <p className={styles.body}>
+            <a
+              className={styles.coral}
+              href="https://www.grassinifamilyvineyards.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Grassini Family Vineyards
+            </a>{' '}
+            — Family-run tasting room in the Santa Ynez Valley
+          </p>
+          <p className={styles.body}>
+            <a
+              className={styles.coral}
+              href="https://www.santabarbara.com/activities/beaches/santa-barbara/thousand-steps-beach/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Thousand Steps Beach
+            </a>{' '}
+            — Locals&rsquo; beach reached by a long stone staircase
+          </p>
+          <p className={styles.body}>
+            <a
+              className={styles.coral}
+              href="https://stearnswharf.org/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Stearns Wharf
+            </a>{' '}
+            — Historic pier at the foot of State Street
+          </p>
+          <p className={styles.body}>
+            <a
+              className={styles.coral}
+              href="https://liltootsb.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Lil&rsquo; Toot
+            </a>{' '}
+            — Little yellow boat tour around the harbor
+          </p>
+          <p className={styles.body}>
+            <a
+              className={styles.coral}
+              href="https://sbbowl.com/photos/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Santa Barbara Bowl
+            </a>{' '}
+            — Open-air concert venue with a mountain backdrop
+          </p>
+        </div>
+
+        <div className={styles.category}>
+          <span className={styles.eyebrow}>Hikes</span>
+          <p className={styles.body}>
+            <a
+              className={styles.coral}
+              href="https://www.alltrails.com/trail/us/california/inspiration-point--2"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Inspiration Point
+            </a>{' '}
+            — Moderate, 3.5 mi out-and-back, panoramic views of the coastline
+          </p>
+          <p className={styles.body}>
+            <a
+              className={styles.coral}
+              href="https://www.alltrails.com/trail/us/california/hot-springs-canyon-trail"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Hot Springs Trail
+            </a>{' '}
+            — Moderate, 2.6 mi out-and-back, ends at natural hot springs
+          </p>
+          <p className={styles.body}>
+            <a
+              className={styles.coral}
+              href="https://www.alltrails.com/trail/us/california/lizards-mouth"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Lizard&rsquo;s Mouth
+            </a>{' '}
+            — Short scramble to a sandstone rock formation with big views
+          </p>
+          <p className={styles.body}>
+            <a
+              className={styles.coral}
+              href="https://www.alltrails.com/trail/us/california/rattlesnake-canyon--2"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Rattlesnake Canyon
+            </a>{' '}
+            — Challenging, 5 mi, creek crossings and canyon scenery
+          </p>
+        </div>
+
         <VideoFrame
           src="/videos/santa-barbara.mp4"
           label="Santa Barbara County Courthouse and downtown"
