@@ -1,6 +1,13 @@
 import { createServiceClient } from '@/src/lib/supabase/server';
+import {
+  getAdminRsvpSummary,
+  type AdminRsvpSummary,
+} from '@/src/app/actions/getAdminRsvpSummary';
 import SummaryCards from './SummaryCards';
 import ContributionsTable from './ContributionsTable';
+import RsvpSummaryCards from './RsvpSummaryCards';
+import DeclinedGuestsTable from './DeclinedGuestsTable';
+import RsvpExportButton from './RsvpExportButton';
 import type { Contribution } from './types';
 import styles from './page.module.css';
 
@@ -38,9 +45,20 @@ async function fetchContributions(): Promise<FetchResult> {
   }
 }
 
+const EMPTY_RSVP_SUMMARY: AdminRsvpSummary = {
+  total_invited: 0,
+  attending_count: 0,
+  declining_guests: [],
+};
+
 export default async function AdminPage() {
-  const result = await fetchContributions();
-  const rows = result.ok ? result.rows : [];
+  const [contributionsResult, rsvpResult] = await Promise.all([
+    fetchContributions(),
+    getAdminRsvpSummary(),
+  ]);
+
+  const rows = contributionsResult.ok ? contributionsResult.rows : [];
+  const rsvpSummary = rsvpResult.ok ? rsvpResult.data : EMPTY_RSVP_SUMMARY;
 
   return (
     <article>
@@ -52,14 +70,30 @@ export default async function AdminPage() {
           Contributions
         </h2>
 
-        {result.ok ? null : (
+        {contributionsResult.ok ? null : (
           <p className={styles.fetchError}>
-            Could not load contributions: {result.error}
+            Could not load contributions: {contributionsResult.error}
           </p>
         )}
 
         <SummaryCards rows={rows} />
         <ContributionsTable rows={rows} />
+      </section>
+
+      <section className={styles.section} aria-labelledby="rsvp-heading">
+        <h2 id="rsvp-heading" className={styles.sectionHeading}>
+          RSVPs
+        </h2>
+
+        {rsvpResult.ok ? null : (
+          <p className={styles.fetchError}>
+            Could not load RSVP summary: {rsvpResult.error}
+          </p>
+        )}
+
+        <RsvpSummaryCards summary={rsvpSummary} />
+        <RsvpExportButton />
+        <DeclinedGuestsTable guests={rsvpSummary.declining_guests} />
       </section>
     </article>
   );
