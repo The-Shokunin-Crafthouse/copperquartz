@@ -5,6 +5,7 @@ import {
   BEVERAGE_CATEGORIES,
   BEVERAGE_SELECTIONS,
   type BeverageCategory,
+  type BeverageOption,
 } from '../state';
 import styles from '../rsvp.module.css';
 
@@ -34,9 +35,14 @@ export default function StepBeverage({
   )
     ? (category as BeverageCategory)
     : null;
-  const selections = validCategory ? BEVERAGE_SELECTIONS[validCategory] : [];
-  const requiresSelection = validCategory !== null && selections.length > 0;
-  const continueEnabled = validCategory !== null && (!requiresSelection || selection !== null);
+  const usesCards =
+    validCategory === 'Cocktails' || validCategory === 'Mocktails';
+  const optionCount = validCategory
+    ? BEVERAGE_SELECTIONS[validCategory].length
+    : 0;
+  const requiresSelection = validCategory !== null && optionCount > 0;
+  const continueEnabled =
+    validCategory !== null && (!requiresSelection || selection !== null);
 
   return (
     <div className={styles.stepShell}>
@@ -69,28 +75,55 @@ export default function StepBeverage({
       </div>
 
       <div className={styles.beverageSelectionSlot}>
-        {requiresSelection && (
+        {requiresSelection && validCategory !== null && (
           <>
             <span className={styles.label}>Type</span>
-            <div
-              className={styles.pillGroup}
-              role="radiogroup"
-              aria-label="Beverage selection"
-            >
-              {selections.map((sel) => (
-                <button
-                  key={sel}
-                  type="button"
-                  role="radio"
-                  aria-checked={selection === sel}
-                  data-selected={selection === sel}
-                  className={styles.pill}
-                  onClick={() => onSelection(sel)}
-                >
-                  {sel}
-                </button>
-              ))}
-            </div>
+            {usesCards ? (
+              <div
+                className={styles.optionCardGroup}
+                role="radiogroup"
+                aria-label="Beverage selection"
+              >
+                {(
+                  BEVERAGE_SELECTIONS[validCategory] as BeverageOption[]
+                ).map((opt) => (
+                  <button
+                    key={opt.name}
+                    type="button"
+                    role="radio"
+                    aria-checked={selection === opt.name}
+                    data-selected={selection === opt.name}
+                    className={styles.optionCard}
+                    onClick={() => onSelection(opt.name)}
+                  >
+                    <span className={styles.optionCardName}>{opt.name}</span>
+                    <span className={styles.optionCardIngredients}>
+                      {opt.ingredients}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            ) : (
+              <div
+                className={styles.pillGroup}
+                role="radiogroup"
+                aria-label="Beverage selection"
+              >
+                {(BEVERAGE_SELECTIONS[validCategory] as string[]).map((sel) => (
+                  <button
+                    key={sel}
+                    type="button"
+                    role="radio"
+                    aria-checked={selection === sel}
+                    data-selected={selection === sel}
+                    className={styles.pill}
+                    onClick={() => onSelection(sel)}
+                  >
+                    {sel}
+                  </button>
+                ))}
+              </div>
+            )}
           </>
         )}
       </div>
