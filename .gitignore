@@ -79,3 +79,6 @@ public/images/wedding photos/
 .claude-cache/
 .cursor-cache/
 .ai-cache/
+
+# guest list — contains real names, never commit
+guest-list.xlsx
