@@ -50,8 +50,12 @@
   color: var(--color-brown);
 }
 
-.body + .body {
-  margin-top: 31px;             /* paragraph rhythm — matches /travel desktop cadence */
+.body p {
+  margin: 0;
+}
+
+.body p + p {
+  margin-top: 31px;             /* paragraph rhythm — matches /our-story + /travel */
 }
 
 /* Venue metadata — definition list. Label + value on one row at desktop
@@ -133,7 +137,7 @@
     font-size: var(--text-base);         /* 16 */
     line-height: 24px;
   }
-  .body + .body {
+  .body p + p {
     margin-top: var(--space-2);          /* 16 */
   }
   .meta {

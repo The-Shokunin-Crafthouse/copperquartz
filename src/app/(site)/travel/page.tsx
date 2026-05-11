@@ -227,6 +227,11 @@ export default function TravelPage() {
           </p>
         </div>
 
+        <VideoFrame
+          src="/videos/santa-barbara.mp4"
+          label="Santa Barbara County Courthouse and downtown"
+        />
+
         <div className={styles.category}>
           <span className={styles.eyebrow}>Restaurants</span>
           <p className={styles.body}>
@@ -439,11 +444,6 @@ export default function TravelPage() {
             — Challenging, 5 mi, creek crossings and canyon scenery
           </p>
         </div>
-
-        <VideoFrame
-          src="/videos/santa-barbara.mp4"
-          label="Santa Barbara County Courthouse and downtown"
-        />
       </section>
     </article>
   );
