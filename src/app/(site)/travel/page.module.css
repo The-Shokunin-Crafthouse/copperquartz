@@ -153,6 +153,48 @@
   margin-bottom: var(--travel-hotel-trailing);
 }
 
+/* When a palm-break follows the media, the divider provides the
+   visual separation — drop the trailing margin so spacing above
+   and below the divider stays symmetric (32 / 32). */
+.hotelMedia:has(+ .palmBreak) {
+  margin-bottom: 0;
+}
+
+/* Palm-break section divider — mirrors the our-story pattern.
+   42×16 landscape slot between two flex-1 hairlines, the 32×85
+   portrait SVG rotated 90deg inside. */
+.palmBreak {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+}
+
+.palmBreakLine {
+  flex: 1;
+  height: var(--border-hairline);
+  background-color: var(--color-gold);
+}
+
+.palmBreakIcon {
+  position: relative;
+  flex: 0 0 auto;
+  display: block;
+  width: 42px;
+  height: 16px;
+}
+
+.palmBreakIcon img {
+  display: block;
+  width: 16px;
+  height: 42px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(90deg);
+}
+
 @media (hover: hover) and (pointer: fine) {
   .coral:hover {
     color: var(--color-terracotta);

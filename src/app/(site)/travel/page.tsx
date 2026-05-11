@@ -128,6 +128,18 @@ export default function TravelPage() {
             objectPosition="center bottom"
           />
         </div>
+        <div className={styles.palmBreak} aria-hidden>
+          <span className={styles.palmBreakLine} />
+          <span className={styles.palmBreakIcon}>
+            <Image
+              src={withBase('/images/svg/palm-break.svg')}
+              alt=""
+              width={32}
+              height={85}
+            />
+          </span>
+          <span className={styles.palmBreakLine} />
+        </div>
         <div className={styles.body}>
           <p>
             <span className={styles.label}>Palmero House</span>
@@ -184,6 +196,18 @@ export default function TravelPage() {
             height={2560}
             loading="lazy"
           />
+        </div>
+        <div className={styles.palmBreak} aria-hidden>
+          <span className={styles.palmBreakLine} />
+          <span className={styles.palmBreakIcon}>
+            <Image
+              src={withBase('/images/svg/palm-break.svg')}
+              alt=""
+              width={32}
+              height={85}
+            />
+          </span>
+          <span className={styles.palmBreakLine} />
         </div>
         <div className={styles.body}>
           <p>
@@ -256,15 +280,6 @@ export default function TravelPage() {
             height={680}
             loading="lazy"
           />
-        </div>
-        <div className={styles.body}>
-          <p>
-            <span className={styles.label}>Note:</span>{' '}
-            We are still working on a cheaper hotel room block and will add
-            that here if that becomes available. If you want to be close to
-            the action, a short walk to the Courthouse and State Street,
-            these are our picks.
-          </p>
         </div>
       </section>
 
