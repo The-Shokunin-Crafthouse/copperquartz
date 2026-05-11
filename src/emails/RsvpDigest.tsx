@@ -8,6 +8,7 @@ import {
   Section,
   Text,
 } from '@react-email/components';
+import { formatBeverageCategory } from '@/src/app/(site)/rsvp/state';
 
 export type RsvpDigestResponse = {
   guest_id: string;
@@ -209,7 +210,9 @@ function drinkValue(
   selection: string | null,
   category: string | null,
 ): string {
-  return selection ?? category ?? '—';
+  if (selection) return selection;
+  const label = formatBeverageCategory(category);
+  return label || '—';
 }
 
 function GuestRow({ response }: { response: RsvpDigestResponse }) {

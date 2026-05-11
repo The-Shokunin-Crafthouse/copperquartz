@@ -19,6 +19,17 @@ export type RsvpPayload = {
   accommodation_notes?: string | null;
 };
 
+/* Must stay in sync with the CHECK constraint on
+   rsvp_responses.beverage_category. Any other value will hit the DB
+   constraint — we validate up front to return a clear error code. */
+const ALLOWED_BEVERAGE_CATEGORIES = new Set([
+  'cocktails',
+  'mocktails',
+  'wine',
+  'beer',
+  'non-alcoholic',
+]);
+
 export async function submitRsvp(
   payload: RsvpPayload,
 ): Promise<{ success: true; partyId: string } | { error: string }> {
@@ -72,6 +83,18 @@ export async function submitRsvp(
       if (!partyGuestIds.has(r.guest_id)) {
         console.error('submitRsvp: response guest_id not in party', r.guest_id);
         return { error: 'submission_failed' };
+      }
+      if (
+        r.attending &&
+        r.beverage_category != null &&
+        !ALLOWED_BEVERAGE_CATEGORIES.has(r.beverage_category)
+      ) {
+        console.error(
+          'submitRsvp: invalid beverage_category',
+          r.guest_id,
+          r.beverage_category,
+        );
+        return { error: 'invalid_beverage_category' };
       }
       responseGuestIds.add(r.guest_id);
     }

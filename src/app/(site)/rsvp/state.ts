@@ -25,28 +25,46 @@ export type WizardState = {
   submitError: string | null;
 };
 
+/* Wire values match the DB CHECK constraint on
+   rsvp_responses.beverage_category. Display labels live in
+   BEVERAGE_CATEGORY_LABELS — never invert this. */
 export const BEVERAGE_CATEGORIES = [
-  'Cocktails',
-  'Mocktails',
-  'Wine',
-  'Beer',
-  'Non-Alcoholic',
+  'cocktails',
+  'mocktails',
+  'wine',
+  'beer',
+  'non-alcoholic',
 ] as const;
 
 export type BeverageCategory = (typeof BEVERAGE_CATEGORIES)[number];
 
+export const BEVERAGE_CATEGORY_LABELS: Record<BeverageCategory, string> = {
+  cocktails: 'Cocktails',
+  mocktails: 'Mocktails',
+  wine: 'Wine',
+  beer: 'Beer',
+  'non-alcoholic': 'Non-Alcoholic',
+};
+
+export function formatBeverageCategory(category: string | null): string {
+  if (!category) return '';
+  return (
+    BEVERAGE_CATEGORY_LABELS[category as BeverageCategory] ?? category
+  );
+}
+
 export type BeverageOption = { name: string; ingredients: string };
 
 export type BeverageSelections = {
-  Cocktails: BeverageOption[];
-  Mocktails: BeverageOption[];
-  Wine: string[];
-  Beer: string[];
-  'Non-Alcoholic': string[];
+  cocktails: BeverageOption[];
+  mocktails: BeverageOption[];
+  wine: string[];
+  beer: string[];
+  'non-alcoholic': string[];
 };
 
 export const BEVERAGE_SELECTIONS: BeverageSelections = {
-  Cocktails: [
+  cocktails: [
     {
       name: 'Old Fashioned',
       ingredients: 'Bourbon, sweet, citrus, spice',
@@ -72,7 +90,7 @@ export const BEVERAGE_SELECTIONS: BeverageSelections = {
       ingredients: 'Rum, horchata, cinnamon, vanilla',
     },
   ],
-  Mocktails: [
+  mocktails: [
     {
       name: 'Santa Barbara Spark',
       ingredients: 'Strawberry, lemon, basil, LaCroix Lemon, light agave',
@@ -98,9 +116,9 @@ export const BEVERAGE_SELECTIONS: BeverageSelections = {
       ingredients: 'Horchata, vanilla, cinnamon, LaCroix Coconut',
     },
   ],
-  Wine: ['Red', 'White', 'Rosé', 'Surprise Me'],
-  Beer: ['IPA', 'Lager', 'Wheat', 'Non-Alcoholic Beer', 'Surprise Me'],
-  'Non-Alcoholic': [],
+  wine: ['Red', 'White', 'Rosé', 'Surprise Me'],
+  beer: ['IPA', 'Lager', 'Wheat', 'Non-Alcoholic Beer', 'Surprise Me'],
+  'non-alcoholic': [],
 };
 
 export function beverageSelectionCount(category: BeverageCategory): number {

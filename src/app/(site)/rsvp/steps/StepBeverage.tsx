@@ -3,6 +3,7 @@
 import type { Guest } from '../state';
 import {
   BEVERAGE_CATEGORIES,
+  BEVERAGE_CATEGORY_LABELS,
   BEVERAGE_SELECTIONS,
   type BeverageCategory,
   type BeverageOption,
@@ -36,7 +37,7 @@ export default function StepBeverage({
     ? (category as BeverageCategory)
     : null;
   const usesCards =
-    validCategory === 'Cocktails' || validCategory === 'Mocktails';
+    validCategory === 'cocktails' || validCategory === 'mocktails';
   const optionCount = validCategory
     ? BEVERAGE_SELECTIONS[validCategory].length
     : 0;
@@ -68,7 +69,7 @@ export default function StepBeverage({
               className={styles.pill}
               onClick={() => onCategory(cat)}
             >
-              {cat}
+              {BEVERAGE_CATEGORY_LABELS[cat]}
             </button>
           ))}
         </div>

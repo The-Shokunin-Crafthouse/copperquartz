@@ -1,7 +1,7 @@
 'use client';
 
 import type { PartyResult } from '@/src/app/actions/lookupParty';
-import type { Guest } from '../state';
+import { formatBeverageCategory, type Guest } from '../state';
 import styles from '../rsvp.module.css';
 
 export default function StepReview({
@@ -57,10 +57,13 @@ export default function StepReview({
         {party.guests.map((guest) => {
           const isAttending = attendance[guest.id] === true;
           const drink = beverage[guest.id];
+          const drinkCategoryLabel = drink
+            ? formatBeverageCategory(drink.category)
+            : '';
           const drinkValue = drink
             ? drink.selection
-              ? `${drink.category}: ${drink.selection}`
-              : drink.category
+              ? `${drinkCategoryLabel}: ${drink.selection}`
+              : drinkCategoryLabel
             : '—';
 
           if (!isAttending) {
