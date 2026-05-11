@@ -214,7 +214,7 @@ export default function TravelPage() {
         <div className={styles.body}>
           <p>
             Besides using ChatGPT to find your own adventure, here are our
-            picks — and a million more wait on the{' '}
+            picks, and a million more wait on the{' '}
             <a
               className={styles.coral}
               href="https://santabarbaraca.com/"
