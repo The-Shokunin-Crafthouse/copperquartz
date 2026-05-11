@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { withBase } from '@/src/lib/paths';
 import styles from './page.module.css';
 
@@ -9,10 +10,13 @@ export default function HomePage() {
   return (
     <section className={styles.home}>
       <h1 className={styles.heroLockup}>
-        <img
+        <Image
           className={styles.heroImg}
           src={withBase('/images/svg/Levi & Meghan - homepage.svg')}
           alt="Levi & Meghan"
+          width={767}
+          height={108}
+          priority
         />
       </h1>
       <p className={styles.body}>

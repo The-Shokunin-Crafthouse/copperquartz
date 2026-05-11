@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { withBase } from '@/src/lib/paths';
 import PrintButton from './PrintButton';
 import styles from './page.module.css';
@@ -6,25 +7,32 @@ export default function SaveTheDatePage() {
   return (
     <main className={styles.page} data-scroll-root>
       {/* Page Background ------------------------------------------------- */}
-      <img
+      <Image
         className={styles.palmIllustration}
         src={withBase('/images/palm-illustration@2x.jpg')}
         alt=""
+        width={2384}
+        height={1454}
+        priority
       />
 
       {/* Coastal scene — anchored to top of horizontal rule */}
-      <img
+      <Image
         className={styles.coastal}
         src={withBase('/images/coastal-scene@2x.png')}
         alt=""
+        width={409}
+        height={420}
       />
 
       {/* Courthouse + Print CTA — share an anchor so they move together --- */}
       <div className={styles.courthouseAnchor}>
-        <img
+        <Image
           className={styles.courthouse}
           src={withBase('/images/courthouse-illustration@2x.jpg')}
           alt=""
+          width={468}
+          height={1727}
         />
         <PrintButton className={styles.printBtn} />
       </div>
@@ -35,10 +43,13 @@ export default function SaveTheDatePage() {
 
       {/* H1 lockup + Info bar — both scale via cqw within left column --- */}
       <div className={styles.leftColumn}>
-        <img
+        <Image
           className={styles.h1}
           src={withBase('/images/svg/save-the-date.svg')}
           alt="Save the Date"
+          width={538}
+          height={325}
+          priority
         />
 
         {/* Info bar — Date / Location / Venue */}
@@ -69,10 +80,12 @@ export default function SaveTheDatePage() {
 
       {/* Right panel ---------------------------------------------------- */}
       <div className={styles.rightPanel}>
-        <img
+        <Image
           className={styles.couple}
           src={withBase('/images/svg/levi-meghan.svg')}
           alt="Levi & Meghan"
+          width={200}
+          height={107}
         />
 
         <p className={styles.bodyCopy}>
@@ -124,10 +137,12 @@ export default function SaveTheDatePage() {
           </p>
         </div>
 
-        <img
+        <Image
           className={`${styles.palmIcon} ${styles.palmIconTR}`}
           src={withBase('/images/svg/palm-icon.svg')}
           alt=""
+          width={15}
+          height={16}
         />
       </div>
 
@@ -141,21 +156,27 @@ export default function SaveTheDatePage() {
           <p className={styles.footerNote}>invitation to follow</p>
         </div>
 
-        <img
+        <Image
           className={styles.badge}
           src={withBase('/images/badge@2x.png')}
           alt=""
+          width={244}
+          height={244}
         />
 
-        <img
+        <Image
           className={`${styles.palmIcon} ${styles.palmIconBL}`}
           src={withBase('/images/svg/palm-icon.svg')}
           alt=""
+          width={15}
+          height={16}
         />
-        <img
+        <Image
           className={`${styles.palmIcon} ${styles.palmIconBR}`}
           src={withBase('/images/svg/palm-icon.svg')}
           alt=""
+          width={15}
+          height={16}
         />
       </div>
     </main>

@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { withBase } from '@/src/lib/paths';
 import InfoItem from './InfoItem';
 import CountdownValue from './CountdownValue';
@@ -64,21 +65,27 @@ export default function FooterBar({ weddingDate, rsvpHref }: FooterBarProps) {
         </div>
       </FooterColumns>
 
-      <img
+      <Image
         className={styles.badge}
         src={withBase('/images/badge@2x.png')}
         alt=""
+        width={244}
+        height={244}
       />
 
-      <img
+      <Image
         className={`${styles.palmIcon} ${styles.palmIconBL}`}
         src={withBase('/images/svg/palm-icon.svg')}
         alt=""
+        width={15}
+        height={16}
       />
-      <img
+      <Image
         className={`${styles.palmIcon} ${styles.palmIconBR}`}
         src={withBase('/images/svg/palm-icon.svg')}
         alt=""
+        width={15}
+        height={16}
       />
     </footer>
   );

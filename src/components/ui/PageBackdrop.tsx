@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { withBase } from '@/src/lib/paths';
 import styles from './PageBackdrop.module.css';
@@ -31,27 +32,36 @@ export default function PageBackdrop() {
         data-page-backdrop
         aria-hidden
       >
-        <img
+        <Image
           className={styles.palm}
           src={withBase('/images/palm-illustration@2x.jpg')}
           alt=""
+          width={2384}
+          height={1454}
+          priority
         />
-        <img
+        <Image
           className={styles.courthouse}
           src={withBase('/images/courthouse-illustration@2x.jpg')}
           alt=""
+          width={468}
+          height={1727}
         />
-        <img
+        <Image
           className={styles.coastal}
           src={withBase('/images/coastal-scene@2x.png')}
           alt=""
+          width={409}
+          height={420}
         />
       </div>
       {!isHome && (
-        <img
+        <Image
           className={styles.mobilePalm}
           src={withBase('/images/palm-illustration@2x.jpg')}
           alt=""
+          width={2384}
+          height={1454}
           aria-hidden
           data-page-backdrop
         />
