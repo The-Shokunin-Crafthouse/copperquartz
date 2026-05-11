@@ -12,7 +12,7 @@ export default function WipeWarningBanner({
   return (
     <div className={styles.wipeBanner} role="status">
       <p className={styles.wipeBannerText}>
-        Heads up — when you submit, {firstName}&apos;s drink and event preferences
+        Heads up. When you submit, {firstName}&apos;s drink and event preferences
         will be cleared. Toggle back to Attending to keep them.
       </p>
       <button type="button" className={styles.wipeBannerUndo} onClick={onUndo}>

@@ -126,7 +126,7 @@ export default function OurStoryPage() {
         <div className={styles.spotify}>
           <iframe
             data-testid="embed-iframe"
-            title="Copper and Quartz — Meghan's song for Levi"
+            title="Copper and Quartz · Meghan's song for Levi"
             src={`https://open.spotify.com/embed/track/${SPOTIFY_TRACK_ID}?utm_source=generator`}
             width="100%"
             height="352"

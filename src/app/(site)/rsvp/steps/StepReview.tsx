@@ -59,7 +59,7 @@ export default function StepReview({
           const drink = beverage[guest.id];
           const drinkValue = drink
             ? drink.selection
-              ? `${drink.category} — ${drink.selection}`
+              ? `${drink.category}: ${drink.selection}`
               : drink.category
             : '—';
 
@@ -128,7 +128,7 @@ export default function StepReview({
           className={styles.textarea}
           value={accommodations}
           onChange={(e) => onAccommodationsChange(e.target.value)}
-          placeholder="Optional — allergies, mobility needs, dietary restrictions, etc."
+          placeholder="Optional: allergies, mobility needs, dietary restrictions, etc."
         />
       </div>
 

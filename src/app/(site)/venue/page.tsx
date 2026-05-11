@@ -72,7 +72,7 @@ export default function VenuePage() {
           transformed into a lush garden surrounded by the courthouse&rsquo;s
           architecture, palms, lawns, and stone details. Over the years, it
           has become one of Santa Barbara&rsquo;s most iconic gathering
-          places for civic events, performances, and weddings &mdash; a
+          places for civic events, performances, and weddings: a
           pretty fitting place to start our next chapter.
         </p>
       </section>

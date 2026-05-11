@@ -1,5 +1,5 @@
 # FAQ Page Content
-## Bahn × Cave — September 29, 2026
+## Bahn × Cave · September 29, 2026
 
 ---
 
@@ -29,7 +29,7 @@ Ceremony music starts at 4:00 PM. The ceremony begins promptly at 4:30 PM. We re
 Semi-formal. Dress to impress, not beyond your comfort. If you'd like to dress within the wedding colors, reach out and we'll share the palette.
 
 **Is the ceremony outside? What should I wear on my feet?**
-Yes, the ceremony takes place outdoors and runs about 30 minutes. Santa Barbara in late September averages around 75°F, so it's comfortable. Keep that in mind for footwear — the garden has grass and stone paths.
+Yes, the ceremony takes place outdoors and runs about 30 minutes. Santa Barbara in late September averages around 75°F, so it's comfortable. Keep that in mind for footwear. The garden has grass and stone paths.
 
 ---
 
@@ -42,7 +42,7 @@ This celebration is intentionally intimate, so we're not extending plus-ones. Th
 We kindly ask that this be an adults-only celebration. We appreciate your understanding.
 
 **I missed the RSVP deadline. What do I do?**
-Don't panic — we want you there. Reach out directly to either Levi or Meghan and we'll sort it out.
+Don't panic. We want you there. Reach out directly to either Levi or Meghan and we'll sort it out.
 
 ---
 
@@ -76,7 +76,7 @@ We know we planned this on a tight timeline. No obligation at all, but if you'd 
 ### Venue
 
 **What if it rains?**
-It won't. But if it does, have a change of clothes ready for the reception — or we'll arrange a car wash air dryer situation. We're getting married rain or shine.
+It won't. But if it does, have a change of clothes ready for the reception, or we'll arrange a car wash air dryer situation. We're getting married rain or shine.
 
 **Is the venue wheelchair accessible?**
 Yes. Both the ceremony at the Courthouse and the reception venue are fully wheelchair accessible.

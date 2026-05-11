@@ -217,7 +217,7 @@ export async function sendRsvpDigest(): Promise<SendRsvpDigestResult> {
       to: DIGEST_TO,
       from: DIGEST_FROM,
       replyTo: DIGEST_REPLY_TO,
-      subject: `RSVP digest — ${total} new responses · ${formattedDate}`,
+      subject: `RSVP digest · ${total} new responses · ${formattedDate}`,
       html,
     });
 
