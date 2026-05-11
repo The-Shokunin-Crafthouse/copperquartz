@@ -12,9 +12,9 @@ import styles from './page.module.css';
  * couple. SBA section is a static image (no airport video in /videos).
  */
 export const metadata = {
-  title: 'Travel — Levi & Meghan',
+  title: 'Travel · Levi & Meghan',
   description:
-    'Getting to Santa Barbara — flights, hotel, and what to do once you arrive.',
+    'Getting to Santa Barbara: flights, hotel, and what to do once you arrive.',
 };
 
 export default function TravelPage() {
@@ -143,7 +143,7 @@ export default function TravelPage() {
                 Book your room
               </a>{' '}
               <span className={styles.metaInline}>
-                — add &ldquo;returning guest discount&rdquo; in the notes
+                (add &ldquo;returning guest discount&rdquo; in the notes)
               </span>
             </dd>
           </div>
@@ -200,7 +200,7 @@ export default function TravelPage() {
             <span className={styles.label}>Note:</span>{' '}
             We are still working on a cheaper hotel room block and will add
             that here if that becomes available. If you want to be close to
-            the action — a short walk to the Courthouse and State Street —
+            the action, a short walk to the Courthouse and State Street,
             these are our picks.
           </p>
         </div>
