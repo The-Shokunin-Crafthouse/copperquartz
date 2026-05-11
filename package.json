@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "preview": "node scripts/preview.mjs",
-    "test:digest": "tsx scripts/test-digest.ts"
+    "test:digest": "tsx scripts/test-digest.ts",
+    "seed:guests": "tsx scripts/seed-guests.ts"
   },
   "dependencies": {
     "@phosphor-icons/react": "^2.1.10",
@@ -20,7 +21,8 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "resend": "^6.4.2",
-    "stripe": "^22.1.1"
+    "stripe": "^22.1.1",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.5",
