@@ -136,6 +136,7 @@
 .mediaImage {
   display: block;
   width: 100%;
+  height: auto;
   aspect-ratio: var(--video-aspect);
   object-fit: cover;
   border-radius: var(--radius-md);
