@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import Image from 'next/image';
 import { CaretLeft, CaretRight, X } from '@phosphor-icons/react';
 import { withBase } from '@/src/lib/paths';
 import styles from './PhotoGallery.module.css';
@@ -165,7 +166,7 @@ export default function PhotoGallery({ photos, basePath = DEFAULT_BASE }: Props)
                 aria-label={`Open photo ${index + 1} of ${total}`}
                 style={{ aspectRatio: `${photo.width} / ${photo.height}` }}
               >
-                <img
+                <Image
                   className={styles.thumb}
                   src={withBase(`${basePath}/${photo.file}`)}
                   alt=""
@@ -201,7 +202,7 @@ export default function PhotoGallery({ photos, basePath = DEFAULT_BASE }: Props)
               <CaretLeft size={24} weight="bold" aria-hidden />
             </button>
             <div className={styles.stage}>
-              <img
+              <Image
                 key={current.file}
                 className={styles.full}
                 src={withBase(`${basePath}/${current.file}`)}

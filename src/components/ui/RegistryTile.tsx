@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useId, useRef, useState } from 'react';
+import Image from 'next/image';
 import { withBase } from '@/src/lib/paths';
 import RegistryButton from './RegistryButton';
 import styles from './RegistryTile.module.css';
@@ -21,6 +22,11 @@ export type TileCrop = {
 type Props = {
   imageSrc: string;             /* path under /public, eg "/images/honeymoon-desktop.jpg" */
   imageAlt: string;
+  /* Natural pixel dimensions of the fallback image (used for the inner
+     <img> attrs — only governs pre-load CLS reservation; the tile's
+     CSS aspect-ratio fully owns the rendered slot). */
+  imageWidth: number;
+  imageHeight: number;
   /* Optional mobile-specific image. When provided, a <picture> element
      swaps to `imageSrc` at min-width: 769px and serves this file below.
      Use when the desktop and mobile crops differ enough that one source
@@ -54,6 +60,8 @@ type Props = {
 export default function RegistryTile({
   imageSrc,
   imageAlt,
+  imageWidth,
+  imageHeight,
   imageSrcMobile,
   desktopCrop,
   mobileCrop,
@@ -103,9 +111,11 @@ export default function RegistryTile({
         {imageSrcMobile ? (
           <source media="(min-width: 769px)" srcSet={withBase(imageSrc)} />
         ) : null}
-        <img
+        <Image
           src={withBase(imageSrcMobile ?? imageSrc)}
           alt={imageAlt}
+          width={imageWidth}
+          height={imageHeight}
           loading="lazy"
           decoding="async"
         />

@@ -1,5 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
+import Image from 'next/image';
 import VideoFrame from '@/src/components/ui/VideoFrame';
 import PhotoGallery, { type Photo } from '@/src/components/ui/PhotoGallery';
 import { withBase } from '@/src/lib/paths';
@@ -102,7 +103,7 @@ export default function OurStoryPage() {
         <div className={styles.palmBreak} aria-hidden>
           <span className={styles.palmBreakLine} />
           <span className={styles.palmBreakIcon}>
-            <img
+            <Image
               src={withBase('/images/svg/palm-break.svg')}
               alt=""
               width={32}

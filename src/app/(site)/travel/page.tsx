@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { withBase } from '@/src/lib/paths';
 import VideoFrame from '@/src/components/ui/VideoFrame';
 import styles from './page.module.css';
@@ -34,10 +35,12 @@ export default function TravelPage() {
             min to downtown so you can easily Uber to your lodging accommodations.
           </p>
         </div>
-        <img
+        <Image
           className={styles.mediaImage}
           src={withBase('/images/sba.jpg')}
           alt="Santa Barbara Airport tarmac with mountains beyond."
+          width={3936}
+          height={2213}
           loading="lazy"
         />
         <div className={styles.body}>
@@ -188,10 +191,12 @@ export default function TravelPage() {
           </p>
         </div>
         <div className={styles.hotelMedia}>
-          <img
+          <Image
             className={styles.mediaImage}
             src={withBase('/images/cabrillo-inn.jpeg')}
             alt="Cabrillo Inn courtyard with palm trees and ocean view."
+            width={1360}
+            height={680}
             loading="lazy"
           />
         </div>

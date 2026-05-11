@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { withBase } from '@/src/lib/paths';
 import {
   WEDDING_DATE_ROMAN,
@@ -51,7 +52,7 @@ export default function Confirmation({
       <div className={styles.palmBreak} aria-hidden>
         <span className={styles.palmBreakLine} />
         <span className={styles.palmBreakIcon}>
-          <img src={palmBreak} alt="" width={32} height={85} />
+          <Image src={palmBreak} alt="" width={32} height={85} />
         </span>
         <span className={styles.palmBreakLine} />
       </div>
@@ -73,7 +74,7 @@ export default function Confirmation({
       <div className={styles.palmBreak} aria-hidden>
         <span className={styles.palmBreakLine} />
         <span className={styles.palmBreakIcon}>
-          <img src={palmBreak} alt="" width={32} height={85} />
+          <Image src={palmBreak} alt="" width={32} height={85} />
         </span>
         <span className={styles.palmBreakLine} />
       </div>
