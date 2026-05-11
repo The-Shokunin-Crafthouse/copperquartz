@@ -21,6 +21,14 @@ export default function NavBar({ links, rsvpHref }: NavBarProps) {
   const pathname = usePathname();
   const here = pathname ? norm(pathname) : '';
 
+  /* Close drawer on any client-side navigation. Nav links handle this in
+     their onClick, but the RSVP pill is a bare next/link — without this,
+     tapping RSVP would route to /rsvp while leaving the overlay covering
+     the page. */
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
+
   /* Close drawer on Escape; lock body scroll while open. */
   useEffect(() => {
     if (!open) return;
