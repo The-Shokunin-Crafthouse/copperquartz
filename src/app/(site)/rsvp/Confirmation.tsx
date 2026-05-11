@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import { withBase } from '@/src/lib/paths';
 import {
   WEDDING_DATE_ROMAN,
@@ -49,15 +48,13 @@ export default function Confirmation({
 
   return (
     <section className={styles.confirmation}>
-      <Image
-        src={palmBreak}
-        alt=""
-        aria-hidden
-        className={styles.confirmationDivider}
-        width={0}
-        height={0}
-        style={{ width: '100%', height: 'auto' }}
-      />
+      <div className={styles.palmBreak} aria-hidden>
+        <span className={styles.palmBreakLine} />
+        <span className={styles.palmBreakIcon}>
+          <img src={palmBreak} alt="" width={32} height={85} />
+        </span>
+        <span className={styles.palmBreakLine} />
+      </div>
       <h1 className={styles.confirmationHeading}>{heading}</h1>
       <p className={styles.confirmationBody}>{body}</p>
       <p className={styles.subline}>
@@ -73,15 +70,13 @@ export default function Confirmation({
           </span>
         ))}
       </p>
-      <Image
-        src={palmBreak}
-        alt=""
-        aria-hidden
-        className={styles.confirmationDivider}
-        width={0}
-        height={0}
-        style={{ width: '100%', height: 'auto' }}
-      />
+      <div className={styles.palmBreak} aria-hidden>
+        <span className={styles.palmBreakLine} />
+        <span className={styles.palmBreakIcon}>
+          <img src={palmBreak} alt="" width={32} height={85} />
+        </span>
+        <span className={styles.palmBreakLine} />
+      </div>
       <p className={styles.confirmationFooter}>
         Take a look at the Venue and Travel pages while you&apos;re here.
       </p>
