@@ -18,7 +18,7 @@ import styles from './page.module.css';
  * The markdown is read at build time so no client-side fetch fires.
  */
 export const metadata = {
-  title: 'Q&A — Levi & Meghan',
+  title: 'Q&A · Levi & Meghan',
   description:
     'Logistics, dress code, RSVPs, food, travel, gifts, and venue questions answered for Bahn × Cave on September 29, 2026.',
 };

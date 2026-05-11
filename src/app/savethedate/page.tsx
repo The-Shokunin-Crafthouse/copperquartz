@@ -76,7 +76,7 @@ export default function SaveTheDatePage() {
         />
 
         <p className={styles.bodyCopy}>
-          Request the honor of your presence — an evening under palms, in good
+          Request the honor of your presence. An evening under palms, in good
           company, with the ocean near.
         </p>
 

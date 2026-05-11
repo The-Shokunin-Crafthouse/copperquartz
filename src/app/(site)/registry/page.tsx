@@ -17,9 +17,9 @@ import styles from './page.module.css';
  * verbatim so this sprint adds interactivity without touching layout.
  */
 export const metadata = {
-  title: 'Registry — Levi & Meghan',
+  title: 'Registry · Levi & Meghan',
   description:
-    'If you wish to give beyond your presence — honeymoon contributions, Howlin’ Dog Music Group, and Kiva micro-loans.',
+    'If you wish to give beyond your presence: honeymoon contributions, Howlin’ Dog Music Group, and Kiva micro-loans.',
 };
 
 type ThankedFund = 'honeymoon' | 'kiva';

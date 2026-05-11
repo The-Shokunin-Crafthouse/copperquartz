@@ -12,9 +12,9 @@ import styles from './page.module.css';
  * couple. SBA section is a static image (no airport video in /videos).
  */
 export const metadata = {
-  title: 'Travel — Levi & Meghan',
+  title: 'Travel · Levi & Meghan',
   description:
-    'Getting to Santa Barbara — flights, hotel, and what to do once you arrive.',
+    'Getting to Santa Barbara: flights, hotel, and what to do once you arrive.',
 };
 
 export default function TravelPage() {
@@ -25,34 +25,38 @@ export default function TravelPage() {
         <h2 id="travel-airports" className={styles.heading}>
           Fly like a bird
         </h2>
-        <p className={styles.body}>
-          <span className={styles.eyebrow}>Airports</span>
-          <span className={styles.label}>Santa Barbara Airport (SBA):</span>{' '}
-          served by 5 main airlines providing direct access to major hubs:
-          Alaska, American, Delta, Southwest, and United. It is located 15–20
-          min to downtown so you can easily Uber to your lodging accommodations.
-        </p>
+        <div className={styles.body}>
+          <p>
+            <span className={styles.eyebrow}>Airports</span>
+            <span className={styles.label}>Santa Barbara Airport (SBA):</span>{' '}
+            served by 5 main airlines providing direct access to major hubs:
+            Alaska, American, Delta, Southwest, and United. It is located 15–20
+            min to downtown so you can easily Uber to your lodging accommodations.
+          </p>
+        </div>
         <img
           className={styles.mediaImage}
           src={withBase('/images/sba.jpg')}
           alt="Santa Barbara Airport tarmac with mountains beyond."
           loading="lazy"
         />
-        <p className={styles.body}>
-          <span className={styles.label}>Los Angeles Airport (LAX):</span>{' '}
-          Enjoy a beautiful drive up the Pacific Coast Highway if you plan on
-          renting a car or take a bus directly from the airport to downtown
-          Santa Barbara via{' '}
-          <a
-            className={styles.coral}
-            href="https://www.sbairbus.com/lax-shuttle-schedule-fares/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Santa Barbara Airbus
-          </a>
-          .
-        </p>
+        <div className={styles.body}>
+          <p>
+            <span className={styles.label}>Los Angeles Airport (LAX):</span>{' '}
+            Enjoy a beautiful drive up the Pacific Coast Highway if you plan on
+            renting a car or take a bus directly from the airport to downtown
+            Santa Barbara via{' '}
+            <a
+              className={styles.coral}
+              href="https://www.sbairbus.com/lax-shuttle-schedule-fares/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Santa Barbara Airbus
+            </a>
+            .
+          </p>
+        </div>
       </section>
 
       {/* ---------- Section 2: Hotel Accommodations ---------- */}
@@ -60,9 +64,11 @@ export default function TravelPage() {
         <h2 id="travel-hotel" className={styles.heading}>
           Hotel Accommodations
         </h2>
-        <p className={styles.body}>
-          <span className={styles.label}>Mar Monte Hyatt</span>
-        </p>
+        <div className={styles.body}>
+          <p>
+            <span className={styles.label}>Mar Monte Hyatt</span>
+          </p>
+        </div>
         <dl className={styles.meta}>
           <div className={styles.metaRow}>
             <dt>Booking</dt>
@@ -104,12 +110,14 @@ export default function TravelPage() {
             </dd>
           </div>
         </dl>
-        <p className={styles.body}>
-          This hotel is directly across the street from the reception and
-          where the bride and groom will be staying. There is limited
-          availability so please reach out if you wish to stay here and they
-          are no longer available.
-        </p>
+        <div className={styles.body}>
+          <p>
+            This hotel is directly across the street from the reception and
+            where the bride and groom will be staying. There is limited
+            availability so please reach out if you wish to stay here and they
+            are no longer available.
+          </p>
+        </div>
         <div className={styles.hotelMedia}>
           <VideoFrame
             src="/videos/mar-monte.mp4"
@@ -117,9 +125,11 @@ export default function TravelPage() {
             objectPosition="center bottom"
           />
         </div>
-        <p className={styles.body}>
-          <span className={styles.label}>Cabrillo Inn</span>
-        </p>
+        <div className={styles.body}>
+          <p>
+            <span className={styles.label}>Cabrillo Inn</span>
+          </p>
+        </div>
         <dl className={styles.meta}>
           <div className={styles.metaRow}>
             <dt>Booking</dt>
@@ -133,7 +143,7 @@ export default function TravelPage() {
                 Book your room
               </a>{' '}
               <span className={styles.metaInline}>
-                — add &ldquo;returning guest discount&rdquo; in the notes
+                (add &ldquo;returning guest discount&rdquo; in the notes)
               </span>
             </dd>
           </div>
@@ -167,14 +177,16 @@ export default function TravelPage() {
             </dd>
           </div>
         </dl>
-        <p className={styles.body}>
-          A 4-minute walk from the reception venue. They don&rsquo;t offer a
-          room block, but my Aunt arranged a cheaper rate with the manager:
-          a Deluxe Ocean View (two queens or one king) for $199/night, or a
-          standard king for $144/night. Make sure to add &ldquo;
-          <span className={styles.label}>returning guest discount</span>
-          &rdquo; in the notes section before checkout.
-        </p>
+        <div className={styles.body}>
+          <p>
+            A 4-minute walk from the reception venue. They don&rsquo;t offer a
+            room block, but my Aunt arranged a cheaper rate with the manager:
+            a Deluxe Ocean View (two queens or one king) for $199/night, or a
+            standard king for $144/night. Make sure to add &ldquo;
+            <span className={styles.label}>returning guest discount</span>
+            &rdquo; in the notes section before checkout.
+          </p>
+        </div>
         <div className={styles.hotelMedia}>
           <img
             className={styles.mediaImage}
@@ -183,13 +195,15 @@ export default function TravelPage() {
             loading="lazy"
           />
         </div>
-        <p className={styles.body}>
-          <span className={styles.label}>Note:</span>{' '}
-          We are still working on a cheaper hotel room block and will add
-          that here if that becomes available. If you want to be close to
-          the action — a short walk to the Courthouse and State Street —
-          these are our picks.
-        </p>
+        <div className={styles.body}>
+          <p>
+            <span className={styles.label}>Note:</span>{' '}
+            We are still working on a cheaper hotel room block and will add
+            that here if that becomes available. If you want to be close to
+            the action, a short walk to the Courthouse and State Street,
+            these are our picks.
+          </p>
+        </div>
       </section>
 
       {/* ---------- Section 3: Local Recommendations ---------- */}
@@ -197,19 +211,26 @@ export default function TravelPage() {
         <h2 id="travel-recs" className={styles.heading}>
           Local Recommendations
         </h2>
-        <p className={styles.body}>
-          Besides using ChatGPT to find your own adventure, here are our
-          picks — and a million more wait on the{' '}
-          <a
-            className={styles.coral}
-            href="https://santabarbaraca.com/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            official site
-          </a>
-          .
-        </p>
+        <div className={styles.body}>
+          <p>
+            Besides using ChatGPT to find your own adventure, here are our
+            picks, and a million more wait on the{' '}
+            <a
+              className={styles.coral}
+              href="https://santabarbaraca.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              official site
+            </a>
+            .
+          </p>
+        </div>
+
+        <VideoFrame
+          src="/videos/santa-barbara.mp4"
+          label="Santa Barbara County Courthouse and downtown"
+        />
 
         <div className={styles.category}>
           <span className={styles.eyebrow}>Restaurants</span>
@@ -423,11 +444,6 @@ export default function TravelPage() {
             — Challenging, 5 mi, creek crossings and canyon scenery
           </p>
         </div>
-
-        <VideoFrame
-          src="/videos/santa-barbara.mp4"
-          label="Santa Barbara County Courthouse and downtown"
-        />
       </section>
     </article>
   );

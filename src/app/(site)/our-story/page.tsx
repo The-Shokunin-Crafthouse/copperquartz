@@ -17,7 +17,7 @@ import styles from './page.module.css';
  * is reserved before the JPEG decodes (no CLS, no flash).
  */
 export const metadata = {
-  title: 'Our Story — Levi & Meghan',
+  title: 'Our Story · Levi & Meghan',
   description:
     'How Meghan and Levi met, why the wedding is called Copper & Quartz, and a gallery of the road that got us here.',
 };
@@ -126,7 +126,7 @@ export default function OurStoryPage() {
         <div className={styles.spotify}>
           <iframe
             data-testid="embed-iframe"
-            title="Copper and Quartz — Meghan's song for Levi"
+            title="Copper and Quartz · Meghan's song for Levi"
             src={`https://open.spotify.com/embed/track/${SPOTIFY_TRACK_ID}?utm_source=generator`}
             width="100%"
             height="352"

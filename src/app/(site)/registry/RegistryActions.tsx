@@ -109,7 +109,7 @@ export default function RegistryActions({ initialSuccess, initialFund }: Props) 
             <RegistryTile
               imageSrc="/images/honeymoon-desktop.jpg"
               imageSrcMobile="/images/honeymoon-mobile.jpg"
-              imageAlt="Honeymoon — bamboo treehouse villa nestled in a tropical jungle canopy"
+              imageAlt="Honeymoon fund: bamboo treehouse villa nestled in a tropical jungle canopy"
               desktopCrop={HONEYMOON_DESKTOP}
               mobileCrop={HONEYMOON_MOBILE}
               overlayCopy="Help us enjoy our Honeymoon even more by contributing to our extra adventures fund."
@@ -129,7 +129,7 @@ export default function RegistryActions({ initialSuccess, initialFund }: Props) 
             <RegistryTile
               imageSrc="/images/hdmg-desktop.jpg"
               imageSrcMobile="/images/hdmg-mobile.jpg"
-              imageAlt="Howlin’ Dog Music Group — vinyl record over a desert horizon at dusk"
+              imageAlt="Howlin’ Dog Music Group: vinyl record over a desert horizon at dusk"
               desktopCrop={HDMG_DESKTOP}
               mobileCrop={HDMG_MOBILE}
               overlayCopy="Help artists fund the recording of their next album."
@@ -147,7 +147,7 @@ export default function RegistryActions({ initialSuccess, initialFund }: Props) 
             <RegistryTile
               imageSrc="/images/kiva-desktop.jpg"
               imageSrcMobile="/images/kiva-mobile.jpg"
-              imageAlt="Kiva — terraced rice paddies with palms and a rainbow at the horizon"
+              imageAlt="Kiva: terraced rice paddies with palms and a rainbow at the horizon"
               desktopCrop={KIVA_DESKTOP}
               mobileCrop={KIVA_MOBILE}
               overlayCopy="Donate a loan to help small business owners all over the world."

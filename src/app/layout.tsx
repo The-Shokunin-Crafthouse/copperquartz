@@ -2,9 +2,9 @@ import '../styles/globals.css';
 
 export const metadata = {
   metadataBase: new URL('https://copperquartz.family'),
-  title: 'Copper & Quartz — Levi & Meghan',
+  title: 'Copper & Quartz · Levi & Meghan',
   description:
-    'Levi & Meghan request the honor of your presence — Sept. 29th, 2026, Santa Barbara, CA.',
+    'Levi & Meghan request the honor of your presence. September 29, 2026, Santa Barbara, CA.',
   openGraph: {
     title: 'Levi & Meghan · September 29, 2026',
     description: 'Join us in Santa Barbara',
