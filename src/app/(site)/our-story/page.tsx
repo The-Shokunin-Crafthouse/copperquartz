@@ -100,6 +100,7 @@ export default function OurStoryPage() {
         </div>
 
         <div className={styles.palmBreak} aria-hidden>
+          <span className={styles.palmBreakLine} />
           <span className={styles.palmBreakIcon}>
             <img
               src={withBase('/images/svg/palm-break.svg')}
@@ -108,6 +109,7 @@ export default function OurStoryPage() {
               height={85}
             />
           </span>
+          <span className={styles.palmBreakLine} />
         </div>
 
         <div className={styles.body}>

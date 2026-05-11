@@ -859,10 +859,40 @@
   text-align: center;
 }
 
-.confirmationDivider {
-  width: var(--space-12);
-  height: auto;
-  opacity: 0.85;
+/* Palm-break divider — mirrors src/app/(site)/our-story/page.module.css.
+   42×16 landscape slot (half-scale to match the footer palm) between
+   two flex-1 hairlines so the line stops at the icon edges. Inner SVG
+   is the 32×85 portrait asset rotated 90deg. */
+.palmBreak {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+}
+
+.palmBreakLine {
+  flex: 1;
+  height: var(--border-hairline);
+  background-color: var(--color-gold);
+}
+
+.palmBreakIcon {
+  position: relative;
+  flex: 0 0 auto;
+  display: block;
+  width: 42px;
+  height: 16px;
+}
+
+.palmBreakIcon img {
+  display: block;
+  width: 16px;
+  height: 42px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(90deg);
 }
 
 .confirmationHeading {
@@ -896,6 +926,7 @@
   .confirmationHeading { font-size: var(--text-2xl); line-height: 1.2; }
   .confirmationBody { font-size: var(--text-base); }
   .confirmation { padding-block: var(--space-8); }
+  /* Aspect ratio is locked at every viewport — no mobile override. */
 }
 
 /* ---------- Step transition (framer-motion target) ---------- */

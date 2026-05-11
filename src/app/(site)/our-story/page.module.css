@@ -61,41 +61,36 @@
 }
 
 /* Palm-break section divider — Figma frame 22:1057, asset
-   public/images/svg/palm-break.svg. The asset is 32×85 portrait with
-   a cream rect ground that masks the line behind the icon; we hold a
-   fixed 85×32 landscape slot and rotate the inner SVG -90deg so the
-   palm reads horizontally. The hairline runs full-bleed under the
-   icon and the cream rect inside the SVG punches the gap. */
+   public/images/svg/palm-break.svg. The 42×16 landscape slot
+   (half-scale to match the footer palm) sits between two flex-1 line
+   segments so the hairline stops exactly at the icon edges — no SVG
+   rect mask. Inner SVG is the 32×85 portrait asset rotated 90deg. */
 .palmBreak {
-  position: relative;
   width: 100%;
-  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: var(--space-2);
 }
 
-.palmBreak::before {
-  content: '';
-  position: absolute;
-  inset: 50% 0 auto 0;
+.palmBreakLine {
+  flex: 1;
   height: var(--border-hairline);
   background-color: var(--color-gold);
-  transform: translateY(-50%);
 }
 
 .palmBreakIcon {
   position: relative;
-  z-index: 1;
+  flex: 0 0 auto;
   display: block;
-  width: 85px;
-  height: 32px;
+  width: 42px;
+  height: 16px;
 }
 
 .palmBreakIcon img {
   display: block;
-  width: 32px;
-  height: 85px;
+  width: 16px;
+  height: 42px;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -129,17 +124,7 @@
   .spotify iframe {
     height: 80px;
   }
-  /* Mobile palm-break: collapse the 85×32 landscape slot to a 24×24
-     square. The SVG ships preserveAspectRatio="none" so the cream
-     ground + palm path scale uniformly within the smaller box. */
-  .palmBreakIcon {
-    width: 24px;
-    height: 24px;
-  }
-  .palmBreakIcon img {
-    width: 24px;
-    height: 24px;
-  }
+  /* Aspect ratio is locked at every viewport — no mobile override. */
 }
 
 /* ---------- Mobile (≤768px) ---------- */
