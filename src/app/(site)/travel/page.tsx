@@ -170,9 +170,9 @@ export default function TravelPage() {
         </dl>
         <div className={styles.body}>
           <p>
-            This hotel is the amenity-less sister hotel to Mar Monte. You will
-            still check in at the Mar Monte lobby and the rooms are 1.5 blocks
-            away.
+            A streamlined room option connected to the Mar Monte. You&rsquo;ll
+            check in at the Mar Monte lobby, with rooms a short 1.5-block walk
+            away. No resort amenities, but the location is the same.
           </p>
         </div>
         <div className={styles.hotelMedia}>
