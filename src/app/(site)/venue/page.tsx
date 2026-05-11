@@ -10,9 +10,9 @@ import styles from './page.module.css';
  * inline links (`.coral`) match the established address-link treatment.
  */
 export const metadata = {
-  title: 'Venue — Levi & Meghan',
+  title: 'Venue · Levi & Meghan',
   description:
-    'Sunken Garden ceremony and Cabrillo Pavilion reception — Santa Barbara, September 29, 2026.',
+    'Sunken Garden ceremony and Cabrillo Pavilion reception: Santa Barbara, September 29, 2026.',
 };
 
 export default function VenuePage() {

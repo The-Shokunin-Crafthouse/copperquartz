@@ -17,7 +17,7 @@ import styles from './page.module.css';
  * is reserved before the JPEG decodes (no CLS, no flash).
  */
 export const metadata = {
-  title: 'Our Story — Levi & Meghan',
+  title: 'Our Story · Levi & Meghan',
   description:
     'How Meghan and Levi met, why the wedding is called Copper & Quartz, and a gallery of the road that got us here.',
 };

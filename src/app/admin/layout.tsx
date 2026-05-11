@@ -1,7 +1,7 @@
 import styles from './layout.module.css';
 
 export const metadata = {
-  title: 'Admin — Copper & Quartz',
+  title: 'Admin · Copper & Quartz',
   robots: { index: false, follow: false },
 };
 

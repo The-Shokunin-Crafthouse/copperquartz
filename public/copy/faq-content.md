@@ -11,9 +11,9 @@ The ceremony is held outdoors in the Sunken Gardens at the Santa Barbara Courtho
 **Where do I park?**
 Three options, all close:
 
-- **City Lot 7 (Anacapa Parking)** — 1115 Anacapa St. Directly across the street from the courthouse. This is your easiest bet. First 75 minutes free, $3/hour after.
-- **City Lot 2 (Chapala Parking)** — 1119 Chapala St. One block away. First 75 minutes free, $3/hour after.
-- **Street Parking** — Available on Anacapa, Figueroa, and Santa Barbara streets. Check posted signs for 75-minute limits and meter fees.
+- **City Lot 7 (Anacapa Parking)**: 1115 Anacapa St. Directly across the street from the courthouse. This is your easiest bet. First 75 minutes free, $3/hour after.
+- **City Lot 2 (Chapala Parking)**: 1119 Chapala St. One block away. First 75 minutes free, $3/hour after.
+- **Street Parking**: Available on Anacapa, Figueroa, and Santa Barbara streets. Check posted signs for 75-minute limits and meter fees.
 
 **Is there transportation between the ceremony and reception?**
 Yes. We're providing Uber/Lyft credits for guests who need a ride from the ceremony to the reception. Just let us know on your RSVP that you'll need transportation and we'll take care of the rest.
@@ -49,7 +49,7 @@ Don't panic — we want you there. Reach out directly to either Levi or Meghan a
 ### Food & Drinks
 
 **What's on the menu? Do I need to select a meal?**
-No meal selection needed. We'll have a Mexican-style buffet with vegetarian options, followed by a light dessert. Come hungry.
+No meal selection needed. We'll have a Mexican-style buffet with vegetarian options, followed by a light dessert.
 
 **I have dietary restrictions. Will there be options for me?**
 Yes. The buffet includes vegetarian options throughout. If you have allergies or more specific needs, note them on your RSVP and we'll make sure you're taken care of.

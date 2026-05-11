@@ -16,7 +16,7 @@ export default function HomePage() {
         />
       </h1>
       <p className={styles.body}>
-        Request the honor of your presence — an evening under palms, in good
+        Request the honor of your presence. An evening under palms, in good
         company, with the ocean near.
       </p>
     </section>
