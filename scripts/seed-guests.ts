@@ -5,7 +5,11 @@ import * as XLSX from 'xlsx';
 import { createServiceClient } from '../src/lib/supabase/server';
 
 const EXPECTED_HEADERS = ['guest_1', 'guest_2', 'guest_3', 'guest_4', 'guest_5'] as const;
-const PAREN_RE = /^(.+?)\s*\(([^)]+)\)\s*$/;
+
+/* Matches any (...) group, anywhere in the cell. Diverges from the original
+   spec, which only treated trailing parens as aliases — mid-name forms like
+   "Charles (Bud) Bahn" or "Kamala (Kam) Shalhoub" now extract aliases too. */
+const PAREN_RE = /\s*\(([^)]+)\)\s*/g;
 
 type ParsedGuest = {
   full_name: string;
@@ -18,18 +22,19 @@ function parseGuestCell(raw: string): ParsedGuest | null {
   const cell = raw.trim();
   if (!cell) return null;
 
-  const match = PAREN_RE.exec(cell);
-  let baseName: string;
-  let aliases: string[] = [];
-  if (match) {
-    baseName = match[1].trim();
-    aliases = match[2]
-      .split(',')
-      .map((a) => a.trim().toLowerCase())
-      .filter(Boolean);
-  } else {
-    baseName = cell;
-  }
+  const aliases: string[] = [];
+  const baseName = cell
+    .replace(PAREN_RE, (_, group: string) => {
+      for (const a of group.split(',')) {
+        const trimmed = a.trim().toLowerCase();
+        if (trimmed) aliases.push(trimmed);
+      }
+      return ' ';
+    })
+    .replace(/\s+/g, ' ')
+    .trim();
+
+  if (!baseName) return null;
 
   const lastSpace = baseName.lastIndexOf(' ');
   let first_name: string;
