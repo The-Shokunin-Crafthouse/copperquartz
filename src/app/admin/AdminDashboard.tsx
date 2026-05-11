@@ -26,8 +26,8 @@ const PILLS: { id: Pill; label: string }[] = [
    with this list as the localeCompare tiebreaker. Default-active is the
    first entry. */
 const CANONICAL_DRINK_CATEGORIES = [
-  'cocktail',
-  'mocktail',
+  'cocktails',
+  'mocktails',
   'wine',
   'beer',
   'non-alcoholic',
@@ -50,8 +50,14 @@ function categoryLabels(category: string): {
   singular: string;
 } {
   const upper = category.trim().toUpperCase();
+  /* Wire values are already plural where applicable (COCKTAILS, MOCKTAILS).
+     WINE/BEER/NON-ALCOHOLIC are mass nouns — same plural and singular. */
+  const ALREADY_PLURAL = new Set(['COCKTAILS', 'MOCKTAILS']);
   const NO_PLURAL = new Set(['WINE', 'BEER', 'NON-ALCOHOLIC']);
   if (NO_PLURAL.has(upper)) return { plural: upper, singular: upper };
+  if (ALREADY_PLURAL.has(upper)) {
+    return { plural: upper, singular: upper.slice(0, -1) };
+  }
   return { plural: `${upper}S`, singular: upper };
 }
 
