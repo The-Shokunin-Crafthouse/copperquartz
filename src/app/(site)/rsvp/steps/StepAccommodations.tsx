@@ -50,7 +50,7 @@ export default function StepAccommodations({
       )}
       <div className={styles.fieldGroup}>
         <label htmlFor="rsvp-accommodations" className={styles.label}>
-          SPECIAL REQUEST
+          Special Request
         </label>
         <textarea
           id="rsvp-accommodations"

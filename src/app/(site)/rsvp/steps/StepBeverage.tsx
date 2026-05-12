@@ -53,7 +53,8 @@ export default function StepBeverage({
         </h2>
         <p className={styles.stepBody}>
           This is a popularity contest and not all drinks are guaranteed to
-          be on the final menu. Best of luck!
+          be on the final menu. Best of luck your drink will be waiting for
+          you!
         </p>
       </div>
 
