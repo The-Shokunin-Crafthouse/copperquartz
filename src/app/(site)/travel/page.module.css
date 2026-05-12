@@ -153,20 +153,26 @@
   margin-bottom: var(--travel-hotel-trailing);
 }
 
+/* When a palm-break follows hotel media, shrink the media's trailing
+   margin so the gap above the divider lands at 64 (32 section gap
+   + 32 trailing) instead of 72. */
+.hotelMedia:has(+ .palmBreak) {
+  margin-bottom: var(--space-4);
+}
+
 /* Palm-break section divider — mirrors the our-story pattern.
    42×16 landscape slot between two flex-1 hairlines, the 32×85
    portrait SVG rotated 90deg inside.
 
-   Trailing margin matches .hotelMedia so the divider sits with
-   equal breathing room above (media margin-bottom 40 + section
-   gap 32) and below (palmBreak margin-bottom 40 + section gap 32). */
+   Trailing margin = 24 so the gap below the divider lands at
+   56 (32 section gap + 24 trailing). Above = 64, below = 56. */
 .palmBreak {
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: var(--space-2);
-  margin-bottom: var(--travel-hotel-trailing);
+  margin-bottom: var(--space-3);
 }
 
 .palmBreakLine {
