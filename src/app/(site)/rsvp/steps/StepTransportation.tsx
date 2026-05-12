@@ -21,7 +21,8 @@ export default function StepTransportation({
       <div className={styles.stepHeadingGroup}>
         <h2 className={styles.stepHeading}>Getting to the reception</h2>
         <p className={styles.stepBody}>
-          Will you need transportation to the reception?
+          We plan to provide Uber/Lyft credits for anyone that needs
+          transportation. It&apos;s a short 8 min drive.
         </p>
       </div>
       <div className={styles.list}>
