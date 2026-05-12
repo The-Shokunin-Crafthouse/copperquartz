@@ -6,7 +6,7 @@ import styles from './page.module.css';
 /*
  * Travel — three sections per Figma frame 22:1181.
  *   1. Fly like a bird   — Airports (SBA + LAX)         — image: sba.jpg
- *   2. Hotel Accommodations — Mar Monte Hyatt           — video: mar-monte.mp4
+ *   2. Hotel Accommodations — Mar Monte / Palmero House / Cabrillo Inn
  *   3. Things to do      — Santa Barbara recs            — video: santa-barbara.mp4
  *
  * Pink-coral inline links use class `.coral`. All hrefs supplied by the
@@ -128,6 +128,87 @@ export default function TravelPage() {
             objectPosition="center bottom"
           />
         </div>
+        <div className={styles.palmBreak} aria-hidden>
+          <span className={styles.palmBreakLine} />
+          <span className={styles.palmBreakIcon}>
+            <Image
+              src={withBase('/images/svg/palm-break.svg')}
+              alt=""
+              width={32}
+              height={85}
+            />
+          </span>
+          <span className={styles.palmBreakLine} />
+        </div>
+        <div className={styles.body}>
+          <p>
+            <span className={styles.label}>Palmero House</span>
+          </p>
+        </div>
+        <dl className={styles.meta}>
+          <div className={styles.metaRow}>
+            <dt>Booking</dt>
+            <dd>
+              Book your room with our discount{' '}
+              <span className={styles.metaInline}>(coming soon)</span>
+            </dd>
+          </div>
+          <div className={styles.metaRow}>
+            <dt>Address</dt>
+            <dd>
+              <a
+                className={styles.coral}
+                href="https://maps.app.goo.gl/YBT7YNuknjgXPGvx7"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                424 Por La Mar Dr, Santa Barbara, CA 93103
+              </a>
+            </dd>
+          </div>
+          <div className={styles.metaRow}>
+            <dt>Website</dt>
+            <dd>
+              <a
+                className={styles.coral}
+                href="https://marmontehotel.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                marmontehotel.com
+              </a>
+            </dd>
+          </div>
+        </dl>
+        <div className={styles.body}>
+          <p>
+            A streamlined room option connected to the Mar Monte. You&rsquo;ll
+            check in at the Mar Monte lobby, with rooms a short 1.5-block walk
+            away. No resort amenities, but the location is the same.
+          </p>
+        </div>
+        <div className={styles.hotelMedia}>
+          <Image
+            className={styles.mediaImage}
+            src={withBase('/images/palmero-house.jpg')}
+            alt="Palmero House exterior in Santa Barbara."
+            width={3840}
+            height={2560}
+            loading="lazy"
+          />
+        </div>
+        <div className={styles.palmBreak} aria-hidden>
+          <span className={styles.palmBreakLine} />
+          <span className={styles.palmBreakIcon}>
+            <Image
+              src={withBase('/images/svg/palm-break.svg')}
+              alt=""
+              width={32}
+              height={85}
+            />
+          </span>
+          <span className={styles.palmBreakLine} />
+        </div>
         <div className={styles.body}>
           <p>
             <span className={styles.label}>Cabrillo Inn</span>
@@ -199,15 +280,6 @@ export default function TravelPage() {
             height={680}
             loading="lazy"
           />
-        </div>
-        <div className={styles.body}>
-          <p>
-            <span className={styles.label}>Note:</span>{' '}
-            We are still working on a cheaper hotel room block and will add
-            that here if that becomes available. If you want to be close to
-            the action, a short walk to the Courthouse and State Street,
-            these are our picks.
-          </p>
         </div>
       </section>
 
