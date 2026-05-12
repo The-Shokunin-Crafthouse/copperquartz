@@ -6,7 +6,7 @@ import styles from './page.module.css';
 /*
  * Travel — three sections per Figma frame 22:1181.
  *   1. Fly like a bird   — Airports (SBA + LAX)         — image: sba.jpg
- *   2. Hotel Accommodations — Mar Monte / Palmero House / Cabrillo Inn
+ *   2. Hotel Accommodations — Mar Monte / Palmoro House / Cabrillo Inn
  *   3. Things to do      — Santa Barbara recs            — video: santa-barbara.mp4
  *
  * Pink-coral inline links use class `.coral`. All hrefs supplied by the
@@ -142,7 +142,7 @@ export default function TravelPage() {
         </div>
         <div className={styles.body}>
           <p>
-            <span className={styles.label}>Palmero House</span>
+            <span className={styles.label}>Palmoro House</span>
           </p>
         </div>
         <dl className={styles.meta}>
@@ -190,8 +190,8 @@ export default function TravelPage() {
         <div className={styles.hotelMedia}>
           <Image
             className={styles.mediaImage}
-            src={withBase('/images/palmero-house.jpg')}
-            alt="Palmero House exterior in Santa Barbara."
+            src={withBase('/images/palmoro-house.jpg')}
+            alt="Palmoro House exterior in Santa Barbara."
             width={3840}
             height={2560}
             loading="lazy"
