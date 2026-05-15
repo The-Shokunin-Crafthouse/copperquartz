@@ -31,8 +31,8 @@ export default function StepAccommodations({
       <div className={styles.stepHeadingGroup}>
         <h2 className={styles.stepHeading}>Any special requests?</h2>
         <p className={styles.stepBody}>
-          You can literally request anything, anything at all, just no
-          guarantees.
+          You can literally request anything, anything at all, and we&apos;ll
+          make it happen.
         </p>
       </div>
       {existing && (
@@ -50,7 +50,7 @@ export default function StepAccommodations({
       )}
       <div className={styles.fieldGroup}>
         <label htmlFor="rsvp-accommodations" className={styles.label}>
-          Notes
+          Special Request
         </label>
         <textarea
           id="rsvp-accommodations"

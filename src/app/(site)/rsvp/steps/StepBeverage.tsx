@@ -52,7 +52,9 @@ export default function StepBeverage({
           {guest.first_name}&apos;s drink of choice
         </h2>
         <p className={styles.stepBody}>
-          Please let us know your beverage of choice.
+          This is a popularity contest and not all drinks are guaranteed to
+          be on the final menu. Best of luck your drink will be waiting for
+          you!
         </p>
       </div>
 
