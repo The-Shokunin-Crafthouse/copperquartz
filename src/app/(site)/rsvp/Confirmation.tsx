@@ -49,13 +49,6 @@ export default function Confirmation({
 
   return (
     <section className={styles.confirmation}>
-      <div className={styles.palmBreak} aria-hidden>
-        <span className={styles.palmBreakLine} />
-        <span className={styles.palmBreakIcon}>
-          <Image src={palmBreak} alt="" width={32} height={85} />
-        </span>
-        <span className={styles.palmBreakLine} />
-      </div>
       <h1 className={styles.confirmationHeading}>{heading}</h1>
       <p className={styles.confirmationBody}>{body}</p>
       <p className={styles.subline}>
