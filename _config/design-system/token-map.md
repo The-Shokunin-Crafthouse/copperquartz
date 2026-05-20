@@ -10,7 +10,7 @@ Nominal palette. No raw hex anywhere except here and `src/styles/tokens.css`.
 
 | Token | Hex | Use |
 | --- | --- | --- |
-| `--color-bg` | `#FBF3E9` | Page background |
+| `--color-bg` | `#FCFCFA` | Page background |
 | `--color-sand-linen` | `#F3E6D3` | Soft surface, panel washes |
 | `--color-teal` | `#2F7F7B` | Accent — link hover, key moments |
 | `--color-terracotta` | `#C86A4A` | Accent — secondary highlight |
