@@ -1,5 +1,5 @@
 export const colors = {
-  bg: '#FCFCFA',
+  bg: '#FBF3E9',
   sandLinen: '#F3E6D3',
   teal: '#2F7F7B',
   terracotta: '#C86A4A',
