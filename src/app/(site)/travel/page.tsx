@@ -149,8 +149,14 @@ export default function TravelPage() {
           <div className={styles.metaRow}>
             <dt>Booking</dt>
             <dd>
-              Book your room with our discount{' '}
-              <span className={styles.metaInline}>(coming soon)</span>
+              <a
+                className={styles.coral}
+                href="https://www.hyatt.com/events/en-US/group-booking/SBARS/G-PHB1"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Book your room with our discount
+              </a>
             </dd>
           </div>
           <div className={styles.metaRow}>
