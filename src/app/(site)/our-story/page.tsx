@@ -25,6 +25,16 @@ export const metadata = {
 
 const SPOTIFY_TRACK_ID = '0F654jfCJc6v9FUPaoycNC';
 
+/* Engagement photos — pinned to the top of the gallery in this order so
+   they're the first thing visitors see. Everything else shuffles below
+   on each mount, same as before. */
+const PINNED_PHOTOS = [
+  'img-9449.jpg',  /* ring-on-chest selfie */
+  'img-9453.jpg',  /* kiss */
+  'img-9457.jpg',  /* wide-eyed selfie */
+  'img-9465.jpg',  /* Tarone hug */
+];
+
 function loadPhotos(): Photo[] {
   const manifestPath = join(
     process.cwd(),
@@ -146,7 +156,7 @@ export default function OurStoryPage() {
         <h2 id="our-story-gallery" className={styles.heading}>
           Photo Gallery
         </h2>
-        <PhotoGallery photos={photos} />
+        <PhotoGallery photos={photos} pinned={PINNED_PHOTOS} />
       </section>
     </article>
   );
