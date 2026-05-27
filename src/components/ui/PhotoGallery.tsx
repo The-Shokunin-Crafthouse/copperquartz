@@ -14,6 +14,10 @@ export type Photo = {
 
 type Props = {
   photos: Photo[];
+  /* Filenames to pin to the top of the gallery in the order given. Any
+     entries not present in `photos` are ignored; remaining photos are
+     shuffled below the pinned block on each client mount. */
+  pinned?: string[];
   /* Folder under /public where the optimized photos live. Trailing slash
      omitted; leading slash required. */
   basePath?: string;
@@ -49,16 +53,45 @@ function shuffle<T>(input: readonly T[]): T[] {
  * shows Phosphor caret buttons + supports ←/→/Esc; touch hides the
  * buttons and listens for horizontal swipes.
  */
-export default function PhotoGallery({ photos, basePath = DEFAULT_BASE }: Props) {
+export default function PhotoGallery({
+  photos,
+  pinned,
+  basePath = DEFAULT_BASE,
+}: Props) {
+  /* Split photos into a pinned head (kept in the caller's order, top of the
+     grid) and a tail that shuffles on each client mount. Pinning by
+     filename rather than index so the page-level config reads naturally
+     and is robust to manifest reordering. */
+  const { pinnedPhotos, restPhotos } = useMemo(() => {
+    if (!pinned || pinned.length === 0) {
+      return { pinnedPhotos: [] as Photo[], restPhotos: photos };
+    }
+    const byFile = new Map(photos.map((p) => [p.file, p]));
+    const head: Photo[] = [];
+    const headFiles = new Set<string>();
+    for (const file of pinned) {
+      const match = byFile.get(file);
+      if (match && !headFiles.has(file)) {
+        head.push(match);
+        headFiles.add(file);
+      }
+    }
+    const tail = photos.filter((p) => !headFiles.has(p.file));
+    return { pinnedPhotos: head, restPhotos: tail };
+  }, [photos, pinned]);
+
   /* Hold a stable order for SSR + first paint (sorted, deterministic), then
-     swap to a freshly shuffled list once the client mounts. Doing the
+     swap to a freshly shuffled tail once the client mounts. Doing the
      shuffle in useEffect — not useState's lazy initializer — keeps the
      server-rendered HTML matching the first client render and avoids the
      hydration mismatch you'd get from Math.random() on both sides. */
-  const [order, setOrder] = useState<Photo[]>(photos);
+  const [order, setOrder] = useState<Photo[]>(() => [
+    ...pinnedPhotos,
+    ...restPhotos,
+  ]);
   useEffect(() => {
-    setOrder(shuffle(photos));
-  }, [photos]);
+    setOrder([...pinnedPhotos, ...shuffle(restPhotos)]);
+  }, [pinnedPhotos, restPhotos]);
 
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const dialogRef = useRef<HTMLDialogElement>(null);
