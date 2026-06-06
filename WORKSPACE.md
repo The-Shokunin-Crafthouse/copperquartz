@@ -10,21 +10,18 @@
 <!-- WHAT YOU (THE MODEL) MUST DO                                 -->
 <!-- 1. Read this file completely before taking any action.       -->
 <!-- 2. Load WORKFLOW.md for stage sequence and approval gates.   -->
-<!-- 3. Resolve the current stage from workspace.manifest.yaml    -->
-<!--    (project.stage).                                          -->
-<!-- 4. Load stages/<current>/STAGE.md for the active brief.      -->
-<!-- 5. Load _config/design-system/ui-rules.md and token-map.md   -->
-<!--    before any design or build task.                          -->
-<!-- 6. Load _config/brand/ and _config/voice/ before producing   -->
-<!--    anything the audience will see.                           -->
-<!-- 7. Read decisions/decisions.md before reopening any          -->
+<!-- 3. Follow the "Current sprint:" pointer to that sprint's     -->
+<!--    CONTEXT.md — the active sprint contract.                  -->
+<!-- 4. Load only the files named in that CONTEXT.md Inputs       -->
+<!--    table — _config/ sections selectively, never in full.     -->
+<!-- 5. Read decisions/decisions.md before reopening any          -->
 <!--    previously resolved question.                             -->
-<!-- 8. Never cross an approval gate without explicit studio      -->
+<!-- 6. Never cross an approval gate without explicit studio      -->
 <!--    sign-off.                                                 -->
 <!--                                                              -->
 <!-- READ NEXT                                                    -->
-<!-- WORKFLOW.md → workspace.manifest.yaml →                      -->
-<!-- stages/<current>/STAGE.md → _config/*                        -->
+<!-- WORKFLOW.md → "Current sprint:" CONTEXT.md →                 -->
+<!-- Inputs-table files                                           -->
 <!-- ============================================================ -->
 
 # WORKSPACE — [PROJECT NAME]
@@ -48,6 +45,7 @@ This file is a directive, not documentation. Read it. Follow it.
 - **Lead:** [Fill in]
 - **Start date:** [YYYY-MM-DD]
 - **Target launch:** [YYYY-MM-DD]
+- **Current sprint:** stages/03-build/CONTEXT.md
 
 Canonical machine-readable meta lives in `workspace.manifest.yaml`. Keep this section and the manifest in sync.
 
@@ -69,13 +67,13 @@ These cannot be traded away under schedule pressure. Recorded here so no one has
 
 ## 4. OPERATING RULES
 
-**Read before writing.** No output begins without WORKSPACE.md, WORKFLOW.md, and the current STAGE.md loaded. Violations produce drift.
+**Read before writing.** No output begins without WORKSPACE.md, WORKFLOW.md, and the current sprint's CONTEXT.md loaded. Violations produce drift.
 
 **Stage gates are binding.** Do not start work in stage N+1 until stage N is signed off. If a later-stage problem is rooted in an earlier stage, return to the owning stage and fix it there. Do not patch downstream.
 
 **Decisions are logged.** Every decision with irreversible or cross-cutting consequence is recorded in `decisions/decisions.md` with date, context, and rationale. Unlogged decisions are provisional and may be reopened without notice.
 
-**Token file is the source of truth.** `_config/design-system/token-map.md` governs color, type, spacing, motion, radius. Figma mirrors the tokens, not the reverse. Code imports generated from the tokens.
+**Token source is conditional.** For a Shokunin-branded property, the shared design system at `brand.shokunincrafthouse.com` governs color, type, spacing, motion, radius (linked shared CSS, generated from the shared JSON); local `token-map.md` is bypassed. For a client project, `_config/design-system/token-map.md` governs, and Figma mirrors those tokens. `decisions/decisions.md` records which applies (logged at kickoff). Code imports are generated from the active source, never hand-authored.
 
 **Copy is design.** Button labels, error states, onboarding, empty states, microcopy — all written, never filler. Placeholder copy is a bug.
 
@@ -124,7 +122,7 @@ Parseable index: `workspace.manifest.yaml`.
 - `_config/brand/` — logo, palette, visual identity artifacts.
 - `_config/voice/` — copy guidelines, tone references, lexicon.
 - `_config/design-system/` — tokens, Figma links, UI rules.
-- `stages/<n>/STAGE.md` — active stage brief.
+- `stages/<n>/CONTEXT.md` — stage or sprint contract (Inputs table, audit checklist).
 - `stages/<n>/output/` — shipped artifacts for that stage.
 - `decisions/decisions.md` — decision log (append-only).
 
@@ -132,7 +130,7 @@ Parseable index: `workspace.manifest.yaml`.
 
 - Do not create new top-level folders without updating `workspace.manifest.yaml`.
 - Do not write content that contradicts `_config/voice/` without a logged decision.
-- Do not introduce color, type, spacing, or motion values outside the token map.
+- Do not introduce color, type, spacing, or motion values outside the project's token source (shared design system or local token map, per the operating rule above).
 - Do not skip a stage. If scope genuinely bypasses one, record the bypass in `decisions/decisions.md`.
 - Do not duplicate project rules into tool-specific config files (`CLAUDE.md`, editor configs, etc.). They live here. Adapters point back.
 - Do not treat this file as reference material. It is a directive. Follow it.

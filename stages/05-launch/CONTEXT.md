@@ -1,8 +1,8 @@
 <!-- ============================================================ -->
-<!-- STAGE.md — 05 LAUNCH                                         -->
+<!-- CONTEXT.md — 05 LAUNCH                                       -->
 <!-- ============================================================ -->
 <!-- WHAT THIS FILE IS                                            -->
-<!-- The brief for stage 05 of this project. Directive.           -->
+<!-- The contract for stage 05 of this project. Directive.        -->
 <!-- Defines the scope of work and Close criteria.                -->
 <!--                                                              -->
 <!-- WHAT YOU (THE MODEL) MUST DO                                 -->

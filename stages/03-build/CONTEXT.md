@@ -1,8 +1,8 @@
 <!-- ============================================================ -->
-<!-- STAGE.md — 03 BUILD                                          -->
+<!-- CONTEXT.md — 03 BUILD                                        -->
 <!-- ============================================================ -->
 <!-- WHAT THIS FILE IS                                            -->
-<!-- The brief for stage 03 of this project. Directive.           -->
+<!-- The contract for stage 03 of this project. Directive.        -->
 <!-- Defines the scope of work and Gate-3 criteria.               -->
 <!--                                                              -->
 <!-- WHAT YOU (THE MODEL) MUST DO                                 -->

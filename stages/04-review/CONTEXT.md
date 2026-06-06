@@ -1,8 +1,8 @@
 <!-- ============================================================ -->
-<!-- STAGE.md — 04 REVIEW                                         -->
+<!-- CONTEXT.md — 04 REVIEW                                       -->
 <!-- ============================================================ -->
 <!-- WHAT THIS FILE IS                                            -->
-<!-- The brief for stage 04 of this project. Directive.           -->
+<!-- The contract for stage 04 of this project. Directive.        -->
 <!-- Defines the scope of work and Gate-4 criteria.               -->
 <!--                                                              -->
 <!-- WHAT YOU (THE MODEL) MUST DO                                 -->

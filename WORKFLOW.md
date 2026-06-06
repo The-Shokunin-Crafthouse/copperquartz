@@ -16,7 +16,7 @@
 <!--    a suggestion.                                             -->
 <!--                                                              -->
 <!-- READ NEXT                                                    -->
-<!-- stages/<current>/STAGE.md                                    -->
+<!-- stages/<current>/CONTEXT.md                                  -->
 <!-- ============================================================ -->
 
 # WORKFLOW

@@ -1,8 +1,8 @@
 <!-- ============================================================ -->
-<!-- STAGE.md — 01 BRIEF                                          -->
+<!-- CONTEXT.md — 01 BRIEF                                        -->
 <!-- ============================================================ -->
 <!-- WHAT THIS FILE IS                                            -->
-<!-- The brief for stage 01 of this project. Directive.           -->
+<!-- The contract for stage 01 of this project. Directive.        -->
 <!-- Defines the scope of work and Gate-1 criteria.               -->
 <!--                                                              -->
 <!-- WHAT YOU (THE MODEL) MUST DO                                 -->

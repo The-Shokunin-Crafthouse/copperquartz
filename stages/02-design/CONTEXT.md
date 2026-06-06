@@ -1,8 +1,8 @@
 <!-- ============================================================ -->
-<!-- STAGE.md — 02 DESIGN                                         -->
+<!-- CONTEXT.md — 02 DESIGN                                       -->
 <!-- ============================================================ -->
 <!-- WHAT THIS FILE IS                                            -->
-<!-- The brief for stage 02 of this project. Directive.           -->
+<!-- The contract for stage 02 of this project. Directive.        -->
 <!-- Defines the scope of work and Gate-2 criteria.               -->
 <!--                                                              -->
 <!-- WHAT YOU (THE MODEL) MUST DO                                 -->
