@@ -25,11 +25,22 @@ Hold the work against criteria set in stages 01 and 02. This is where "good enou
 
 ## Inputs
 
-- Staged build (URL from Gate 3)
-- Gate-1 success criteria (`../01-brief/output/success-criteria.md`)
-- Gate-2 specification (`../02-design/output/`)
+| Source | File / Location | Section / Scope | Why |
+|--------|-----------------|-----------------|-----|
+| Studio core | global via `~/.claude/CLAUDE.md` | §3 quality criteria, gates | The bar to measure against |
+| Project identity | `../../WORKSPACE.md` | all | Non-negotiables |
+| Canonical workflow | `../../../studio-memory/WORKFLOW.md` | §"04 — Review" | Gate-4 criteria |
+| Staged build | URL from Gate 3 | all | The artifact under review |
+| Gate-1 success criteria | `../01-brief/output/success-criteria.md` | all | Measure against intent |
+| Gate-2 specification | `../02-design/output/` | all | Measure parity against spec |
+| Voice | `../../_config/voice/` | all if populated | Copy-review reference |
+| Decisions | `../../decisions/decisions.md` | relevant | Deferral log |
 
-## Required outputs (`./output/`)
+## Process
+
+Run each review pass separately (see *Review passes* below) — measure against the stage-01/02 criteria, not vibe. Every finding lands on the punch list with an owner + date. Reports → `./output/`.
+
+## Outputs (`./output/`)
 
 - `qa-report.md` — functional issues with repro steps and severity
 - `a11y-report.md` — accessibility findings with severity

@@ -24,11 +24,23 @@ Establish direction, scope, constraints, and reference sensibility before any pi
 
 ## Inputs
 
-- Client conversations and source material → drop in `./references/`
-- Competitor and precedent audit
-- Any pre-existing brand, voice, or technical material
+| Source | File / Location | Section / Scope | Why |
+|--------|-----------------|-----------------|-----|
+| Studio core | global via `~/.claude/CLAUDE.md` | principles, gates, quality bar | Loaded globally |
+| Project identity | `../../WORKSPACE.md` | all | Non-negotiables to confirm the brief against |
+| Canonical workflow | `../../../studio-memory/WORKFLOW.md` | §"01 — Brief" | Gate-1 criteria |
+| Source material | `./references/` | all | Client conversations, pre-existing brand/voice/tech material |
+| Precedent audit | `./references/` | as gathered | Competitor + precedent analysis |
+| Decisions | `../../decisions/decisions.md` | relevant | Prior calls; do not reopen without reason |
 
-## Required outputs (`./output/`)
+## Process
+
+1. Confirm `WORKSPACE.md` + canonical `WORKFLOW.md` are loaded.
+2. Work only within stage-01 scope until Gate 1 closes — writing is the work; resist visuals.
+3. Capture client language verbatim where phrasing encodes the ask.
+4. Brief / scope / success-criteria / references / risks → `./output/`; raw material → `./references/`.
+
+## Outputs (`./output/`)
 
 - `brief.md` — narrative project brief
 - `scope.md` — in / out statement, explicit

@@ -26,12 +26,28 @@ Implement the design without drift. The build should be a faithful materializati
 
 ## Inputs
 
-- Gate-2 artifacts (`../02-design/output/`)
-- Token map (`../../_config/design-system/token-map.md`) — source of truth
-- UI rules (`../../_config/design-system/ui-rules.md`)
-- Implementation-only references → `./references/`
+| Source | File / Location | Section / Scope | Why |
+|--------|-----------------|-----------------|-----|
+| Studio core | global via `~/.claude/CLAUDE.md` | identity, principles, gates, stack defaults | Loaded globally — do not re-load here |
+| Project identity | `../../WORKSPACE.md` | all | Binding project rules + `Current sprint:` pointer |
+| Canonical workflow | `../../../studio-memory/WORKFLOW.md` | §"03 — Build" | Gate-3 criteria |
+| Design spec | `../02-design/output/` | all | The resolved spec to materialize faithfully |
+| Tokens | `../../_config/design-system/token-map.md` | all | Source of truth for values (or shared DS per `decisions/`) |
+| UI rules | `../../_config/design-system/ui-rules.md` | all | Component + layout rules |
+| **Code standards** | `../../../studio-memory/playbooks/code-standards.md` | all | **Moved out of always-loaded core (Phase 1) — load explicitly here or it silently stops applying** |
+| **Creative defaults** | `../../../studio-memory/playbooks/creative-defaults.md` | all | **Same — moved out of core; explicit load required** |
+| Build references | `./references/` | as needed | Implementation-only material |
+| Decisions | `../../decisions/decisions.md` | relevant | Prior calls; do not reopen without reason |
 
-## Required outputs
+## Process
+
+1. Confirm Gate 2 has closed before writing implementation.
+2. Materialize the stage-02 spec without reinterpretation — values from the token map, rules from `ui-rules.md`, standards from the code-standards playbook.
+3. If a design value is missing, return to stage 02 — never invent it.
+4. Self-verify against Gate 3 (`sc-verify`) before presenting any build.
+5. Build artifacts (notes, reports, pointers) → `./output/`; reference material → `./references/`.
+
+## Outputs
 
 - Implementation in the project codebase (link from `./output/README.md`, do not duplicate)
 - Storybook or component index (where applicable)

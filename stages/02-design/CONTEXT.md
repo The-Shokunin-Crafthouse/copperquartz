@@ -26,10 +26,26 @@ Resolve every decision a builder would otherwise improvise. Design until ambigui
 
 ## Inputs
 
-- Gate-1 artifacts (`../01-brief/output/`)
-- Brand: `../../_config/brand/`
-- Voice: `../../_config/voice/`
-- Design system: `../../_config/design-system/` (tokens, UI rules, Figma links)
+| Source | File / Location | Section / Scope | Why |
+|--------|-----------------|-----------------|-----|
+| Studio core | global via `~/.claude/CLAUDE.md` | principles + §3 quality criteria | Loaded globally — the design bar |
+| Project identity | `../../WORKSPACE.md` | all | Rules + `Current sprint:` pointer |
+| Canonical workflow | `../../../studio-memory/WORKFLOW.md` | §"02 — Design" | Gate-2 criteria |
+| Brief output | `../01-brief/output/` | all | Gate-1 artifacts |
+| Brand | `../../_config/brand/` | all if populated | Brand inputs |
+| Voice | `../../_config/voice/` | all if populated | Voice inputs |
+| Design system | `../../_config/design-system/` | token-map, ui-rules, figma-links | Tokens + rules + Figma links |
+| **Creative defaults** | `../../../studio-memory/playbooks/creative-defaults.md` | all | **Moved out of always-loaded core (Phase 1) — load explicitly or it silently stops applying** |
+| **Quality criteria** | studio core §3 (global) + `sc-verify` | full §3 (motion/type/color/spacing/interaction/responsive) | **The bar every design output must hit** |
+| Decisions | `../../decisions/decisions.md` | relevant | Prior calls; do not reopen without reason |
+
+## Process
+
+1. Confirm Gate 1 has closed before producing outputs.
+2. Solve type first — resolve every decision a builder would otherwise improvise.
+3. Every value is a token (no raw hex); check against creative-defaults + the §3 quality criteria.
+4. Surface ambiguity here — do not push it to build.
+5. Resolved spec → `./output/`; Figma exports → `./figma/`; model-generated artifacts → `./claude-design/`.
 
 ## Working folders
 
@@ -37,7 +53,7 @@ Resolve every decision a builder would otherwise improvise. Design until ambigui
 - `./claude-design/` — model-generated design artifacts (explorations, specs, diffs)
 - `./output/` — the resolved design specification
 
-## Required outputs (`./output/`)
+## Outputs (`./output/`)
 
 - `type-system.md` — scale, ratio, families, pairings, tracking, measure
 - `color-tokens.md` — full token set with light and dark values

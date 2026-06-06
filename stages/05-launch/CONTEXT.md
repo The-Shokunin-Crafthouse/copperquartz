@@ -24,10 +24,23 @@ Ship with observability in place. Hand off in a state the client or internal tea
 
 ## Inputs
 
-- Gate-4 sign-off
-- Production access (hosting, DNS, analytics, monitoring, email, payment if relevant)
+| Source | File / Location | Section / Scope | Why |
+|--------|-----------------|-----------------|-----|
+| Studio core | global via `~/.claude/CLAUDE.md` | gates | Close criteria |
+| Project identity | `../../WORKSPACE.md` | all | Non-negotiables |
+| Canonical workflow | `../../../studio-memory/WORKFLOW.md` | §"05 — Launch" | Close criteria |
+| Gate-4 sign-off | `../04-review/output/` | all | Precondition to deploy |
+| Production access | hosting, DNS, analytics, monitoring, email, payment | as relevant | Deploy + observability |
+| Decisions | `../../decisions/decisions.md` | relevant | Prior calls |
 
-## Required outputs (`./output/`)
+## Process
+
+1. Confirm Gate 4 closed before deploying.
+2. Verify every pre-launch checklist item (below).
+3. Treat the first 14 days as a review tail — findings file against the punch list, not "v2".
+4. Handoff material → `./output/`.
+
+## Outputs (`./output/`)
 
 - `launch-checklist.md` — the pre-launch verification, signed with date
 - `deployment-notes.md` — how production is structured; how to deploy again
