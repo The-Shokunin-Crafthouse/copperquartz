@@ -244,7 +244,34 @@ export default function TravelPage() {
           >
             Lil&rsquo; Toot
           </a>
-          , or catch a show at the{' '}
+          , whale watching with{' '}
+          <a
+            className={styles.coral}
+            href="https://www.condorexpress.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Condor Express
+          </a>
+          , an afternoon or sunset cruise with the{' '}
+          <a
+            className={styles.coral}
+            href="https://sbsail.com/santa-barbara-cruises/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Santa Barbara Sailing Center
+          </a>
+          , kayaking or SUPing (also through the{' '}
+          <a
+            className={styles.coral}
+            href="https://sbsail.com/santa-barbara-boat-kayak-paddleboard-rentals-tours/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Sailing Center
+          </a>
+          ), or catch a show at the{' '}
           <a
             className={styles.coral}
             href="https://sbbowl.com/photos/"
