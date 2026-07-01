@@ -396,9 +396,31 @@ export default function TravelPage() {
               target="_blank"
               rel="noopener noreferrer"
             >
-              Sunset Cruise
+              Whale Watching
             </a>{' '}
-            — Book a cruise from the harbor with the Condor Express
+            — Condor Express runs whale watching tours out of the harbor
+          </p>
+          <p className={styles.body}>
+            <a
+              className={styles.coral}
+              href="https://sbsail.com/santa-barbara-cruises/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Afternoon or Sunset Cruise
+            </a>{' '}
+            — Set sail with the Santa Barbara Sailing Center
+          </p>
+          <p className={styles.body}>
+            <a
+              className={styles.coral}
+              href="https://sbsail.com/santa-barbara-boat-kayak-paddleboard-rentals-tours/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Kayaking &amp; Paddleboarding
+            </a>{' '}
+            — Rentals and tours also through the Sailing Center
           </p>
           <p className={styles.body}>
             <a
