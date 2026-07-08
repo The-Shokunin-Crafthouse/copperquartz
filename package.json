@@ -9,6 +9,7 @@
     "lint": "next lint",
     "preview": "node scripts/preview.mjs",
     "test:digest": "tsx scripts/test-digest.ts",
+    "backfill:digest": "tsx scripts/backfill-digest.ts",
     "seed:guests": "tsx scripts/seed-guests.ts"
   },
   "dependencies": {
