@@ -47,6 +47,71 @@ function thirtyDaysAgoIso(): string {
   return new Date(Date.now() - FALLBACK_DAYS * DAY_MS).toISOString();
 }
 
+/* Out-of-band failure alert. The digest itself IS email, so a failure can't
+   be reported over email — post to an optional webhook (Slack/Discord-style
+   incoming webhook URL in DIGEST_ALERT_WEBHOOK) so a broken send is never
+   silent again (guardrail for the Jun-2026 silent-rot incident). Always
+   best-effort: alerting must never mask the original failure. */
+async function alertDigestFailure(code: string, detail: string): Promise<void> {
+  const webhook = process.env.DIGEST_ALERT_WEBHOOK;
+  if (!webhook) return;
+  try {
+    await fetch(webhook, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        text: `⚠️ RSVP digest failure [${code}]: ${detail}`,
+      }),
+      signal: AbortSignal.timeout(5000),
+    });
+  } catch (err) {
+    console.error('alertDigestFailure webhook post failed:', err);
+  }
+}
+
+/* Post-accept delivery verification (studio learnings #45). A 200 + message
+   id means Resend ACCEPTED the send, not that it delivered — the exact gap
+   that hid the Jun-2026 outage. When a read-capable key is available
+   (RESEND_VERIFY_API_KEY, full-access), poll the email's event once after a
+   short settle and fail loudly on a terminal non-delivery event. Absent a
+   verify key this degrades to accept-only recording with a logged warning. */
+const DELIVERY_FAIL_EVENTS = new Set([
+  'bounced',
+  'failed',
+  'complained',
+  'canceled',
+]);
+
+async function verifyDelivery(messageId: string): Promise<void> {
+  const verifyKey = process.env.RESEND_VERIFY_API_KEY;
+  if (!verifyKey) {
+    console.warn(
+      'sendRsvpDigest: RESEND_VERIFY_API_KEY not set — recording on accept only, ' +
+        'delivery not confirmed. Set a full-access key to catch silent drops.',
+    );
+    return;
+  }
+  const res = await fetch(`https://api.resend.com/emails/${messageId}`, {
+    headers: { authorization: `Bearer ${verifyKey}` },
+    signal: AbortSignal.timeout(8000),
+  });
+  if (!res.ok) {
+    console.error(
+      `sendRsvpDigest verifyDelivery lookup failed: HTTP ${res.status}`,
+    );
+    return; // don't block recording on a verify-path outage
+  }
+  const body = (await res.json()) as { last_event?: string };
+  const event = body.last_event;
+  if (event && DELIVERY_FAIL_EVENTS.has(event)) {
+    await alertDigestFailure(
+      'resend_delivery_failed',
+      `Resend accepted id ${messageId} but last_event=${event}.`,
+    );
+    throw new Error(`sendRsvpDigest delivery failed: last_event=${event}`);
+  }
+}
+
 function formatDigestDate(d: Date): string {
   return new Intl.DateTimeFormat('en-US', {
     weekday: 'long',
@@ -56,26 +121,47 @@ function formatDigestDate(d: Date): string {
   }).format(d);
 }
 
-export async function sendRsvpDigest(): Promise<SendRsvpDigestResult> {
+export interface SendRsvpDigestOptions {
+  /* Explicit window start (ISO). Overrides the digest_runs-derived cutoff.
+     Used by the one-off catch-up backfill to re-cover a window whose
+     digest_runs rows were written on accepted-but-undelivered sends. */
+  sinceOverride?: string;
+  /* When true, do not write a digest_runs row after a successful send. The
+     backfill is a manual replay, not a scheduled boundary — recording it
+     would corrupt the automatic cutoff for the next scheduled run. */
+  skipRecord?: boolean;
+}
+
+export async function sendRsvpDigest(
+  opts: SendRsvpDigestOptions = {},
+): Promise<SendRsvpDigestResult> {
   try {
     const supabase = createServiceClient();
 
-    /* Cutoff = last digest's sent_at, or 30 days ago for the very first
-       run. We deliberately use exclusive `.gt` so the boundary row is
+    /* Cutoff = explicit override, else last digest's sent_at, else 30 days
+       ago for the very first run. Exclusive `.gt` so the boundary row is
        never re-sent across consecutive runs. */
-    const lastRunRes = await supabase
-      .from('digest_runs')
-      .select('sent_at')
-      .order('sent_at', { ascending: false })
-      .limit(1)
-      .maybeSingle();
+    let cutoff: string;
+    if (opts.sinceOverride) {
+      cutoff = opts.sinceOverride;
+    } else {
+      const lastRunRes = await supabase
+        .from('digest_runs')
+        .select('sent_at')
+        .order('sent_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
 
-    if (lastRunRes.error) {
-      console.error('sendRsvpDigest digest_runs select failed:', lastRunRes.error);
-      return { sent: false, reason: 'digest_runs_query_error' };
+      if (lastRunRes.error) {
+        console.error(
+          'sendRsvpDigest digest_runs select failed:',
+          lastRunRes.error,
+        );
+        return { sent: false, reason: 'digest_runs_query_error' };
+      }
+
+      cutoff = lastRunRes.data?.sent_at ?? thirtyDaysAgoIso();
     }
-
-    const cutoff = lastRunRes.data?.sent_at ?? thirtyDaysAgoIso();
 
     const [responsesRes, accomRes] = await Promise.all([
       supabase
@@ -221,9 +307,65 @@ export async function sendRsvpDigest(): Promise<SendRsvpDigestResult> {
       html,
     });
 
+    /* Verify BEFORE recording (studio learnings #45/#46). Two disjoint
+       failure modes, handled separately:
+         1. sendRes.error present  → Resend rejected the call. A 401/403
+            (name === 'restricted_api_key' / 'validation_error', or a 4xx
+            statusCode) is an AUTH/PERMISSION failure — bad, rotated, or
+            wrong-scope key. Anything else is an API/transport error.
+         2. sendRes.error absent but no message id  → response-shape
+            failure: the call "succeeded" without an accepted message.
+       In every failure case we THROW so the cron route surfaces a non-2xx
+       run, and we do NOT write digest_runs — leaving the cutoff unadvanced
+       so the next run re-covers this exact window (self-healing backlog).
+       Nothing is recorded as sent until Resend confirms acceptance. */
     if (sendRes.error) {
-      console.error('sendRsvpDigest resend failed:', sendRes.error);
-      return { sent: false, reason: 'resend_error' };
+      const err = sendRes.error as { name?: string; message?: string } & {
+        statusCode?: number;
+      };
+      const status = err.statusCode;
+      const isAuth =
+        status === 401 ||
+        status === 403 ||
+        err.name === 'restricted_api_key' ||
+        err.name === 'missing_api_key';
+      const mode = isAuth ? 'auth' : 'api';
+      console.error(
+        `sendRsvpDigest resend ${mode}-failure:`,
+        JSON.stringify(sendRes.error),
+      );
+      await alertDigestFailure(
+        `resend_${mode}_failure`,
+        `Resend ${mode} failure: ${err.name ?? 'unknown'} — ${err.message ?? ''}`,
+      );
+      throw new Error(`sendRsvpDigest resend ${mode} failure: ${err.name}`);
+    }
+
+    const messageId = sendRes.data?.id;
+    if (!messageId) {
+      /* No error object, but Resend returned no accepted message id — a
+         response-shape failure distinct from an auth reject (#46). */
+      console.error(
+        'sendRsvpDigest resend shape-failure: 200 with no message id',
+        JSON.stringify(sendRes),
+      );
+      await alertDigestFailure(
+        'resend_shape_failure',
+        'Resend returned no message id on a non-error response.',
+      );
+      throw new Error('sendRsvpDigest resend shape failure: no message id');
+    }
+
+    /* Confirm delivery (or at least a non-terminal event) before recording,
+       when a verify key is configured. Throws on a bounced/failed event so
+       the run surfaces as failed and the cutoff is not advanced. */
+    await verifyDelivery(messageId);
+
+    if (opts.skipRecord) {
+      console.info(
+        `sendRsvpDigest catch-up send accepted (id ${messageId}); digest_runs not recorded (skipRecord).`,
+      );
+      return { sent: true };
     }
 
     const insertRes = await supabase.from('digest_runs').insert({
@@ -232,18 +374,24 @@ export async function sendRsvpDigest(): Promise<SendRsvpDigestResult> {
     });
 
     if (insertRes.error) {
-      /* Email already went out. Skipping the digest_runs row would cause
-         the next run to overlap with this one — duplicates over a clean
-         miss is the right tradeoff. Log loudly. */
+      /* Email was accepted (we have a message id). Skipping the
+         digest_runs row would make the next run re-cover this window and
+         duplicate — duplicates over a clean miss is the right tradeoff.
+         Log loudly and alert; do not throw (the send already happened). */
       console.error(
-        'sendRsvpDigest digest_runs insert failed AFTER successful send:',
+        'sendRsvpDigest digest_runs insert failed AFTER accepted send:',
         insertRes.error,
+      );
+      await alertDigestFailure(
+        'digest_runs_insert_failed',
+        `Digest sent (id ${messageId}) but digest_runs insert failed: ${insertRes.error.message}`,
       );
     }
 
+    console.info(`sendRsvpDigest accepted by Resend: id ${messageId}`);
     return { sent: true };
   } catch (err) {
     console.error('sendRsvpDigest threw:', err);
-    return { sent: false, reason: 'unexpected_error' };
+    throw err instanceof Error ? err : new Error(String(err));
   }
 }

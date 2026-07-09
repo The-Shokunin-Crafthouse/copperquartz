@@ -186,3 +186,44 @@ Append-only log of non-trivial decisions made on this project. Entries are not e
 **Decision.** Add a single new color token `--color-ink-deep: #0E2122` to `_config/design-system/token-map.md` and `src/styles/tokens.css`. Use is scoped to content-on-image surfaces where contrast must dominate (Registry tile reveal panels). It is not promoted as a generic surface color, foreground color, or button fill — pages that need a deep field reach for this token explicitly with that constraint in mind.
 **Rationale.** The overlay panels carry the only CTA on the Registry page; their text legibility is non-negotiable. `#0E2122` paired with `--color-sand-linen` (#F3E6D3) clears AA at all sizes (contrast ≈ 14.7:1). Re-using a hue-mismatched existing token would have introduced visible drift from Figma without saving anything — wedding-site palettes are small enough that a precision-named addition is cheaper than a derived approximation. The token is nominal (named by hue intensity, not semantic role), consistent with v1's nominal palette discipline.
 **Consequences.** v2 semantic-alias layer (already contemplated in token-map header) will likely fold this into something like `--color-overlay-on-media` or `--color-fg-strong`. Until then, the nominal name documents the value and its scope-of-use is constrained by inline comments in `tokens.css` and the use column in `token-map.md`. If a second surface in the project legitimately needs the same hue, this entry is the precedent — not improvising again.
+
+## 2026-07-08 — Verify Resend acceptance before recording a digest run
+**Stage:** 03-build
+**Status:** accepted
+
+**Context.** The daily RSVP digest (`src/app/actions/sendRsvpDigest.ts`, Vercel cron `0 13 * * *` → `/api/cron/rsvp-digest`) stopped landing in the inbox after 2026-06-14, yet `digest_runs` kept recording rows (Jun 20 → Jul 8, `responses_included ≥ 1`) with no runtime errors and no code deploy in the gap. Diagnosis at the destination (Gmail `in:anywhere`, both recipients): last delivered digest is Jun 14 13:12; nothing since. Two live probe sends through the app's `RESEND_API_KEY` returned HTTP 200 + a message id with `error: null`, and neither arrived. So Resend is *accepting* the API call (200 + id) but not delivering — a post-acceptance drop at the Resend account/domain layer (studio learnings #45/#46). The old code checked only `sendRes.error`; on a genuine 200 it inserted the `digest_runs` row and returned success, advancing the cutoff over responses no human ever saw.
+**Decision.** Verify before record. `sendRsvpDigest` now (1) separates an auth/permission reject (401/403 / `restricted_api_key` / `missing_api_key`) from a generic API error from a response-shape failure (200 with no `data.id`); (2) throws on every failure mode so the cron route returns non-2xx and the run surfaces as failed; (3) only writes `digest_runs` after Resend returns an accepted message id — leaving the cutoff unadvanced on failure so the next run self-heals the window; (4) when a read-capable `RESEND_VERIFY_API_KEY` is set, polls `GET /emails/{id}` and throws on a terminal `bounced/failed/complained/canceled` event; (5) posts an out-of-band alert to an optional `DIGEST_ALERT_WEBHOOK` (email can't report an email outage). The cron route treats only `no_new_rsvps` as a benign 200; every other non-sent reason is a 500. Adds a one-off `scripts/backfill-digest.ts` (`npm run backfill:digest`) that replays a catch-up digest since the last delivered run via new `sinceOverride`/`skipRecord` options, without touching `digest_runs`.
+**Rationale.** A 200 from a send API is acceptance, not delivery — recording on acceptance is the exact source→destination conflation of learning #45, and conflating an auth reject with a shape failure is #46. Throwing (vs returning `{sent:false}`) is what makes a scheduled failure visible; a swallowed error that still 200s is worse than a crash. Not advancing the cutoff on failure means no RSVP is lost even if an alert is missed. Delivery verification and the alert webhook are gated on optional env so the change degrades gracefully where those aren't configured yet — but their absence is logged, not silent.
+**Consequences.** The proximate delivery break is Resend-account/domain-status level and is NOT fixed by this code — it needs dashboard access or a full-access key to resolve (the send-only key can't read domain/email status). Steps that require a live send (real test digest, backfill of ~19–21 responses since Jun 14) are blocked until Resend delivers again. To get full protection, set `RESEND_VERIFY_API_KEY` (full-access) and `DIGEST_ALERT_WEBHOOK` in Vercel. Once delivery is restored: run a real test, confirm at the inbox (not on a 200), then `SINCE=2026-06-14T13:12:19Z npm run backfill:digest`.
+
+### 2026-07-08 — Correction: true root cause was Gmail inbound spam, not Resend
+
+**Amends the ADR above.** After the code shipped, live diagnosis (Resend Emails
+dashboard + Google Workspace **Admin → Email Log Search**) proved the digests
+were **accepted by Google (SMTP 250, shown as "Delivered" in Resend) then
+classified as spam** for `levi@levibahn.com` (Email Log Search disposition:
+"Marked spam", `0/1 Delivered`). Resend, the `levibahn.com` domain
+(DKIM/SPF/DMARC), and the API key were all healthy the whole time.
+`meghancave@yahoo.com` received every digest (Yahoo didn't spam-flag), which is
+what localized the loss to the Google account. Likely trigger: mail from the
+**apex** domain (`rsvp@levibahn.com`) sent via an **external** server (Amazon
+SES) is a same-domain-spoof signal Google weights heavily; its model tightened
+~Jun 14. The original "Resend account/domain-status break" hypothesis in the
+ADR above is **withdrawn** — Resend was never the problem, and the pre-existing
+code already checked `sendRes.error` and recorded on a genuine 200.
+
+**Resolution.** Gmail filter `from:rsvp@levibahn.com` → **"Never send it to
+Spam"** (immediate). Verified: a post-fix test and the catch-up backfill (21
+responses since Jun 14, id `276b139d…`) both landed in the **inbox** with intact
+bodies, confirmed by reading the delivered message (not the 200). Recommended
+durable fix (not yet done): move the digest `from:` to a subdomain
+(`digest@send.levibahn.com`) so it stops tripping the apex-spoof heuristic, and
+Workspace-admin allowlist `send.levibahn.com`.
+
+**Status of the code change:** kept as hardening (verify-before-record, typed
+failure modes, throw-on-fail, optional delivery verify + alert). It neither
+caused nor can detect this failure — Resend reports "delivered" the instant
+Google accepts; spam-foldering is downstream. Also added `tsconfig.scripts.json`
+(`jsx: react-jsx`) so the one-off backfill renders `RsvpDigest.tsx` under bare
+`tsx` (root tsconfig `jsx: preserve` + no `import React` → the first backfill
+send had a broken body until fixed).
