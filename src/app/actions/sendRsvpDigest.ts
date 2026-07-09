@@ -16,7 +16,14 @@ export type SendRsvpDigestResult =
   | { sent: false; reason: string };
 
 const DIGEST_TO = ['levi@levibahn.com', 'meghancave@yahoo.com'];
-const DIGEST_FROM = 'rsvp@levibahn.com';
+/* Sent from the `mail.levibahn.com` SUBDOMAIN, not the apex `levibahn.com`.
+   Sending apex-from (rsvp@levibahn.com) via an external server (Resend/SES) to
+   an apex recipient (levi@levibahn.com) trips Google's same-domain-spoof spam
+   heuristic — the 2026-06-14 outage (see decisions/decisions.md). A distinct
+   sending subdomain has its own DKIM/SPF and no from==recipient collision.
+   REQUIRES `mail.levibahn.com` to be a Verified domain in Resend first, or
+   every send 403s. */
+const DIGEST_FROM = 'rsvp@mail.levibahn.com';
 const DIGEST_REPLY_TO = 'levi@levibahn.com';
 
 const DAY_MS = 24 * 60 * 60 * 1000;
