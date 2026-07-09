@@ -5,8 +5,7 @@
 
 ---
 
-_No entries yet._
-## 2026-07-08 — RSVP digest: verify-before-record + silent-rot guardrail
+## 2026-07-08 — RSVP digest: root-caused to Gmail spam; verify-before-record hardening
 
 **What shipped.** Fixed the daily RSVP digest that silently stopped delivering
 after 2026-06-14 while `digest_runs` kept recording success. `sendRsvpDigest`
@@ -18,12 +17,18 @@ delivery event via `RESEND_VERIFY_API_KEY`, and alerts out-of-band via
 (`npm run backfill:digest`) with `sinceOverride`/`skipRecord` to replay the
 missed window once delivery is restored.
 
-**Diagnosis.** Trigger is Vercel cron (`0 13 * * *`), not GH Actions. Resend
-accepts sends (HTTP 200 + id) but delivers nothing — verified at destination
-(Gmail, both recipients) and via two live probe sends. Send-only API key is
-valid; DNS records (DKIM `resend._domainkey`, `send.` SPF+MX, DMARC) present.
-The delivery break is Resend account/domain-status level — needs dashboard /
-full-access key to resolve; live-send steps (test + backfill) blocked on it.
+**Diagnosis (final).** Trigger is Vercel cron (`0 13 * * *`), not GH Actions.
+**Root cause: Google Workspace marked the digests as spam** for
+`levi@levibahn.com` — confirmed via Admin → Email Log Search ("Marked spam",
+`0/1 Delivered`). Resend, the `levibahn.com` domain, and the API key were all
+healthy; Resend's "Delivered" = Google returned SMTP 250, not inbox landing.
+Meghan (Yahoo) received every digest, which localized the loss to the Google
+account. Likely trigger: apex `from:` (`rsvp@levibahn.com`) via external SES =
+same-domain-spoof signal. **Fixed** with a Gmail `from:rsvp@levibahn.com` →
+"Never send it to Spam" filter; post-fix test + 21-response backfill both
+verified landing in the inbox with intact bodies. The initial "Resend delivery
+break" hypothesis was withdrawn (ADR correction 2026-07-08).
 
-**Learnings.** See LEARNINGS.md (Resend 200 ≠ delivery) + ADR 2026-07-08 in
-decisions/decisions.md. One studio-promotion candidate flagged.
+**Learnings.** See LEARNINGS.md + the two ADR entries (2026-07-08 + its
+correction) in decisions/decisions.md. Two studio-promotion candidates flagged
+(ESP "Delivered" ≠ inbox → trace at receiver; apex-from-via-SES spam trap).

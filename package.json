@@ -8,8 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "preview": "node scripts/preview.mjs",
-    "test:digest": "tsx scripts/test-digest.ts",
-    "backfill:digest": "tsx scripts/backfill-digest.ts",
+    "test:digest": "TSX_TSCONFIG_PATH=./tsconfig.scripts.json tsx --env-file=.env.local scripts/test-digest.ts",
+    "backfill:digest": "TSX_TSCONFIG_PATH=./tsconfig.scripts.json tsx --env-file=.env.local scripts/backfill-digest.ts",
     "seed:guests": "tsx scripts/seed-guests.ts"
   },
   "dependencies": {
