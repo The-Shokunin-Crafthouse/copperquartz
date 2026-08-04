@@ -1,6 +1,7 @@
 'use server';
 
 import { createServiceClient } from '@/src/lib/supabase/server';
+import { rsvpAccessible } from '@/src/lib/rsvpAccess';
 import type { Tables } from '@/types/supabase';
 
 export type PartyResult = {
@@ -25,7 +26,9 @@ export type PartyResult = {
   } | null;
 };
 
-export type LookupError = { error: 'no_match' | 'ambiguous' | 'server_error' };
+export type LookupError = {
+  error: 'no_match' | 'ambiguous' | 'server_error' | 'rsvp_closed';
+};
 
 type GuestLookupRow = Pick<
   Tables<'guests'>,
@@ -38,6 +41,11 @@ const GUEST_LOOKUP_COLS =
 export async function lookupParty(
   name: string,
 ): Promise<PartyResult | LookupError> {
+  /* Gate the lookup, not just the button. The wizard is unreachable when
+     the window is closed, so this only fires on a crafted request — but an
+     ungated read is still an ungated read (studio learning #72). */
+  if (!(await rsvpAccessible())) return { error: 'rsvp_closed' };
+
   const trimmed = typeof name === 'string' ? name.trim() : '';
   if (trimmed.length === 0) return { error: 'no_match' };
   const lower = trimmed.toLowerCase();

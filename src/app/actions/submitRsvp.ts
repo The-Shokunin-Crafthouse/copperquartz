@@ -1,6 +1,7 @@
 'use server';
 
 import { createServiceClient } from '@/src/lib/supabase/server';
+import { rsvpAccessible } from '@/src/lib/rsvpAccess';
 import type { Tables, TablesInsert } from '@/types/supabase';
 
 export type RsvpResponseInput = {
@@ -33,6 +34,9 @@ const ALLOWED_BEVERAGE_CATEGORIES = new Set([
 export async function submitRsvp(
   payload: RsvpPayload,
 ): Promise<{ success: true; partyId: string } | { error: string }> {
+  /* The write is the thing that actually has to close. */
+  if (!(await rsvpAccessible())) return { error: 'rsvp_closed' };
+
   if (
     !payload ||
     typeof payload.party_id !== 'string' ||

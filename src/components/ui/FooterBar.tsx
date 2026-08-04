@@ -11,6 +11,8 @@ type FooterBarProps = {
   weddingDate: string; // ISO yyyy-mm-dd
   /** Where the mobile-only RSVP slot points. */
   rsvpHref: string;
+  /** Render the mobile-only RSVP slot. False after the deadline. */
+  showRsvp?: boolean;
 };
 
 const CEREMONY_HREF = 'https://maps.app.goo.gl/W1HYa3VJHi5fbgWm7';
@@ -22,7 +24,11 @@ const RECEPTION_HREF = 'https://maps.app.goo.gl/tS9ES4q8SHVE5q2E8';
  * anchored right at desktop, palm icons in the bottom corners.
  * Mobile (<768) appends a sixth slot with the RSVP pill.
  */
-export default function FooterBar({ weddingDate, rsvpHref }: FooterBarProps) {
+export default function FooterBar({
+  weddingDate,
+  rsvpHref,
+  showRsvp = true,
+}: FooterBarProps) {
   return (
     <footer className={styles.footer}>
       <div className={styles.divider} aria-hidden />
@@ -59,10 +65,12 @@ export default function FooterBar({ weddingDate, rsvpHref }: FooterBarProps) {
         {/* Mobile-only — RSVP pill sits where a value would, gold
             pillar on the left like every other column. Hidden ≥768
             via styles.mobileRsvpItem. */}
-        <div className={styles.mobileRsvpItem}>
-          <div className={styles.mobileRsvpPillar} aria-hidden />
-          <RSVPButton href={rsvpHref} label="RSVP" />
-        </div>
+        {showRsvp ? (
+          <div className={styles.mobileRsvpItem}>
+            <div className={styles.mobileRsvpPillar} aria-hidden />
+            <RSVPButton href={rsvpHref} label="RSVP" />
+          </div>
+        ) : null}
       </FooterColumns>
 
       <Image
