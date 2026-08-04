@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { lookupParty, type PartyResult } from '@/src/app/actions/lookupParty';
 import styles from '../rsvp.module.css';
 
-type ErrorReason = 'no_match' | 'ambiguous' | 'server_error';
+type ErrorReason = 'no_match' | 'ambiguous' | 'server_error' | 'rsvp_closed';
 
 const ERROR_COPY: Record<ErrorReason, string> = {
   no_match:
@@ -12,6 +12,7 @@ const ERROR_COPY: Record<ErrorReason, string> = {
   ambiguous:
     'We found more than one guest with that name. Please enter your full name.',
   server_error: 'Something went wrong. Please try again.',
+  rsvp_closed: 'RSVPs are closed. Please reach out to us directly.',
 };
 
 export default function StepNameEntry({

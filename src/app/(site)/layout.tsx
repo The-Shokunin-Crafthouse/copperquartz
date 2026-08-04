@@ -1,4 +1,5 @@
 import NavBar from '@/src/components/ui/NavBar';
+import { rsvpPubliclyOpen } from '@/src/lib/rsvpWindow';
 import FooterBar from '@/src/components/ui/FooterBar';
 import PageBackdrop from '@/src/components/ui/PageBackdrop';
 import styles from './layout.module.css';
@@ -22,12 +23,26 @@ const WEDDING_DATE = '2026-09-29';
  * with its own self-contained layout.
  */
 export default function SiteLayout({ children }: { children: React.ReactNode }) {
+  /* Env-only read (no cookies) so every page in the group stays
+     statically renderable. A bypassing admin therefore still sees the
+     pills hidden — by design; the bypass is a direct /rsvp visit, not a
+     restoration of the public chrome. */
+  const rsvpOpen = rsvpPubliclyOpen();
+
   return (
     <div className={styles.shell} data-scroll-root>
       <PageBackdrop />
-      <NavBar links={NAV_LINKS} rsvpHref={RSVP_HREF} />
+      <NavBar
+        links={NAV_LINKS}
+        rsvpHref={RSVP_HREF}
+        showRsvp={rsvpOpen}
+      />
       <main className={styles.main}>{children}</main>
-      <FooterBar weddingDate={WEDDING_DATE} rsvpHref={RSVP_HREF} />
+      <FooterBar
+        weddingDate={WEDDING_DATE}
+        rsvpHref={RSVP_HREF}
+        showRsvp={rsvpOpen}
+      />
     </div>
   );
 }
