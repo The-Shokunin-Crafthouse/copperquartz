@@ -21,18 +21,16 @@ This workspace belongs to The Shokunin Crafthouse. Project identity, rules, and 
 
 ## Load order (non-optional)
 
-1. `../../WORKSPACE.md` — identity, non-negotiables, operating rules
+1. `../../WORKSPACE.md` — identity, non-negotiables, operating rules, and the `Current sprint:` pointer
 2. `../../WORKFLOW.md` — stage sequence and approval gates
-3. `../../workspace.manifest.yaml` — parseable index; resolve the current stage
-4. `../../stages/<current>/STAGE.md` — the active brief
-5. `../../_config/design-system/ui-rules.md` and `token-map.md` — source of truth (design/build)
-6. `../../_config/voice/` and `../../_config/brand/` — audience-facing output
-7. `../../decisions/decisions.md` — prior decisions
+3. The active sprint's `CONTEXT.md` — path given by the `Current sprint:` field in WORKSPACE.md; the sprint contract and Inputs table
+4. Only the files named in that CONTEXT.md Inputs table — `_config/` sections selectively, never in full
+5. `../../decisions/decisions.md` — prior decisions
 
 ## Operating expectations
 
 - WORKSPACE.md is binding. Treat it as a directive, not documentation.
-- Do not improvise values (color, spacing, timing, copy). Pull from config.
+- **Token source is conditional.** For color, type, spacing, or motion, pull from the source named in `decisions/decisions.md`: the shared design system at `brand.shokunincrafthouse.com` for a Shokunin-branded property (local `token-map.md` is bypassed), or local `_config/design-system/token-map.md` for a client project. Never improvise a value.
 - Do not cross an approval gate without explicit sign-off. See WORKFLOW.md.
 - Record non-trivial decisions in `decisions/decisions.md` with date, context, rationale, consequences.
 - If this workspace contradicts your general defaults, the workspace wins.
