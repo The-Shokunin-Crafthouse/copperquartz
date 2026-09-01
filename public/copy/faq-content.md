@@ -21,6 +21,9 @@ Yes. We're providing Uber/Lyft credits for guests who need a ride from the cerem
 **What time should I arrive?**
 Ceremony music starts at 4:00 PM. The ceremony begins promptly at 4:30 PM. We recommend arriving by 4:15. Water will be available while you find your seat.
 
+**Is anything happening the night before?**
+Yes, and you're invited. We're gathering at Validation Ale on Monday, September 28 from 6 to 8 PM. It's casual, there's no dress code, and it's entirely optional. Food and drinks are available for purchase, and much of the seating is outdoors, so bring a sweatshirt or a jacket. Address and details on the [Venue page](/venue/#venue-night-before).
+
 ---
 
 ### Dress Code & Attire
