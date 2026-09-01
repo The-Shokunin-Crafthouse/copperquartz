@@ -2,23 +2,88 @@ import VideoFrame from '@/src/components/ui/VideoFrame';
 import styles from './page.module.css';
 
 /*
- * Venue — two sections per Figma frame 22:1119.
- *   1. Sunken Garden    — Ceremony 4:30pm   — video: sunken-garden.mp4
- *   2. Cabrillo Pavilion — Reception 5:30pm  — video: cabrillo-pavilion.mp4
+ * Venue — three sections, chronological across the wedding weekend.
+ *   1. The Night Before  — Mon 6–8pm       — video: validation-ale.mp4
+ *   2. Sunken Garden     — Ceremony 4:30pm — video: sunken-garden.mp4
+ *   3. Cabrillo Pavilion — Reception 5:30pm — video: cabrillo-pavilion.mp4
  *
- * Composition mirrors /travel: heading → meta → media → body. Coral-rose
- * inline links (`.coral`) match the established address-link treatment.
+ * Sections 2–3 are the Figma frame 22:1119 pair. Section 1 was added after
+ * the RSVP closed (the Monday meetup was an RSVP question with no public
+ * home) and reuses the same composition verbatim: heading → meta → media →
+ * body, coral-rose inline links (`.coral`), no new CSS. It carries a poster
+ * because it is the only clip with a still worth showing before playback.
  */
 export const metadata = {
   title: 'Venue · Levi & Meghan',
   description:
-    'Sunken Garden ceremony and Cabrillo Pavilion reception: Santa Barbara, September 29, 2026.',
+    'Monday meetup at Validation Ale, Sunken Garden ceremony, and Cabrillo Pavilion reception: Santa Barbara, September 28–29, 2026.',
 };
 
 export default function VenuePage() {
   return (
     <article className={styles.venue}>
-      {/* ---------- Section 1: Sunken Garden ---------- */}
+      {/* ---------- Section 1: The Night Before ---------- */}
+      <section className={styles.section} aria-labelledby="venue-night-before">
+        <h2 id="venue-night-before" className={styles.heading}>
+          The Night Before
+        </h2>
+        <dl className={styles.meta}>
+          <div className={styles.metaRow}>
+            <dt>When</dt>
+            <dd>Monday, September 28 &middot; 6:00&ndash;8:00pm</dd>
+          </div>
+          <div className={styles.metaRow}>
+            <dt>Address</dt>
+            <dd>
+              <a
+                className={styles.coral}
+                href="https://maps.google.com/?q=102+E+Yanonali+St,+Santa+Barbara,+CA+93101"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                102 E Yanonali St, Santa Barbara, CA 93101
+              </a>
+            </dd>
+          </div>
+          <div className={styles.metaRow}>
+            <dt>Website</dt>
+            <dd>
+              <a
+                className={styles.coral}
+                href="https://www.validationale.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                validationale.com
+              </a>
+            </dd>
+          </div>
+        </dl>
+        <VideoFrame
+          src="/videos/validation-ale.mp4"
+          poster="/images/validation-ale.jpg"
+          label="Validation Ale taproom in the Santa Barbara Funk Zone"
+        />
+        <div className={styles.body}>
+          <p>
+            For anyone in town early, we&rsquo;re gathering at Validation Ale
+            the evening before the wedding. Nothing formal, no dress code,
+            entirely optional. Stop in for an hour or stay the whole time, and
+            food and drinks are available for purchase.
+          </p>
+          <p>
+            Validation is a brewery and taproom in the Funk Zone, a few blocks
+            off the waterfront, serving pizza and sandwiches alongside their
+            own beer. The taproom&rsquo;s most-ordered pours get
+            &ldquo;validated&rdquo; and earn a permanent tap, so the board
+            shifts with whatever the room has been drinking. Much of the
+            seating is outside, so bring a sweatshirt or a jacket &mdash;
+            Santa Barbara cools off quickly once the sun drops.
+          </p>
+        </div>
+      </section>
+
+      {/* ---------- Section 2: Sunken Garden ---------- */}
       <section className={styles.section} aria-labelledby="venue-sunken-garden">
         <h2 id="venue-sunken-garden" className={styles.heading}>
           Sunken Garden
@@ -79,7 +144,7 @@ export default function VenuePage() {
         </div>
       </section>
 
-      {/* ---------- Section 2: Cabrillo Pavilion ---------- */}
+      {/* ---------- Section 3: Cabrillo Pavilion ---------- */}
       <section className={styles.section} aria-labelledby="venue-cabrillo-pavilion">
         <h2 id="venue-cabrillo-pavilion" className={styles.heading}>
           Cabrillo Pavilion
