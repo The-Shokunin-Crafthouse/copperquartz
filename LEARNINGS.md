@@ -71,3 +71,48 @@ _Studio-promotion candidates (flag for `sc-learn` Tier-2):_
    ESP integration.
 2. "Same-domain-from-external-sender (apex `you@yourdomain` sent via SES/Resend)
    is a spam-heuristic trap; send transactional mail from a subdomain." 
+
+---
+
+## 2026-09-01 — This checkout's `node_modules` is macOS-native, so the Cowork bridge VM cannot build it
+
+**Context:** Adding the Monday-meetup section. `tsc --noEmit` and `eslint` both ran
+clean from the Cowork device shell, so the toolchain looked healthy. `npm run build`
+then sat at the Next.js banner and produced nothing across three attempts, and
+`npx tsx` failed outright with *"You installed esbuild for another platform"* —
+`@esbuild/darwin-arm64` present, `@esbuild/linux-arm64` needed.
+
+**Lesson:** `node_modules` here was installed on the Mac. The Cowork device shell is
+a Linux VM that mounts the same folder, so every pure-JS tool (`tsc`, `eslint`) works
+and every package with a native binary (`esbuild`, and therefore `tsx` and parts of
+the Next build) does not. Compounding it, a full `next build` cannot finish inside the
+device shell's ~120-second per-call ceiling on a FUSE mount, and background processes
+do not survive the call. Do not read a clean `tsc` as evidence the build is fine.
+Verify builds by cloning into the cloud container and running `npm ci` there (about 30
+seconds), or lean on the `verify` job in `.github/workflows/preview-deploy.yml`. Do
+**not** run `npm install` against the mounted `node_modules` to "fix" it — that swaps
+the Mac's native binaries for Linux ones and breaks local development.
+
+**Trigger:** any Cowork session about to run a build, a test, or a `tsx` script against
+this repo through the device bridge; a build that hangs with no output; an esbuild
+platform error.
+
+---
+
+## 2026-09-01 — Content that lives only inside the RSVP wizard disappears when the RSVP window closes
+
+**Context:** The Monday meetup at Validation Ale was collected as an RSVP step
+(`StepMondayMeetup`) and described nowhere else. Closing the RSVP window (ADR
+2026-08-04) removed the wizard *and* the `?confirmation=` receipt, so every guest who
+answered "yes" lost the only copy of the time, the address, and the outdoor-seating
+note — months before the event they had said yes to.
+
+**Lesson:** the RSVP flow is a collection surface with an expiry date, not a
+publication surface. Anything a guest still needs *after* answering — a time, an
+address, a what-to-bring — needs a permanent home on `/venue`, `/travel` or `/qa`, with
+the RSVP step reading as a shorter echo of it. The `/venue` section pattern (heading →
+`.meta` rows → `VideoFrame` → body) already carries exactly that payload, so the home
+costs no new component and no new CSS.
+
+**Trigger:** adding any question to the RSVP wizard, or any future flow behind a
+deadline; a guest asking about something that was only ever an RSVP question.
