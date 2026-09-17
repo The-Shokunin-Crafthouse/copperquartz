@@ -63,7 +63,7 @@ update contributions
  where coalesce(self_reported, false) is true
    and source = 'stripe';
 
--- 3. An offline gift (cash, check, or a self-reported Kiva loan) has no email
+-- 3. An offline gift (cash, check, or a self-reported Howlin Dog gift) has no email
 --    address to record. name stays NOT NULL — every gift has a giver.
 alter table contributions
   alter column email drop not null;
