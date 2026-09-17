@@ -154,6 +154,7 @@
 }
 
 .input:active:enabled,
+.textarea:active:enabled,
 .select:active:enabled {
   border-color: var(--color-palm-leaf);
 }
