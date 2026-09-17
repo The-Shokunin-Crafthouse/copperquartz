@@ -7,7 +7,7 @@ import type {
   AdminRsvpSummary,
   BeverageBreakdownRow,
 } from '@/src/app/actions/getAdminRsvpSummary';
-import type { Contribution } from './types';
+import type { Contribution, PartyOption } from './types';
 import { fundLabel, formatUsd } from './format';
 import styles from './AdminDashboard.module.css';
 
@@ -128,10 +128,14 @@ function DrinkCategoryCard({
 export default function AdminDashboard({
   contributions,
   summary,
+  parties,
 }: {
   contributions: Contribution[];
   summary: AdminRsvpSummary;
+  parties: PartyOption[];
 }) {
+  /* consumed by the Add gift form */
+  void parties;
   const [activePill, setActivePill] = useState<Pill>('special');
   const [exportBusy, setExportBusy] = useState(false);
   const [exportError, setExportError] = useState<string | null>(null);

@@ -46,6 +46,7 @@ export async function selfReportContribution(
       reference_url: null,
       lenders_choice: false,
       self_reported: true,
+      source: 'self-reported',
       stripe_session_id: null,
       message: trimmedMessage ? trimmedMessage : null,
     });
