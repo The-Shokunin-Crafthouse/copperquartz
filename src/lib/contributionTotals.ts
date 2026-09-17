@@ -24,8 +24,10 @@ export function giftCents(
 }
 
 /* Cash and check are the two sources that never touched a payment
-   processor — the gifts an admin logs by hand. 'self-reported' is a guest
-   telling us about an online Kiva loan, so it counts as online. */
+   processor here — the gifts an admin logs by hand. 'self-reported' is a
+   guest telling us about a Howlin Dog Music Group donation they made on
+   HDMG's own site, so the money did move online and it counts as
+   online. */
 export function isOffline(row: Pick<Contribution, 'source'>): boolean {
   return row.source === 'cash' || row.source === 'check';
 }
@@ -43,8 +45,9 @@ function emptyTotals(fund: Fund): FundTotals {
 }
 
 /* Sums every source into the fund's total. This replaces the older
-   self_reported-filtered sums, which hid a self-reported Kiva loan from
-   the Kiva card and would have hidden every cash gift from every card. */
+   self_reported-filtered sums, which could only ever show a Howlin Dog
+   card built from self-reported donations, hid a Stripe gift to that same
+   fund, and would have hidden every cash gift from every card. */
 export function fundTotals(rows: Contribution[]): Record<Fund, FundTotals> {
   const totals: Record<Fund, FundTotals> = {
     honeymoon: emptyTotals('honeymoon'),
