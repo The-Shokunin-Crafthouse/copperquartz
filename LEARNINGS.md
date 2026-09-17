@@ -186,3 +186,22 @@ and read the hits (media-query breakpoints and comments are the expected ones).
 Treat the checker's repo verdict as advisory on this repo.
 
 **Trigger:** a Gate-3 pass or verifier brief that says "run the drift check".
+
+---
+
+## 2026-09-17 — The wedding site charges the "Levi Bahn" Stripe account, not Shokunin Crafthouse LLC
+
+**Context:** Levi opened the Stripe dashboard and saw one $1 payment instead of six wedding
+gifts. Every wedding row in `contributions` carries a `cs_live_` session id, so it was not
+test-vs-live. The account the studio's Stripe connector reaches (Shokunin Crafthouse LLC,
+`acct_…fn2c`) holds one live payment ever: a $1 invoice test from the client portal. Asking
+it for a wedding session id returns "No such checkout.session". The repo's key belongs to
+the account named "Levi Bahn" (`acct_…xlR1`), confirmed with `GET /v1/account`.
+
+**Lesson:** two Stripe accounts exist. Wedding money, webhooks and the `STRIPE_*` env vars
+live on "Levi Bahn". The studio connector and the client portal live on the LLC. Before
+debugging a "payment missing from Stripe" report, run
+`curl -s https://api.stripe.com/v1/account -u "$STRIPE_SECRET_KEY:"` and read the account id.
+
+**Trigger:** any mismatch between the admin dashboard and the Stripe dashboard; rotating or
+re-creating a Stripe key or webhook for this site.
