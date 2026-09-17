@@ -71,3 +71,50 @@ Both want their own pass.
 bridge VM; RSVP-only content dying with the RSVP window). No new studio index line — the
 git-lock incident was already covered by studio learning #177, which this session
 violated; its detail file gained a dated addendum instead.
+
+## 2026-09-17 — Admin exports and offline gifts
+
+**Shipped.** PR pending, branch `feat/admin-exports-offline-gifts`. The `/admin`
+dashboard gains an Attending tab (positioned before Not Coming); the export button now
+exports only the active tab and renders only on Contributions and Attending. The
+Contributions export has columns Party / Contribution Type / Gift Amount / Message / Kiva
+URL / Mailing Address / Source, plus one totals row per fund with "N online · M cash/check"
+breakdown. An Add-gift form (`src/app/admin/AddGiftForm.tsx`) lives behind a disclosure in
+the Contributions panel, logging cash or check gifts against a party without a database
+console. The three fund cards (Honeymoon, Howlin Dog, Kiva) now sum every contribution
+`source` (Stripe, self-reported, cash, check) into their totals, displaying the online/offline
+split; previously, each card counted only one source by construction.
+
+**Data.** Migration `supabase/migrations/004_party_link_source_addresses.sql` adds
+`contributions.party_id` (nullable FK to `guest_parties`, indexed, `on delete set null`),
+`contributions.source` (text, check constraint over `stripe`/`self-reported`/`cash`/`check`,
+default `'stripe'`, backfilled from legacy `self_reported` boolean), and drops the `not null`
+on `contributions.email`. New table `party_addresses` (one row per party, `party_id` as PK/FK,
+RLS enabled with no policies, explicit `grant all … to service_role`). The migration is
+**not yet applied** — Levi applies it against production. Until it lands, `src/lib/loadContributions.ts`
+falls back gracefully on Postgres `42703`/`42P01` (column/table not found) and returns party
+and address as null, logging one warning per process. A one-time `scripts/import-party-data.ts`
+(dry run by default, `--apply` to execute) links existing contributions and addresses from
+reviewed match files in gitignored `secrets/`; it leaves ambiguous matches unlinked and
+imports city values exactly as-typed for Levi to correct by hand.
+
+**Verification.** `tsc --noEmit`, `npm run lint`, `next build` all green on the
+branch. Real-browser checks against the live database (migration not yet applied): five pills visible and correctly ordered,
+export button absent from the DOM on Special Request / Drink Requests / Not Coming tabs,
+present on Contributions / Attending, Attending rows match the card's attended-guests count,
+focus rings on all eight form controls (party select, fund select, cash/check radios, amount
+input, submit button), per-field error messages on submit with empty required fields, zero
+horizontal scroll at breakpoints 390 / 1024 / 1280 / 1440. An independent verifier pass ran
+on the branch; see PR for the verifier report.
+
+**Decisions.** Three entries dated 2026-09-17 in `decisions/decisions.md`: party-link +
+source + address schema with soft-fail loader; one shared fund-totals derivation + the
+attending export scope; dashboard Attending tab + Add-gift form + active-tab export.
+
+**Open, not fixed here.** (1) `exportRsvpCSV.ts` has no caller but is kept as the full
+historical record. (2) The Contributions table shows no Source column, so a cash gift is
+indistinguishable on-screen from a Stripe one; the CSV carries the value. (3) The `sc-hygiene`
+drift checker's `raw-color` rule false-positives on token names containing colour words
+(`--color-gold`) repo-wide. (4) `exportRsvpCSV.ts` and `exportAttendingCSV.ts` carry duplicate
+`escapeCsv`/`yesNo` helpers. No guest names, addresses, emails, or contribution amounts are
+logged to stdout.
