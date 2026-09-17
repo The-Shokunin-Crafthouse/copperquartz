@@ -1,7 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Commissioner:wght@400;500;600&family=Cormorant+Garamond:wght@400;500;600;700&display=swap');
 @import './tokens.css';
 
-/* TODO: drop ngetic-modern-regular.woff2 / .woff into public/fonts/ — see public/fonts/README.md */
 @font-face {
   font-family: 'Ngetic Modern';
   src: url('/fonts/ngetic-modern-regular.woff2') format('woff2'),
@@ -11,7 +10,6 @@
   font-display: swap;
 }
 
-/* TODO: drop hesland-regular.woff2 / .woff into public/fonts/ — see public/fonts/README.md */
 @font-face {
   font-family: 'Hesland Regular';
   src: url('/fonts/hesland-regular.woff2') format('woff2'),

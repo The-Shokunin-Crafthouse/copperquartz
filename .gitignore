@@ -80,5 +80,7 @@ public/images/wedding photos/
 .cursor-cache/
 .ai-cache/
 
-# guest list — contains real names, never commit
-guest-list.xlsx
+# guest list — contains real names, never commit.
+# Glob-prefixed: the file on disk has a leading space (" guest-list.xlsx"),
+# which the bare filename pattern does not match.
+*guest-list*.xlsx
