@@ -74,7 +74,7 @@ violated; its detail file gained a dated addendum instead.
 
 ## 2026-09-17 — Admin exports and offline gifts
 
-**Shipped.** PR pending, branch `feat/admin-exports-offline-gifts`. The `/admin`
+**Shipped.** PR #63, branch `feat/admin-exports-offline-gifts`. The `/admin`
 dashboard gains an Attending tab (positioned before Not Coming); the export button now
 exports only the active tab and renders only on Contributions and Attending. The
 Contributions export has columns Party / Contribution Type / Gift Amount / Message / Kiva
@@ -90,9 +90,9 @@ split; previously, each card counted only one source by construction.
 `contributions.source` (text, check constraint over `stripe`/`self-reported`/`cash`/`check`,
 default `'stripe'`, backfilled from legacy `self_reported` boolean), and drops the `not null`
 on `contributions.email`. New table `party_addresses` (one row per party, `party_id` as PK/FK,
-RLS enabled with no policies, explicit `grant all … to service_role`). The migration is
-**not yet applied** — Levi applies it against production. Until it lands, `src/lib/loadContributions.ts`
-falls back gracefully on Postgres `42703`/`42P01` (column/table not found) and returns party
+RLS enabled with no policies, explicit `grant all … to service_role`). The migration was
+applied to production on 2026-09-17 with Levi's approval, and the import ran the same day (43 addresses, 3 gift links). Before it landed, `src/lib/loadContributions.ts`
+fell back gracefully on Postgres `42703`/`42P01` (column/table not found) and returns party
 and address as null, logging one warning per process. A one-time `scripts/import-party-data.ts`
 (dry run by default, `--apply` to execute) links existing contributions and addresses from
 reviewed match files in gitignored `secrets/`; it leaves ambiguous matches unlinked and
