@@ -18,46 +18,60 @@ export type Database = {
         Row: {
           amount_cents: number
           created_at: string | null
-          email: string
+          email: string | null
           fund: string
           gift_cents: number | null
           id: string
           lenders_choice: boolean | null
           message: string | null
           name: string
+          party_id: string | null
           reference_url: string | null
           self_reported: boolean | null
+          source: string
           stripe_session_id: string | null
         }
         Insert: {
           amount_cents: number
           created_at?: string | null
-          email: string
+          email?: string | null
           fund: string
           gift_cents?: number | null
           id?: string
           lenders_choice?: boolean | null
           message?: string | null
           name: string
+          party_id?: string | null
           reference_url?: string | null
           self_reported?: boolean | null
+          source?: string
           stripe_session_id?: string | null
         }
         Update: {
           amount_cents?: number
           created_at?: string | null
-          email?: string
+          email?: string | null
           fund?: string
           gift_cents?: number | null
           id?: string
           lenders_choice?: boolean | null
           message?: string | null
           name?: string
+          party_id?: string | null
           reference_url?: string | null
           self_reported?: boolean | null
+          source?: string
           stripe_session_id?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "contributions_party_id_fkey"
+            columns: ["party_id"]
+            isOneToOne: false
+            referencedRelation: "guest_parties"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       digest_runs: {
         Row: {
@@ -134,6 +148,47 @@ export type Database = {
             foreignKeyName: "guests_party_id_fkey"
             columns: ["party_id"]
             isOneToOne: false
+            referencedRelation: "guest_parties"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      party_addresses: {
+        Row: {
+          apt: string | null
+          city: string | null
+          country: string | null
+          created_at: string | null
+          party_id: string
+          postal_code: string | null
+          state: string | null
+          street: string | null
+        }
+        Insert: {
+          apt?: string | null
+          city?: string | null
+          country?: string | null
+          created_at?: string | null
+          party_id: string
+          postal_code?: string | null
+          state?: string | null
+          street?: string | null
+        }
+        Update: {
+          apt?: string | null
+          city?: string | null
+          country?: string | null
+          created_at?: string | null
+          party_id?: string
+          postal_code?: string | null
+          state?: string | null
+          street?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "party_addresses_party_id_fkey"
+            columns: ["party_id"]
+            isOneToOne: true
             referencedRelation: "guest_parties"
             referencedColumns: ["id"]
           },

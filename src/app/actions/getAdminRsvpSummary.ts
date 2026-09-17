@@ -3,6 +3,16 @@
 import { createServiceClient } from '@/src/lib/supabase/server';
 import type { Tables } from '@/types/supabase';
 
+/* One attending guest, as listed under the Attending card. Deliberately
+   the same four fields as DecliningGuest minus the accommodation notes —
+   an attending list is a headcount, not a case file. */
+export type AttendingGuest = {
+  guest_id: string;
+  full_name: string;
+  party_name: string;
+  responded_at: string;
+};
+
 export type DecliningGuest = {
   guest_id: string;
   full_name: string;
@@ -38,6 +48,7 @@ export type AdminRsvpSummary = {
      Drives the Transportation card on the admin dashboard so the number
      reads as "rides to arrange" rather than "seats". */
   transport_party_count: number;
+  attending_guests: AttendingGuest[];
   declining_guests: DecliningGuest[];
   beverage_breakdown: BeverageBreakdownRow[];
   special_requests: SpecialRequest[];
@@ -55,6 +66,7 @@ const EMPTY: AdminRsvpSummary = {
   monday_count: 0,
   transport_count: 0,
   transport_party_count: 0,
+  attending_guests: [],
   declining_guests: [],
   beverage_breakdown: [],
   special_requests: [],
@@ -165,6 +177,27 @@ export async function getAdminRsvpSummary(): Promise<AdminRsvpSummaryResult> {
     }
     const transport_party_count = transportPartyIds.size;
 
+    /* Built from attendingResponses, not from a re-filter of guests, so
+       attending_guests.length is attending_count by construction. A
+       response whose guest row has since been deleted still occupies a
+       line with empty fields rather than silently shrinking the list
+       below the number on the card. */
+    const attending_guests: AttendingGuest[] = attendingResponses
+      .map((r): AttendingGuest => {
+        const guest = guestById.get(r.guest_id);
+        return {
+          guest_id: r.guest_id,
+          full_name: guest?.full_name ?? '',
+          party_name: guest ? partyNameById.get(guest.party_id) ?? '' : '',
+          responded_at: r.updated_at ?? r.submitted_at ?? '',
+        };
+      })
+      .sort((a, b) => {
+        const byParty = a.party_name.localeCompare(b.party_name);
+        if (byParty !== 0) return byParty;
+        return a.full_name.localeCompare(b.full_name);
+      });
+
     const declining_guests: DecliningGuest[] = responses
       .filter((r) => !r.attending)
       .map((r): DecliningGuest | null => {
@@ -232,6 +265,7 @@ export async function getAdminRsvpSummary(): Promise<AdminRsvpSummaryResult> {
         monday_count,
         transport_count,
         transport_party_count,
+        attending_guests,
         declining_guests,
         beverage_breakdown,
         special_requests,

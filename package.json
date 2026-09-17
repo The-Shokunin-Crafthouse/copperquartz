@@ -10,7 +10,8 @@
     "preview": "node scripts/preview.mjs",
     "test:digest": "TSX_TSCONFIG_PATH=./tsconfig.scripts.json tsx --env-file=.env.local scripts/test-digest.ts",
     "backfill:digest": "TSX_TSCONFIG_PATH=./tsconfig.scripts.json tsx --env-file=.env.local scripts/backfill-digest.ts",
-    "seed:guests": "tsx scripts/seed-guests.ts"
+    "seed:guests": "tsx scripts/seed-guests.ts",
+    "import:party-data": "TSX_TSCONFIG_PATH=./tsconfig.scripts.json tsx --env-file=.env.local scripts/import-party-data.ts"
   },
   "dependencies": {
     "@phosphor-icons/react": "^2.1.10",

@@ -308,6 +308,14 @@
     minmax(var(--col-min-md), 1fr)
     minmax(var(--col-min-md), 1fr);
 }
+/* Same two columns as Not Coming — the two panels are the same list read
+   from opposite ends, and a reader switching between them should not see
+   the columns move. */
+.colsAttending {
+  grid-template-columns:
+    minmax(var(--col-min-md), 1fr)
+    minmax(var(--col-min-md), 1fr);
+}
 
 /* ---------------- Drink category cards ---------------- */
 
@@ -453,12 +461,20 @@
 }
 
 /* ---------------- Desktop (≥1024) ----------------
-   The switcher (pills + Export CSV) needs ~900–1000px of breathing room
-   before it fits in a single row without wrapping. At 768 there isn't
-   enough — the four pills alone are ~680 px — so we keep the mobile
-   stacked pattern (pills horizontally scroll, Export CSV drops to its
-   own row) up through tablet and only switch to the side-by-side
-   desktop layout at 1024+. */
+   The switcher (pills + Export CSV) goes side by side at 1024+, as it
+   did with four pills. The fifth pill (Attending) pushes the row to
+   ~830px of pills, which still fits the 1024 content box beside the
+   Export button — but only just, and the pills are text, so a wider
+   label or a different font metric would overflow. So the pill row is
+   allowed to wrap here rather than scroll: the pills drop to a second
+   line before anything can spill out of the container, at 1024, 1280
+   and 1440 alike. Below 1024 the mobile stacked pattern (pills scroll
+   horizontally, Export CSV on its own row) still holds.
+
+   The Export button is absent from the DOM on the three tabs that have
+   no file to hand over. justify-content: space-between with a single
+   child leaves the pills flush left, so their position does not depend
+   on whether the button is there. */
 @media (min-width: 1024px) {
   .pillRow {
     flex-direction: row;
@@ -468,6 +484,10 @@
   }
 
   .pillScroll {
+    flex: 0 1 auto;
+    min-width: 0;
+    flex-wrap: wrap;
+    row-gap: var(--space-1);
     overflow-x: visible;
     margin-inline: 0;
     padding-inline: 0;
@@ -475,6 +495,7 @@
 
   .exportBtn {
     align-self: auto;
+    flex: 0 0 auto;
     white-space: nowrap;
   }
 }

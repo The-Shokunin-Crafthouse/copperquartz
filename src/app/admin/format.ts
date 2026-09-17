@@ -1,4 +1,4 @@
-import type { Fund } from './types';
+import type { ContributionSource, Fund, PartyAddress } from './types';
 
 const FUND_LABEL: Record<Fund, string> = {
   honeymoon: 'Honeymoon',
@@ -49,4 +49,48 @@ export function formatTimestamp(iso: string): string {
 export function truncate(value: string, max: number): string {
   if (value.length <= max) return value;
   return `${value.slice(0, max)}…`;
+}
+
+const SOURCE_LABEL: Record<ContributionSource, string> = {
+  stripe: 'Stripe',
+  'self-reported': 'Self-reported',
+  cash: 'Cash',
+  check: 'Check',
+};
+
+export function sourceLabel(s: ContributionSource): string {
+  return SOURCE_LABEL[s];
+}
+
+/* One-line mailing address: "street, apt, city, state postal_code, country".
+   Every field on party_addresses is nullable because an address can be
+   captured a line at a time, so each part is skipped when absent rather
+   than rendered as an empty slot with its comma still attached. State and
+   postal code share one comma segment, separated by a space, because that
+   is how a US or Canadian address is written. Returns '' when nothing is
+   known, so a caller can drop it straight into a cell. */
+export function formatMailingAddress(a: PartyAddress | null): string {
+  if (!a) return '';
+
+  const clean = (v: string | null): string => v?.trim() ?? '';
+  const segments: string[] = [];
+
+  const street = clean(a.street);
+  if (street) segments.push(street);
+
+  const apt = clean(a.apt);
+  if (apt) segments.push(apt);
+
+  const city = clean(a.city);
+  if (city) segments.push(city);
+
+  const region = [clean(a.state), clean(a.postal_code)]
+    .filter(Boolean)
+    .join(' ');
+  if (region) segments.push(region);
+
+  const country = clean(a.country);
+  if (country) segments.push(country);
+
+  return segments.join(', ');
 }

@@ -1,0 +1,501 @@
+/*
+ * Admin — Add gift form (cash / check gifts logged by hand).
+ *
+ * Sits inside the Contributions panel, on --color-sand-linen. The field
+ * vocabulary is the site's existing form vocabulary from
+ * (site)/registry/forms.module.css — label, input, textarea, focus ring,
+ * field error — copied rather than imported, because that module is the
+ * guest-facing modal's contract and this surface must be free to move
+ * without dragging the modals with it.
+ *
+ * Every value resolves through tokens.css. The only computed values are
+ * color-mix() shifts of existing palette tokens, the same technique the
+ * registry module already uses for its selected radio card.
+ *
+ * Mobile-first; the two breakpoints match AdminDashboard.module.css
+ * (768 / 1024). Native <select> keeps its platform appearance so the
+ * dropdown indicator and keyboard behaviour stay the browser's.
+ */
+
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+}
+
+/* ---------------- Disclosure ---------------- */
+
+.disclosure {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--height-tap);
+  padding: var(--space-1-5) var(--space-3);
+  border: var(--border-hairline) solid var(--color-gold);
+  border-radius: var(--radius-md);
+  background-color: var(--color-bg);
+  color: var(--color-brown);
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: var(--text-sm);
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    background-color var(--motion-fast) ease,
+    border-color var(--motion-fast) ease,
+    transform 160ms ease-out;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .disclosure:hover {
+    border-color: var(--color-terracotta);
+    background-color: color-mix(
+      in oklab,
+      var(--color-terracotta) 8%,
+      var(--color-bg)
+    );
+  }
+}
+
+.disclosure:focus-visible {
+  outline: var(--border-focus) solid var(--color-gold);
+  outline-offset: var(--border-focus);
+}
+
+.disclosure:active {
+  transform: scale(0.97);
+}
+
+.disclosure:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+  transform: none;
+}
+
+/* ---------------- Form shell ---------------- */
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-2);
+  border: var(--border-hairline) solid var(--color-gold);
+  border-radius: var(--radius-lg);
+  background-color: var(--color-bg);
+}
+
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.label {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--color-brown);
+}
+
+/* ---------------- Inputs ---------------- */
+
+.input,
+.textarea,
+.select {
+  width: 100%;
+  font-family: var(--font-sans);
+  font-weight: 400;
+  font-size: var(--text-base);
+  line-height: 1.4;
+  color: var(--color-brown);
+  background-color: var(--color-sand-linen);
+  border: var(--border-hairline) solid var(--color-gold);
+  border-radius: var(--radius-sm);
+  padding: var(--space-1) var(--space-2);
+  min-height: var(--height-tap);
+  transition:
+    border-color var(--motion-fast) ease,
+    background-color var(--motion-fast) ease;
+}
+
+.input,
+.textarea {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .input:hover:enabled,
+  .textarea:hover:enabled,
+  .select:hover:enabled {
+    border-color: var(--color-terracotta);
+  }
+}
+
+.input:focus-visible,
+.textarea:focus-visible,
+.select:focus-visible {
+  outline: var(--border-focus) solid var(--color-gold);
+  outline-offset: var(--border-focus);
+  border-color: var(--color-palm-leaf);
+}
+
+/* Some browsers only fire :focus on a <select> opened by pointer; keep
+   the ring identical so the control never shows an unstyled default. */
+.select:focus {
+  outline: var(--border-focus) solid var(--color-gold);
+  outline-offset: var(--border-focus);
+  border-color: var(--color-palm-leaf);
+}
+
+.input:active:enabled,
+.textarea:active:enabled,
+.select:active:enabled {
+  border-color: var(--color-palm-leaf);
+}
+
+.input:disabled,
+.textarea:disabled,
+.select:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.input::placeholder,
+.textarea::placeholder {
+  color: var(--color-gold-dark);
+  opacity: 1;
+}
+
+.textarea {
+  min-height: var(--space-12);
+  resize: vertical;
+  line-height: 1.5;
+}
+
+.select {
+  cursor: pointer;
+}
+
+/* Amount — the $ glyph is painted on the wrapper so the input keeps a
+   single tab stop and a clean numeric value. */
+.amountWrap {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+}
+
+.amountWrap::before {
+  content: '$';
+  position: absolute;
+  left: var(--space-2);
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: var(--text-base);
+  color: var(--color-brown);
+  pointer-events: none;
+}
+
+.amountInput {
+  padding-left: var(--space-4);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------------- Method radio group ---------------- */
+
+.methodSet {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+
+.legend {
+  padding: 0;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--color-brown);
+}
+
+.methodRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}
+
+/* Styled as pills, but the control is a real <input type="radio"> inside
+   its own <label>: arrow keys, Space and the roving tab stop are the
+   browser's, not ours. */
+.methodPill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-height: var(--height-tap);
+  padding: var(--space-1) var(--space-3);
+  border: var(--border-hairline) solid var(--color-gold);
+  border-radius: var(--radius-pill);
+  background-color: var(--color-sand-linen);
+  cursor: pointer;
+  user-select: none;
+  transition:
+    border-color var(--motion-fast) ease,
+    background-color var(--motion-fast) ease,
+    transform 160ms ease-out;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .methodPill:hover {
+    border-color: var(--color-palm-leaf);
+  }
+}
+
+.methodPill:active {
+  transform: scale(0.97);
+}
+
+.methodPill[data-selected='true'] {
+  border-color: var(--color-palm-leaf);
+  background-color: color-mix(
+    in oklab,
+    var(--color-palm-leaf) 10%,
+    var(--color-bg)
+  );
+}
+
+/* :has() keeps the focus ring on the pill, which is the thing the eye
+   reads; the fallback below keeps a ring on the radio itself where
+   :has() is unsupported. */
+.methodPill:has(.radio:focus-visible) {
+  outline: var(--border-focus) solid var(--color-gold);
+  outline-offset: var(--border-focus);
+}
+
+.radio {
+  width: var(--space-2);
+  height: var(--space-2);
+  margin: 0;
+  accent-color: var(--color-palm-leaf);
+  cursor: pointer;
+  flex: 0 0 auto;
+}
+
+.radio:focus-visible {
+  outline: var(--border-focus) solid var(--color-gold);
+  outline-offset: var(--border-focus);
+}
+
+.radio:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.methodLabel {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: var(--text-sm);
+  line-height: 1;
+  color: var(--color-brown);
+}
+
+/* ---------------- Counter, errors, status ---------------- */
+
+.counter {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  line-height: 1.4;
+  color: var(--color-gold-dark);
+  font-variant-numeric: tabular-nums;
+}
+
+.fieldError {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  line-height: 1.4;
+  color: var(--color-coral-rose);
+}
+
+.formError {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  line-height: 1.4;
+  color: var(--color-coral-rose);
+}
+
+/* Always rendered so the live region exists before the message does —
+   a role="status" inserted at announce time is frequently missed. */
+.status {
+  margin: 0;
+  min-height: var(--space-2);
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: var(--text-sm);
+  line-height: 1.4;
+  color: var(--color-palm-leaf);
+}
+
+/* ---------------- Actions ---------------- */
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  margin-top: var(--space-1);
+}
+
+.save,
+.cancel {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--height-tap);
+  padding: var(--space-1-5) var(--space-3);
+  border-radius: var(--radius-md);
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: var(--text-base);
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    background-color var(--motion-fast) ease,
+    border-color var(--motion-fast) ease,
+    transform 160ms ease-out;
+}
+
+.save {
+  border: var(--border-hairline) solid var(--color-palm-leaf);
+  background-color: var(--color-palm-leaf);
+  color: var(--color-bg);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .save:hover:enabled {
+    background-color: var(--color-palm-leaf-deep);
+    border-color: var(--color-palm-leaf-deep);
+  }
+}
+
+.save:focus-visible {
+  outline: var(--border-focus) solid var(--color-gold);
+  outline-offset: var(--border-focus);
+}
+
+.save:active:enabled {
+  transform: scale(0.97);
+}
+
+.save:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.cancel {
+  border: var(--border-hairline) solid var(--color-gold);
+  background-color: transparent;
+  color: var(--color-brown);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .cancel:hover:enabled {
+    border-color: var(--color-terracotta);
+    background-color: color-mix(
+      in oklab,
+      var(--color-terracotta) 8%,
+      var(--color-bg)
+    );
+  }
+}
+
+.cancel:focus-visible {
+  outline: var(--border-focus) solid var(--color-gold);
+  outline-offset: var(--border-focus);
+}
+
+.cancel:active:enabled {
+  transform: scale(0.97);
+}
+
+.cancel:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ---------------- Tablet (≥768) ---------------- */
+@media (min-width: 768px) {
+  .form {
+    padding: var(--space-3);
+    gap: var(--space-3);
+  }
+
+  .label,
+  .legend {
+    font-size: var(--text-sm);
+  }
+
+  .actions {
+    gap: var(--space-2);
+  }
+}
+
+/* ---------------- Desktop (≥1024) ----------------
+   Party / Fund / Amount are short fields that read as one line of a
+   ledger entry once there is room for three columns; Method and Note
+   stay full width because the pills and the textarea both want it. */
+@media (min-width: 1024px) {
+  .form {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: start;
+    column-gap: var(--space-3);
+    row-gap: var(--space-3);
+  }
+
+  .methodSet,
+  .noteGroup,
+  .actions,
+  .formError,
+  .status {
+    grid-column: 1 / -1;
+  }
+
+  .methodRow {
+    gap: var(--space-2);
+  }
+}
+
+/* ---------------- Reduced motion ---------------- */
+@media (prefers-reduced-motion: reduce) {
+  .disclosure,
+  .input,
+  .textarea,
+  .select,
+  .methodPill,
+  .save,
+  .cancel {
+    transition-property: background-color, border-color;
+    transition-duration: var(--motion-fast);
+    transition-timing-function: linear;
+  }
+
+  .disclosure:active,
+  .methodPill:active,
+  .save:active,
+  .cancel:active {
+    transform: none;
+  }
+}

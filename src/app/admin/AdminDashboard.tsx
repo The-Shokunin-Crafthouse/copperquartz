@@ -1,24 +1,50 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { useCountUp } from '@/src/hooks/useCountUp';
-import { exportRsvpCSV } from '@/src/app/actions/exportRsvpCSV';
+import { exportContributionsCSV } from '@/src/app/actions/exportContributionsCSV';
+import { exportAttendingCSV } from '@/src/app/actions/exportAttendingCSV';
 import type {
   AdminRsvpSummary,
   BeverageBreakdownRow,
 } from '@/src/app/actions/getAdminRsvpSummary';
-import type { Contribution } from './types';
+import {
+  fundTotals,
+  giftCents,
+  splitLabel,
+} from '@/src/lib/contributionTotals';
+import type { Contribution, PartyOption } from './types';
 import { fundLabel, formatUsd } from './format';
+import AddGiftForm from './AddGiftForm';
 import styles from './AdminDashboard.module.css';
 
-type Pill = 'special' | 'contributions' | 'drinks' | 'not-coming';
+type Pill =
+  | 'special'
+  | 'contributions'
+  | 'drinks'
+  | 'attending'
+  | 'not-coming';
 
 const PILLS: { id: Pill; label: string }[] = [
   { id: 'special', label: 'Special Request' },
   { id: 'contributions', label: 'Contributions' },
   { id: 'drinks', label: 'Drink Requests' },
+  { id: 'attending', label: 'Attending' },
   { id: 'not-coming', label: 'Not Coming' },
 ];
+
+/* The two tabs whose contents are a file someone downloads. The other
+   three are read-on-screen surfaces, and the button is absent from the
+   DOM there rather than disabled — a control that cannot act on the
+   visible tab is not a control. */
+const EXPORTABLE: Record<Pill, boolean> = {
+  special: false,
+  contributions: true,
+  drinks: false,
+  attending: true,
+  'not-coming': false,
+};
 
 /* Drink category cards always render — every canonical category appears
    even at count 0 so the row stays visually stable across data states.
@@ -61,12 +87,11 @@ function categoryLabels(category: string): {
   return { plural: `${upper}S`, singular: upper };
 }
 
-function giftCents(r: Contribution): number {
-  return r.gift_cents ?? r.amount_cents;
-}
-
-function downloadFilename(): string {
-  return `rsvp-responses-${new Date().toISOString().slice(0, 10)}.csv`;
+function downloadFilename(pill: Pill): string {
+  const stamp = new Date().toISOString().slice(0, 10);
+  return pill === 'attending'
+    ? `attending-${stamp}.csv`
+    : `contributions-${stamp}.csv`;
 }
 
 /* Small wrapper so each stat card owns its own count-up hook (hooks
@@ -128,39 +153,29 @@ function DrinkCategoryCard({
 export default function AdminDashboard({
   contributions,
   summary,
+  parties,
 }: {
   contributions: Contribution[];
   summary: AdminRsvpSummary;
+  parties: PartyOption[];
 }) {
+  const router = useRouter();
   const [activePill, setActivePill] = useState<Pill>('special');
   const [exportBusy, setExportBusy] = useState(false);
   const [exportError, setExportError] = useState<string | null>(null);
 
-  /* Contribution totals — same gift-vs-charged logic as the legacy
-     SummaryCards: sum the gift the couple actually receives. */
-  const totals = useMemo(() => {
-    const sumFor = (fund: Contribution['fund'], selfReported: boolean) =>
-      contributions
-        .filter((c) => c.fund === fund && c.self_reported === selfReported)
-        .reduce((s, c) => s + giftCents(c), 0);
-    const countFor = (fund: Contribution['fund'], selfReported: boolean) =>
-      contributions.filter(
-        (c) => c.fund === fund && c.self_reported === selfReported,
-      ).length;
+  /* An export failure belongs to the tab that produced it. Carrying it
+     across a tab change would leave a contributions error sitting under
+     an attending export button. */
+  function selectPill(next: Pill) {
+    setActivePill(next);
+    setExportError(null);
+  }
 
-    const honeymoonCents = sumFor('honeymoon', false);
-    const kivaCents = sumFor('kiva', false);
-    const hdmgCents = sumFor('howlin-dog', true);
-
-    return {
-      honeymoonDollars: Math.round(honeymoonCents / 100),
-      honeymoonCount: countFor('honeymoon', false),
-      kivaDollars: Math.round(kivaCents / 100),
-      kivaCount: countFor('kiva', false),
-      hdmgDollars: Math.round(hdmgCents / 100),
-      hdmgCount: countFor('howlin-dog', true),
-    };
-  }, [contributions]);
+  /* One derivation, shared with exportContributionsCSV: every source
+     counts toward its fund's total, and the split line says how much of
+     that arrived online versus as cash or a check. */
+  const totals = useMemo(() => fundTotals(contributions), [contributions]);
 
   /* Drink category cards — fixed canonical order so the row reads
      left-to-right the same way every time, regardless of count. Counts
@@ -205,10 +220,15 @@ export default function AdminDashboard({
   }, [summary.beverage_breakdown, activeCategory]);
 
   async function onExport() {
+    const pill = activePill;
+    if (!EXPORTABLE[pill]) return;
     setExportBusy(true);
     setExportError(null);
     try {
-      const result = await exportRsvpCSV();
+      const result =
+        pill === 'attending'
+          ? await exportAttendingCSV()
+          : await exportContributionsCSV();
       if ('error' in result) {
         setExportError(result.error);
         return;
@@ -217,7 +237,7 @@ export default function AdminDashboard({
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = downloadFilename();
+      a.download = downloadFilename(pill);
       document.body.appendChild(a);
       a.click();
       a.remove();
@@ -256,20 +276,20 @@ export default function AdminDashboard({
           <StatCard
             eyebrow="HONEYMOON FUND"
             prefix="$"
-            target={totals.honeymoonDollars}
-            subtext={`${totals.honeymoonCount} contributions`}
+            target={Math.round(totals.honeymoon.totalCents / 100)}
+            subtext={splitLabel(totals.honeymoon)}
           />
           <StatCard
             eyebrow="HOWLIN DOG MUSIC GROUP"
             prefix="$"
-            target={totals.hdmgDollars}
-            subtext={`${totals.hdmgCount} self-reported`}
+            target={Math.round(totals['howlin-dog'].totalCents / 100)}
+            subtext={splitLabel(totals['howlin-dog'])}
           />
           <StatCard
             eyebrow="KIVA"
             prefix="$"
-            target={totals.kivaDollars}
-            subtext={`${totals.kivaCount} contributions`}
+            target={Math.round(totals.kiva.totalCents / 100)}
+            subtext={splitLabel(totals.kiva)}
           />
         </div>
       </section>
@@ -309,7 +329,7 @@ export default function AdminDashboard({
                   role="tab"
                   aria-selected={active}
                   className={`${styles.pill} ${active ? styles.pillActive : ''}`}
-                  onClick={() => setActivePill(pill.id)}
+                  onClick={() => selectPill(pill.id)}
                 >
                   {pill.label}
                 </button>
@@ -317,14 +337,16 @@ export default function AdminDashboard({
             })}
           </div>
 
-          <button
-            type="button"
-            className={styles.exportBtn}
-            onClick={onExport}
-            disabled={exportBusy}
-          >
-            {exportBusy ? 'Preparing…' : 'Export CSV'}
-          </button>
+          {EXPORTABLE[activePill] ? (
+            <button
+              type="button"
+              className={styles.exportBtn}
+              onClick={onExport}
+              disabled={exportBusy}
+            >
+              {exportBusy ? 'Preparing…' : 'Export CSV'}
+            </button>
+          ) : null}
         </div>
 
         {exportError ? (
@@ -375,6 +397,7 @@ export default function AdminDashboard({
 
         {activePill === 'contributions' ? (
           <div className={styles.panel}>
+            <AddGiftForm parties={parties} onAdded={() => router.refresh()} />
             <div className={styles.tableScroll}>
               <div className={`${styles.tableHead} ${styles.colsContributions}`}>
                 <span className={styles.tableHeadCell}>Party Name</span>
@@ -480,6 +503,37 @@ export default function AdminDashboard({
                   </div>
                 )}
               </div>
+            </div>
+          </div>
+        ) : null}
+
+        {activePill === 'attending' ? (
+          <div className={styles.panel}>
+            <div className={styles.tableScroll}>
+              <div className={`${styles.tableHead} ${styles.colsAttending}`}>
+                <span className={styles.tableHeadCell}>Name</span>
+                <span className={styles.tableHeadCell}>Party</span>
+              </div>
+              <div className={styles.tableDivider} role="presentation" />
+              {summary.attending_guests.length === 0 ? (
+                <div className={styles.empty}>No confirmed guests yet.</div>
+              ) : (
+                <div className={styles.tableBody}>
+                  {summary.attending_guests.map((g) => (
+                    <div
+                      key={g.guest_id}
+                      className={`${styles.tableRow} ${styles.colsAttending}`}
+                    >
+                      <span className={styles.tableCell}>{g.full_name}</span>
+                      <span className={styles.tableCell}>
+                        {g.party_name || (
+                          <span className={styles.dash}>—</span>
+                        )}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         ) : null}
