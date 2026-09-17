@@ -116,3 +116,73 @@ costs no new component and no new CSS.
 
 **Trigger:** adding any question to the RSVP wizard, or any future flow behind a
 deadline; a guest asking about something that was only ever an RSVP question.
+
+---
+
+## 2026-09-17 — `import.meta.dirname` is undefined under this repo's `tsx` scripts
+
+**Context:** `scripts/import-party-data.ts` resolved the repo root with
+`import.meta.dirname` and crashed on first run, before parsing anything. `tsx` with
+`tsconfig.scripts.json` transpiles to CommonJS here, where `import.meta.dirname` is
+`undefined`; `import.meta.url` is populated in both modes.
+
+**Lesson:** resolve script-relative paths with
+`dirname(fileURLToPath(import.meta.url))`. The typechecker accepts
+`import.meta.dirname` happily; it fails only at runtime.
+
+**Trigger:** any new file under `scripts/` run through `npm run …` / `tsx`; a script
+that dies with `undefined` in a `path.join` before doing any work.
+
+---
+
+## 2026-09-17 — Ship code ahead of a migration: the read side and the write side fail differently
+
+**Context:** Migration 004 (party link, `source`, `party_addresses`) was written on the
+branch but applied to production later, by hand. The admin loader, the guest-facing
+self-report insert and the new add-gift insert all name the new columns.
+
+**Lesson:** on a select, a missing column resolves as Postgres `42703` and a missing
+table as `42P01` (studio #85). On an **insert** naming an unknown column, PostgREST
+rejects with `PGRST204` ("Could not find the 'x' column … in the schema cache") — a
+different code, from the schema cache, not Postgres. `error.code` is not always
+populated either way, so match the message too. The pattern that let this branch merge
+in either order lives in `src/lib/loadContributions.ts` (legacy-column fallback, warn
+once) and `src/app/actions/selfReportContribution.ts` (retry the insert without the
+new key; the migration's own `UPDATE` backfills it). Admin-only writes may simply fail
+with a plain sentence until the migration lands; guest-facing writes may not.
+
+**Trigger:** a branch that adds a column and code that names it in the same change;
+"Could not find the … column … in the schema cache" in a server log.
+
+---
+
+## 2026-09-17 — `guest_parties.party_name` is already the display name
+
+**Context:** The Contributions export needed a Party column reading "both names, or
+the single name". Read-only inspection of all 54 parties: no family labels, no
+"Guest of"; two-guest parties are `A & B`, one exception is named after one member (a
+plus-one), one four-guest party uses `&`.
+
+**Lesson:** use `party_name` directly; do not rebuild it from `guests.full_name`.
+`lookup_aliases` holds three aliases in total and is not a matching surface. Matching
+free-text names (contributions, envelope names) to parties is judgment work; leave
+ambiguous ones unlinked (see the 2026-09-17 decisions entry and
+`scripts/import-party-data.ts`).
+
+**Trigger:** any feature that prints or matches a party's name.
+
+---
+
+## 2026-09-17 — The studio drift checker cannot gate this repo's CSS
+
+**Context:** `sc-hygiene` `drift_check` on the branch returned 45 gating `raw-color`
+findings on the two changed CSS modules and 308 repo-wide, all matching the colour
+words inside token names (`var(--color-gold)`, `--color-brown`, `--color-sand-linen`,
+`--color-teal`, `--color-coral-rose`). Zero real hex or px violations.
+
+**Lesson:** until the checker's `raw-color` rule ignores identifiers inside `var()`,
+verify token compliance here by hand: `git diff main -- '*.css' | grep -E '#[0-9a-fA-F]{3,8}|[0-9]+px'`
+and read the hits (media-query breakpoints and comments are the expected ones).
+Treat the checker's repo verdict as advisory on this repo.
+
+**Trigger:** a Gate-3 pass or verifier brief that says "run the drift check".

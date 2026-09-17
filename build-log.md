@@ -118,3 +118,8 @@ drift checker's `raw-color` rule false-positives on token names containing colou
 (`--color-gold`) repo-wide. (4) `exportRsvpCSV.ts` and `exportAttendingCSV.ts` carry duplicate
 `escapeCsv`/`yesNo` helpers. No guest names, addresses, emails, or contribution amounts are
 logged to stdout.
+
+**Learnings.** Four Tier-1 entries in LEARNINGS.md (`import.meta.dirname` under `tsx`;
+read-side vs write-side failure codes when code ships ahead of its migration;
+`party_name` is the display name; the drift checker's `raw-color` rule cannot gate this
+repo). Tier-2 candidates presented to Levi at sprint close, not yet promoted.
