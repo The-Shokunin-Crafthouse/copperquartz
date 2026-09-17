@@ -11,12 +11,16 @@ type NavLink = { label: string; href: string };
 type NavBarProps = {
   links: NavLink[];
   rsvpHref: string;
+  /** Render the RSVP pill. False after the deadline — the slot is removed
+   *  outright rather than shown disabled, so a closed window reads as
+   *  finished business instead of a broken control. */
+  showRsvp?: boolean;
 };
 
 /* Strip trailing slash so /travel and /travel/ both resolve to the same key. */
 const norm = (p: string) => (p !== '/' && p.endsWith('/') ? p.slice(0, -1) : p);
 
-export default function NavBar({ links, rsvpHref }: NavBarProps) {
+export default function NavBar({ links, rsvpHref, showRsvp = true }: NavBarProps) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const here = pathname ? norm(pathname) : '';
@@ -78,9 +82,11 @@ export default function NavBar({ links, rsvpHref }: NavBarProps) {
         })}
       </nav>
 
-      <div className={styles.rsvp}>
-        <RSVPButton href={rsvpHref} label="RSVP" />
-      </div>
+      {showRsvp && (
+        <div className={styles.rsvp}>
+          <RSVPButton href={rsvpHref} label="RSVP" />
+        </div>
+      )}
     </header>
   );
 }

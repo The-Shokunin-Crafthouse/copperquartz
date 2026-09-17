@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import { withBase } from '@/src/lib/paths';
 import VideoFrame from '@/src/components/ui/VideoFrame';
+import TransitionLink from '@/src/components/ui/TransitionLink';
 import styles from './page.module.css';
 
 /*
@@ -306,6 +307,17 @@ export default function TravelPage() {
             >
               official site
             </a>
+            .
+          </p>
+          <p>
+            And if you land on Monday, there&rsquo;s a casual meetup that
+            evening before the wedding &mdash; details on the{' '}
+            <TransitionLink
+              className={styles.coral}
+              href="/venue/#venue-night-before"
+            >
+              Venue page
+            </TransitionLink>
             .
           </p>
         </div>
